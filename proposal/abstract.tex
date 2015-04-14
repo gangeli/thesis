@@ -1,0 +1,148 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%% 
+% View on QA
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{My View on Question Answering}
+\hh{Two parts to question answering:}
+\begin{itemize}
+  \itemsep 1em
+  \item Understanding the question
+  \begin{itemize}
+    \itemsep 1em
+    \item<2-> Most Semantic Parsing work seems to be here
+    \item<2-> Can be arbitrarily hard; we only worry about easy factoids.
+  \end{itemize}
+
+  \item \textcolor<3->{darkgreen}{Understanding the corpus (IE)}
+  \begin{itemize}
+    \itemsep 1em
+    \item<4-> What facts are in the corpus? 
+      \cite{key:2014angeli-kbp,key:2014angeli-active}
+    \item<5-> What facts are entailed by the corpus? \newline
+      [ACL OpenIE Submission]
+    \item<6-> How do we find if a fact is entailed by the corpus?
+      \cite{key:2013angeli-truth,key:2014angeli-naturalli}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Challenges in understanding the corpus
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Challenges in IE}
+\hh{Questions don't always fit into a known schema} \\
+\pause
+\hspace{2em}\darkgreen{\checkmark} \w{Where was Barack Obama born?} \\
+\pause
+\hspace{2em}\textcolor{orange}{?} \w{What city borders the largest river in California?} \\
+\hspace{2em}\textcolor{orange}{?} \w{Who is Chris Manning's academic advisor?} \\
+\pause
+\hspace{2em}\darkred{\xmark} \w{Do cats have tails?} \\
+\vspace{1em}
+\pause
+
+\hh{Questions don't always talk about named entities} \\
+\hspace{2em}\darkgreen{\checkmark} \w{Where was Barack Obama born?} \\
+\pause
+\hspace{2em}\textcolor{orange}{?} \w{What treatments are there for diabetes?} \\
+\hspace{2em}\darkred{\xmark} \w{Do cats have tails?} \\
+\vspace{1em}
+\pause
+
+\hh{Answers aren't always literally justified in text} \\
+\hspace{2em}\darkgreen{\checkmark} \w{Born in Hawaii, Barack Obama $\dots$} \\
+\hspace{2em}\textcolor{orange}{?} \w{Doctors prescribe Insulin for Diabetes.} \\
+\hspace{2em}\darkred{\xmark} \w{All animals have tails.} \\
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Facts in corpus
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{No entailment: What facts are in the corpus?}
+\hh{We can do QA from Freebase
+        ... so let's make Freebase bigger}
+\vspace{2em}
+
+\hh{Relation Extraction + TAC-KBP}
+\pause
+\begin{itemize}
+  \item Done: KBP 2013 -- 2014
+  \item Done: KBP + active learning
+  \item Pending: KBP + deep learning / matrix factorization
+\end{itemize}
+\vspace{2em}
+\pause
+
+\hh{Does it address the challenges?}
+\begin{itemize}
+  \item \darkred{Fixed relation schema}
+  \item \darkred{Very named-entity-centric}
+  \item \darkred{Zero entailments from text}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Facts entailed by corpus
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Mini-Entailment: List facts entailed by corpus}
+\hh{Extract maximally informative, correct things}
+\vspace{2em}
+
+\hh{Natural Logic + OpenIE (ACL submission)}
+\pause
+\begin{enumerate}
+  \item Split sentence up into short, entailed clauses
+  \item Strip away excess information in clauses
+  \item Extract open IE triples
+\end{enumerate}
+\vspace{2em}
+\pause
+
+\hh{Does it address the challenges?}
+\begin{itemize}
+  \item \darkgreen{Open relation schema}
+  \item \darkgreen{Named entity agnostic}
+  \item \darkred{Only limited entailment from text}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Fact entailed by corpus
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Lots of Entailment: Is a fact entailed by corpus?}
+\hh{Given a fact, can we support it in the corpus?}
+\vspace{2em}
+
+\hh{Natural Logic}
+\pause
+\begin{itemize}
+  \item Done: Natural Logic for common sense facts
+  \item Pending: Natural Logic for factoid facts (EMNLP)
+  \item Future: $\dots$ stay tuned
+\end{itemize}
+\vspace{2em}
+\pause
+
+\hh{Does it address the challenges?}
+\begin{itemize}
+  \item \darkgreen{Open relation schema}
+  \item \darkgreen{Named entity agnostic}
+  \item \darkgreen{Large class of entailments from corpus}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Tweetable Slide
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Main Idea of Thesis}
+\begin{center}
+\textit{
+  Natural language inference allows us to leverage latent
+  information in text to improve recall of open-domain facts, without
+  sacrificing [much] precision.
+}
+\end{center}
+\end{frame}

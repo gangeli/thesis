@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%% 
+% OpenIE Results
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\begin{center}
+\huge{\hh{The ``Proposal'' Part}}
+\end{center}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Rhetorical question
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Possible Projects}
+\hh{What is NaturalLI bad at?}
+\pause
+\begin{itemize}
+  \item \textbf{Real world Q/A (WebQuestions, TREC, AI2 Biology).} \\
+        Most people don't really care about common-sense.
+  \pause
+  \vspace{1em}
+  \item \textbf{Reasoning with multiple premises.} \\
+        E.g., DeMorgan's laws.
+  \pause
+  \vspace{1em}
+  \item \textbf{Fully leveraging training data.} \\
+        What if the entailment rules aren't in WordNet?
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Real World Q/A
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Real World Q/A (EMNLP 2015)}
+\hh{Goal:} Make NaturalLI useful, not just cute.
+\vspace{1em}
+\pause
+
+\hh{Start with NaturalLI$\dots$}
+\begin{itemize}
+  \item[$+$] Dependency trees (for passivization, etc.)
+  \item[$+$] Meronymy (Hawaii is in USA)
+  \item[$+$] Relational entailment (\w{works} $\rightarrow$ \w{employed})
+  \item[$+$] Paraphrases
+\end{itemize}
+\pause
+\vspace{1em}
+
+\hh{Evaluate on:}
+\begin{itemize}
+  \item AI2 Biology tests
+  \item WebQuestions
+  \item TREC QA
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Multiple Premises
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Multiple Premises (logic paper?)}
+\hh{Goal:} Make Natural Logic look more appealing.
+\vspace{1em}
+\pause
+
+\hh{The Trivial Case}:
+  Parse premises that define edges in a partial order
+   (e.g., \w{cats are animals}, \w{Hawaii is in the USA}).
+\vspace{1em}
+\pause
+
+\hh{Propositional $+$ Natural Logic}
+\begin{itemize}
+  \item E.g., $a \lor b; \lnot a ~~\Rightarrow~~ b$
+  \pause
+  \item Shallow syntactic parse of sentence for conjunction / disjunction
+  \pause
+  \item Operators in hypothesis are trivial (run all atoms and combine)
+  \item Conjunction in premise is trivial (NaturalLI OpenIE can do this)
+  \item Disjunction and material implication in premise is a bit tricky
+\end{itemize}
+\vspace{1em}
+\pause
+
+\hh{Probabilistic logic of ``some:''} 
+  \w{some cats have tails}; \w{some cats are male} $\Rightarrow$
+  \w{some males have tails} (with some probability)
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Multiple Premises
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Fully Leveraging Training Data (??? paper)}
+\hh{Goal:} Make NaturalLI less hand-coded.
+\vspace{0.5em}
+\pause
+
+\hh{Research by Analogy:} 
+\begin{itemize}
+  \item MIML-RE is to NaturalLI as Neural QA is to $X$.
+  \item High level idea: Natural Logic mutations are transforms in
+        vector space.
+\end{itemize}
+\vspace{0.5em}
+\pause
+
+\hh{Implementation 1:} NaturalLI in vector space
+\begin{itemize}
+  \item Same search, but each rule (e.g., go up WordNet) is a matrix operation.
+        ``Hit'' a premise if we get close enough.
+  \item Can train from SNLI corpus $+$ MT alignments.
+\end{itemize}
+\vspace{0.5em}
+\pause
+
+\hh{Implementation 2:} Learn hyperplane between true and false facts.
+\begin{itemize}
+  \item Positives from the internet.
+  \item Negatives from mutating \textit{each} positive, $+$
+        unrelated facts.
+\end{itemize}
+
+\end{frame}
