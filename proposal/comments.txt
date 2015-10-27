@@ -1,0 +1,40 @@
+Peter Norvig's thesis
+ARISTO common sense dataset
+MCTest
+
+From Chris:
+  * Unconvinced by QA as the motivation
+    - what I'm doing is reasoning from a corpus
+    - looking at reasoning from a KB
+  * Percy agrees
+  * "Learning knowledge from text" -- Dan
+    - "Scalable learning of knowledge from text" -- Gabor?
+    - You want people to think OpenIE when they read the thesis
+    - "massive?" "large?"
+
+Neural QA slide is a whole thesis; don't include in thesis
+
+Doing things like paraphrase with a lot more theoretical foundation
+  - "marriage between power of large-scale paraphrase learning + precision of
+     natural logic"
+    * Percy disagrees: putting features on things from Natural Logic anyways
+  - Don't Highlight Natural Logic as much.
+
+"Abductive" in title?
+Highlight semantic aspect to distinguish from paraphrase -- Percy
+  "Drawing semantic inferences from large bodies of text"
+
+Run baselines
+  - Just paraphrases, or just synonymy
+
+Add in time?
+
+If you make the thesis about inference, not natural logic, 
+then project on better natural logic isn't helping the thesis
+
+Anytime "because" occurs, it's an implication
+
+
+
+
+
