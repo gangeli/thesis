@@ -1,4 +1,4 @@
-\documentclass[hyperref]{beamer}
+\documentclass[hyperref,xcolor=table]{beamer}
 \usepackage{beamerthemesplit}
 \usepackage{graphicx}
 \usepackage{mathptmx}           % replacement for obsolete \usepackage{times}
@@ -14,11 +14,12 @@
 \usetikzlibrary{patterns,matrix}
 \usetikzlibrary{decorations.pathmorphing,decorations.markings}
 \usepackage{times,latexsym,amsfonts,amssymb,amsmath,graphicx,url,bbm,rotating,siunitx}
-\usepackage{multirow,hhline,arydshln,array,color,stmaryrd,pifont,transparent,centernot}
+\usepackage{multirow,hhline,arydshln,array,stmaryrd,pifont,color,centernot}
 \usepackage[absolute,overlay]{textpos}
 \definecolor{darkred}{rgb}{0.5, 0.0, 0.0}
 \definecolor{darkgreen}{rgb}{0.0, 0.4, 0.0}
 \definecolor{darkblue}{rgb}{0.0, 0.0, 0.5}
+\definecolor{verylightgray}{rgb}{0.9, 0.9, 0.9}
 
 % set up Beamer style with Stanford colors and logo
 % logo is available at http://nlp.stanford.edu/local/nlp-logos/nlp-logo.pdf
@@ -42,29 +43,109 @@
 \input ../figures_naturalli.tex
 \input ../figures_kbp.tex
 
+
+\def\roadmap#1{
+\begin{frame}[t,noframenumbering]{Roadmap}
+\vspace{-0.5ex}
+\begin{tabular}{m{3cm} m{7.25cm}}
+  
+  \ifnum0#1=1
+    \rowcolor{verylightgray}
+  \fi
+  \includegraphics[width=3cm]{../img/yarn-cat.png}
+  &
+  \hh{Common Sense Reasoning:} \newline \w{Cats have tails} \\
+  \\
+  
+  \ifnum0#1=2
+    \rowcolor{verylightgray}
+  \fi
+  \includegraphics[width=3cm]{../img/hawaii.png}
+  &
+  \hh{Complex premises:} \newline \w{Born in Hawaii, Obama is a graduate of Columbia} \\
+  \\
+
+  \ifnum0#1=3
+    \rowcolor{verylightgray}
+  \fi
+  \includegraphics[width=3cm]{../img/science.png}
+  &
+  \hh{Lexical $+$ Logical Reasoning:} \newline \w{A graduated cylinder would be best to} \newline \w{measure the volume of a liquid} \\
+\end{tabular}
+\end{frame}
+}
+
+
 \begin{document}
 \begin{frame}[noframenumbering]
   \titlepage
 \end{frame}
 
 \input motivation.tex
-\input naturalli.tex
-\input openie.tex
-\input science.tex
 
 
-%%%%%%%%%%%%%%%%%%% 
-% THANKS
-%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\begin{center}
-  \hh{\huge{Thanks!}} \\
-  \vspace{1cm}
-  \includegraphics[width=3cm]{../img/yarn-cat.jpg} \\
-%  \vspace{1cm}
-%  \url{http://plato42.stanford.edu/naturalli}
-\end{center}
-\end{frame}
+\roadmap{0}
+\roadmap{1}
+
+
+%\input naturalli.tex
+%
+%
+%%%%%%%%%%%%%%%%%%%% 
+%% Are we done?
+%%%%%%%%%%%%%%%%%%%% 
+%\begin{frame}{}
+%\begin{center}
+%\hh{Success?} \\
+%\vspace{2ex}
+%\includegraphics[height=4cm]{../img/fish.jpg}
+%\end{center}
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%%%%% 
+%% What are we bad at
+%%%%%%%%%%%%%%%%%%%% 
+%\def\title{Two Big Problems}
+%\begin{frame}[noframenumbering]{\title}
+%
+%\begin{center}
+%\includegraphics[height=3cm]{../img/hurdle.jpg}
+%\end{center}
+%
+%\hh{1. People don't speak in atomic utterances}
+%\begin{itemize}
+%\uncover<2->{
+%  \item Where was Obama born?
+%    \begin{itemize}
+%    \item \w{Born in Hawaii, 
+%             Obama is a graduate of Columbia 
+%             University and Harvard Law School.} \\
+%           \uncover<3->{$\Rightarrow$ \w{Obama was born in Hawaii}}.
+%     \end{itemize}
+%}
+%\end{itemize}
+%\vspace{2ex}
+%
+%\hh{2. What about the other 50\% recall?} \\
+%\end{frame}
+%
+%\roadmap{1}
+%\roadmap{2}
+%
+%
+%\input openie.tex
+%
+%
+%\roadmap{2}
+%\roadmap{3}
+%
+%
+%\input science.tex
+
+
+\input future.tex
+
+%\input thanks.tex
 
 
 

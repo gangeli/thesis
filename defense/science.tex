@@ -1,18 +1,18 @@
-%%%%%%%%%%%%%%%%%%% 
-% Reminder: Bad At...
-%%%%%%%%%%%%%%%%%%% 
-\def\title{Two Big Problems}
-\begin{frame}{\title}
-
-\begin{center}
-\includegraphics[height=3cm]{../img/hurdle.jpg}
-\end{center}
-
-\hh{1. People don't speak in atomic utterances}
-\vspace{2ex}
-
-\hh{2. Missing recall: the internet is incomplete} \\
-\end{frame}
+%%%%%%%%%%%%%%%%%%%% 
+%% Reminder: Bad At...
+%%%%%%%%%%%%%%%%%%%% 
+%\def\title{Two Big Problems}
+%\begin{frame}{\title}
+%
+%\begin{center}
+%\includegraphics[height=3cm]{../img/hurdle.jpg}
+%\end{center}
+%
+%\hh{1. People don't speak in atomic utterances}
+%\vspace{2ex}
+%
+%\hh{2. Missing recall: the internet is incomplete} \\
+%\end{frame}
 
 
 
@@ -126,8 +126,9 @@
 
 \begin{center}
 $p(y \mid x) 
-  = g\left(- w^{\textrm{T}} f(x)\right)
-  = \frac{1}{1 + \exp({- w^{\textrm{T}} f(x)})}$
+  = g\left(- w^{\textrm{T}} f_y(x)\right)
+%  = \frac{1}{1 + \exp({- w^{\textrm{T}} f(x)})}$
+$
 \end{center}
 \pause
 \vspace{1ex}
@@ -142,7 +143,7 @@ $p(y \mid x)
 \vspace{1ex}
 
 \begin{center}
-\hh{Additive updates on $f(x)$ directly}
+\hh{Additive updates on $f_y(x)$ directly}
 \end{center}
 \end{frame}
 
@@ -298,10 +299,10 @@ Bias                 & -2.0  & 1
 \includegraphics[height=2cm]{../img/efficient.png}
 \end{center}
 
-\hh{Search is \textit{efficient}} 
+\hh{Faster Search = Deeper Reasoning} 
 \begin{itemize}
 \item \textbf{Speed:} Around 1M search states visited per second
-\item \textbf{Memory:} 32 byte search states (store only hash of fact)
+\item \textbf{Memory:} 32 byte search states
 \end{itemize}
 \vspace{2ex}
 \pause
@@ -318,7 +319,36 @@ Bias                 & -2.0  & 1
 % Synthesis
 %%%%%%%%%%%%%%%%%%% 
 \def\title{The Full System}
+%
+% Frame 1
+%
 \begin{frame}{\title}
+\begin{center}
+\only<1>{\hh{Common Sense Reasoning}\textcolor{white}{p}}
+\only<2>{\hh{$+$ Complex Premises}\textcolor{white}{p}}
+\only<3>{\hh{$+$ Evaluation Function}\textcolor{white}{p}}
+
+\begin{tikzpicture}
+
+% horizontal axis
+\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexibility};
+% vertical axis
+\draw[->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
+
+\node at (1.0,3.5)  {\includegraphics[height=1cm]{../img/textrunner.jpg}};
+\node at (7.0,1.0)  {\includegraphics[height=1cm]{../img/pascal.png}};
+\node at (3.5,2.5)  [visible on=<1>] {\includegraphics[height=1cm]{../img/me.png}};
+\node at (3.5,3.5)  [visible on=<2>] {\includegraphics[height=1cm]{../img/me.png}};
+\node at (7.0,3.5)  [visible on=<3>] {\includegraphics[height=1cm]{../img/me.png}};
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+%
+% Frame 2
+%
+\begin{frame}[noframenumbering]{\title}
 
 \hh{Common Sense Facts}
 \begin{itemize}
@@ -348,33 +378,37 @@ Bias                 & -2.0  & 1
 %%%%%%%%%%%%%%%%%%% 
 % Results
 %%%%%%%%%%%%%%%%%%% 
+\def\bell{\raisebox{-2.5mm}{\includegraphics[height=5mm]{../img/bell.png}}}
+\def\whistle{\raisebox{-2.5mm}{\includegraphics[height=5mm]{../img/whistle.jpg}}}
 \def\title{Solving 4$^{th}$ Grade Science}
+
 \begin{frame}{\title}
 \hh{Multiple choice questions from real 4$^{th}$ grade science exams}
 \begin{center}
-\begin{tabular}{lr}
+\begin{tabular}{lcc}
 \hline
-\textbf{System}                & \multicolumn{1}{c}{\textbf{Accuracy}}  \\
+\textbf{System}                & \textbf{Train}     & \textbf{Test} \\
 \hline
-\sc{Knowbot}                    & 45 \\
-\sc{Knowbot (oracle)}           & 57 \\
-\hline
-\pause
-IR Baseline                     & 49 \\
+\sc{Knowbot}                    & 45                & \only<4->{$-$} \\
+\sc{Knowbot (oracle)}           & 57                & \only<4->{$-$} \\
 \hline
 \pause
-NaturalLI                       & 52 \\
-NaturalLI + IR                  & 55 \\
+IR Baseline                     & 49                & \only<4->{42} \\
+My Thesis                       & 52                & \only<4->{51} \\
 \hline
 \pause
-More Data + IR                  & 62 \\
-More Data + IR + NaturalLI      & \textbf{73} \\
+IR Baseline (More Data)         & 62                & \only<4->{58} \\
+More Data + My Thesis           & \textbf<3-4>{65}  & \only<4->{\textbf<4>{61}} \\
+\hline
+\pause
+\pause
+My Thesis + \bell + \whistle   & \textbf{74}        & \textbf{67} \\
 \hline
 \end{tabular}
 \pause
 \vspace{2ex}
 
-\hh{We can pass 4$^{th}$ grade science!}
+\hh{We're able to pass 4$^{th}$ grade science!}
 
 \end{center}
 
