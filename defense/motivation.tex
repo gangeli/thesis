@@ -170,7 +170,7 @@
   \h{2. Open-Domain KBs (Open IE)}
 }{
   \only<1>{
-    \triple{Subject}{verb}{Object}
+    \triple{Subject}{relation}{Object}
   }
   \only<2->{
     \triple{cats}{have}{tails} \\
@@ -194,8 +194,8 @@
   \vspace{1ex}
   \w{Obama enjoys playing basketball} \\
   \uncover<2->{
-    \w{A thermometer is best} \\
-    \w{for measuring temperature}
+    \w{A graduated cylinder is best to} \\
+    \w{measure the volume of a liquid}
   }
 }
 \end{frame}
@@ -279,14 +279,14 @@
 % Open Domain Knowledge
 %%%%%%%%%%%%%%%%%%%
 \begin{frame}{My Thesis}
-\hh{Store Information as Text} \\
-\hh{Query Information as Text} \\
+\hh{Store Information as Text} (easier) \\
+\hh{Query Information as Text} (hard!)  \\
 \vspace{2ex}
 \pause
 
 \hh{Build a system that:} \\
-\hspace{2ex}\textbf{Takes as input} a candidate fact. \\
-\hspace{2ex}\textbf{Produces as output} the truth of that fact. \\
+\hspace{2ex}\textbf{Takes as input} a candidate textual statement. \\
+\hspace{2ex}\textbf{Produces as output} the truth of that statement. \\
 \vspace{1ex}
 \pause
 
@@ -356,11 +356,11 @@
 \begin{center}
 \only<1-2>{
   \textcolor<1>{white}{\textbf{Relation Extraction:} }
-  \w{\textcolor<1>{white}{Where was Barack Obama born?}}
+  \textcolor<1>{white}{\triple{Barack Obama}{born\_in}{???}}
   \textcolor{white}{p} % for spacing
 }
-\only<3>{\textbf{Open Relation Extraction:} \w{What do rabbits eat?}}
-\only<4>{\textbf{Textual Entailment}\textcolor{white}{p}}
+\only<3>{\textbf{Open Relation Extraction:} \triple{rabbits}{eat}{???}}
+\only<4>{\textbf{Entailment:} If \w{a watch measures time}, does \w{it measure volume}?\textcolor{white}{p}}
 \vspace{1ex}
 \begin{tikzpicture}
 
@@ -372,10 +372,13 @@
 \node at (7.0,1.0) [visible on=<4->]{\includegraphics[height=1cm]{../img/pascal.png}};
 
 % vertical axis
-\draw[->,invisible] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
+\draw[->,invisible] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Question Coverage};
 
 \end{tikzpicture}
 \end{center}
+\only<2>{\footnotetext<.->{\cite{key:2011hoffman-kbp,key:2012surdeanu-mimlre,key:2014angeli-active}}}
+\only<3>{\footnotetext<.->{\cite{key:2007banko-openie,key:2011fader-reverb,key:2012mausam-ollie}}}
+\only<4>{\footnotetext<.->{\cite{key:2006glickman-rte,key:2009maccartney-thesis}}}
 \end{frame}
 
 
@@ -405,6 +408,8 @@
 %
 \begin{frame}[noframenumbering]{Prior Work}
 \begin{center}
+\textcolor<1-2>{white}{\textbf{This Thesis:} Formal reasoning with text over large corpora}
+
 \begin{tikzpicture}
 
 % horizontal axis
@@ -418,7 +423,7 @@
 \node at (7.0,3.5) [visible on=<3->] {\includegraphics[height=1cm]{../img/me.png}};
 
 % vertical axis
-\draw[->,visible on=<2->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
+\draw[->,visible on=<2->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Question Coverage};
 
 \end{tikzpicture}
 \end{center}

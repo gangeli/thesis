@@ -31,6 +31,8 @@
 \setbeamercolor{item projected}{bg=darkred}
 \setbeamertemplate{enumerate items}[default]
 \logo{\includegraphics[height=1cm]{../img/nlp-logo.pdf}}
+\renewcommand{\footnoterule}{}
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
 
 % title page information
 \title[Learning Knowledge From Text]{Learning Open Domain Knowledge from Text}
@@ -47,14 +49,14 @@
 \def\roadmap#1{
 \begin{frame}[t,noframenumbering]{Roadmap}
 \vspace{-0.5ex}
-\begin{tabular}{m{3cm} m{7.25cm}}
+\begin{tabular}{m{3cm} m{7.75cm}}
   
   \ifnum0#1=1
     \rowcolor{verylightgray}
   \fi
   \includegraphics[width=3cm]{../img/yarn-cat.png}
   &
-  \hh{Common Sense Reasoning:} \newline \w{Cats have tails} \\
+  \hh{Common Sense Reasoning:} \newline \w{Cats have tails} \newline \footnotesize{\cite{key:2013angeli-truth,key:2014angeli-naturalli}} \\
   \\
   
   \ifnum0#1=2
@@ -62,7 +64,7 @@
   \fi
   \includegraphics[width=3cm]{../img/hawaii.png}
   &
-  \hh{Complex premises:} \newline \w{Born in Hawaii, Obama is a graduate of Columbia} \\
+  \hh{Complex premises:} \newline \w{Born in Hawaii, Obama is a graduate of Columbia} \newline \footnotesize{\cite{key:2015angeli-openie}} \\
   \\
 
   \ifnum0#1=3
