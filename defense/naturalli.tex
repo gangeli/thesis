@@ -19,32 +19,36 @@
 %%%%%%%%%%%%%%%%%%%
 \begin{frame}{Common Sense Reasoning for NLP}
 \begin{center}
-  \w{The city refused the demonstrators a permit because they feared violence.} \\
-  \pause
-  \begin{tabular}{l}
-    \true{a city fears violence} \\
-    \false{demonstrators fear violence}
-  \end{tabular}
+\includegraphics[width=8cm]{../img/ambiguity.png}
 \end{center}
-\pause
-
-\begin{center}
-  \w{I ate the cake with a cherry} \hspace{0.25cm} vs. \hspace{0.25cm} \w{I ate the cake with a fork} \\
-  \begin{tabular}{l}
-    \true{cakes come with cherries} \\
-    \false{cakes are eaten using cherries}
-  \end{tabular}
-\end{center}
-\pause
-
-\begin{center}
-  \w{Put a sarcastic comment in your talk. That's a great idea.} \\
-  \begin{tabular}{l}
-    \false{Sarcasm in your talk is a great idea}
-  \end{tabular}
-\end{center}
-
 \end{frame}
+%\begin{center}
+%  \w{The city refused the demonstrators a permit because they feared violence.} \\
+%  \pause
+%  \begin{tabular}{l}
+%    \true{a city fears violence} \\
+%    \false{demonstrators fear violence}
+%  \end{tabular}
+%\end{center}
+%\pause
+%
+%\begin{center}
+%  \w{I ate the cake with a cherry} \hspace{0.25cm} vs. \hspace{0.25cm} \w{I ate the cake with a fork} \\
+%  \begin{tabular}{l}
+%    \true{cakes come with cherries} \\
+%    \false{cakes are eaten using cherries}
+%  \end{tabular}
+%\end{center}
+%\pause
+%
+%\begin{center}
+%  \w{Put a sarcastic comment in your talk. That's a great idea.} \\
+%  \begin{tabular}{l}
+%    \false{Sarcasm in your talk is a great idea}
+%  \end{tabular}
+%\end{center}
+%
+%\end{frame}
 
 %%%%%%%%%%%%%%%%%%%% 
 %% COMMON SENSE REASONING VISION
@@ -59,34 +63,34 @@
 %\end{tabular}
 %\end{frame}
 
-%%%%%%%%%%%%%%%%%%% 
-% COMMON SENSE CURRENTLY
-%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Prior Work on Common Sense Reasoning}
-\hh{Old School AI:} Nuanced reasoning; tiny coverage.
-\begin{itemize}
-  \item Default reasoning \cite{key:1980reiter-logic,key:1980mccarthy-circumscription}
-  \item Theorem proving (e.g., Datalog).
-\end{itemize}
-\vspace{0.5cm}
-\pause
-
-\hh{Textual Entailment:} Rich inference; small data.
-\begin{itemize}
-  \item RTE Challenges.
-  \item Episodic Logic \cite{key:2002schubert-commonsense}.
-\end{itemize}
-\vspace{0.5cm}
-\pause
-
-\hh{Information Extraction:} Shallow inference, large data.
-\begin{itemize}
-  \item OpenIE \cite{key:2007yates-textrunner}, NELL \cite{key:2010carlson-nell}.
-  \item \textit{Extraction} of facts from a large corpus; fuzzy lookup.
-%  \pause
-%  \item \textbf{Inference doesn't 10x the knowledge base size.}
-\end{itemize}
-\end{frame}
+%%%%%%%%%%%%%%%%%%%% 
+%% COMMON SENSE CURRENTLY
+%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Prior Work on Common Sense Reasoning}
+%\hh{Old School AI:} Nuanced reasoning; tiny coverage.
+%\begin{itemize}
+%  \item Default reasoning \cite{key:1980reiter-logic,key:1980mccarthy-circumscription}
+%  \item Theorem proving (e.g., Datalog).
+%\end{itemize}
+%\vspace{0.5cm}
+%\pause
+%
+%\hh{Textual Entailment:} Rich inference; small data.
+%\begin{itemize}
+%  \item RTE Challenges.
+%  \item Episodic Logic \cite{key:2002schubert-commonsense}.
+%\end{itemize}
+%\vspace{0.5cm}
+%\pause
+%
+%\hh{Information Extraction:} Shallow inference, large data.
+%\begin{itemize}
+%  \item OpenIE \cite{key:2007yates-textrunner}, NELL \cite{key:2010carlson-nell}.
+%  \item \textit{Extraction} of facts from a large corpus; fuzzy lookup.
+%%  \pause
+%%  \item \textbf{Inference doesn't 10x the knowledge base size.}
+%\end{itemize}
+%\end{frame}
 
 %%%%%%%%%%%%%%%%%%%% 
 %% OpenIE
@@ -154,6 +158,12 @@
 \end{center}
 \end{frame}
 
+\begin{frame}[noframenumbering]{Infer new facts...}
+\begin{center}
+  \teaserBlindInferenceNaturalOrder
+\end{center}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NATURAL LOGIC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,6 +175,17 @@
 \begin{center}
 \w{The cat ate a mouse} \textbf{$\vDash \lnot$} \darkred{\textit{No carnivores eat animals}}
 \end{center}
+\pause
+\vspace{2ex}
+
+\hh{Recall:} Inference on every query: \textbf{speed is important!} \\
+\pause
+\vspace{2ex}
+\hh{Recall:} Both premise and query are sentences. \\
+\pause
+\vspace{2ex}
+
+\hh{Detour:} Let's talk about logic!
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%
@@ -187,7 +208,7 @@
   \item Grounding 3,800 rules takes 7 hours (Alchemy).
   \pause
   \item Add Chris R\'{e} $+$ decades of DB research: 106 seconds.
-  \item $\dots$ but still needs lots of memory.
+  \item $\dots$ but still slow for open-domain inference.
 \end{itemize}
 
 \end{frame}
@@ -196,18 +217,21 @@
 % HARD TO PARSE
 %%%%%%%%%%%%%%%%%%%
 \begin{frame}{First order logic is \textbf{an unnatural language}}
+%\begin{center}
+%  \includegraphics[height=3cm]{../img/math.jpg}
+%\end{center}
+%\vspace{1ex}
 
-\hh{Top professors hired for semantic parsing:}
-\begin{itemize}
-\item[\checkmark] Luke Zettlemoyer
-\item[\checkmark] Percy Liang
-\item[\checkmark] Yoav Artzi
-\end{itemize}
+\begin{center}
+$\exists x \left( \textrm{location}(x) \land \textrm{born\_in}(\textrm{Obama}, x) \right)$
+\end{center}
 \vspace{1ex}
 
 \begin{center}
-  \includegraphics[height=4cm]{../img/math.jpg}
+  \includegraphics[height=4cm]{../img/sempre.png}
 \end{center}
+
+\footnotetext<.->{\cite{key:2013berant-sempre}}
 \end{frame}
 
 
@@ -243,9 +267,9 @@
 %%%%%%%%%%%%%%%%%%% 
 % Natural Logic
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{A Good Compromise: Natural Logic}
+\begin{frame}{Natural Logic}
 \begin{center}
-\hh{If I mutate a sentence in this way, do I preserve its truth?}
+\hh{Does a given mutation to a sentence preserve its truth?}
 \end{center}
 \vspace{1em}
 \pause
@@ -277,13 +301,16 @@
 %%%%%%%%%%%%%%%%%%% 
 % NATLOG AS SYLLOGISMS
 %%%%%%%%%%%%%%%%%%%
-\def\title{Natural Logic as Syllogisms}
+\def\title{Detour: Natural Logic}
 \begin{frame}{\title}
 \begin{center}
   \includegraphics[height=5cm]{../img/aristotle.png}
 \end{center}
+\footnotetext<.->{\cite{key:1991valencia-natlog,key:2014icard-natlog}}
 \end{frame}
 
+
+\def\title{Natural Logic as Syllogisms}
 \begin{frame}[noframenumbering]{\title}
 \begin{center}
   \hh{s/Natural Logic/Syllogistic Reasoning/g} \\
@@ -291,7 +318,7 @@
   \begin{tabular}{lp{4cm}}
     &Some cat ate a mouse \\
     & \darkgray{\textit{(all mice are rodents)}} \\
-    $\therefore$& \true{Some cat ate a \textbf{rodent}} \\
+    $\therefore$& \w{Some cat ate a \textbf{rodent}} \\
   \end{tabular}
 \end{center}
 \vspace{3ex}
@@ -299,12 +326,12 @@
 
 \hh{Beyond syllogisms}
 \begin{itemize}
-\item General-purpose logic.
+\item General-purpose logic
 \begin{itemize}
-  \item Compositional grammar.
-  \item Arbitrary quantifiers.
+  \item Compositional grammar
+  \item Arbitrary quantifiers
 \end{itemize}
-\item Model-theoretic soundness $+$ completeness proof (Icard 2014).
+\item Model-theoretic soundness $+$ completeness proof \cite{key:2014icard-natlog}
 \end{itemize}
 \end{frame}
 
@@ -585,9 +612,9 @@
 \hh{Systems}
 \begin{itemize}
   \item[] \textbf{Direct Lookup}: Lookup by lemmas.
-  \item[] \textbf{NaturalLI}: Our system.
+  \item[] \textbf{Thesis}: This thesis.
   \pause
-  \item[] \textbf{NaturalLI Only}: Use only inference (prohibit exact matches).
+  \item[] \textbf{Thesis - Lookup}: Remove query facts from KB.
 \end{itemize}
 \pause
 
@@ -597,8 +624,8 @@
     \hline
     Direct Lookup      & 100.0 & \textbf<5-5>{12.1} \\
     \pause
-    NaturalLI Only     & 88.8  & 40.1 \\
-    NaturalLI          & 90.6  & \textbf<5-5>{49.1} \\
+    Thesis             & 90.6  & \textbf<5-5>{49.1} \\
+    Thesis - Lookup    & 88.8  & 40.1 \\
   \end{tabular}
 \end{center}
 \pause

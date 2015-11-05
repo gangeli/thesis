@@ -19,6 +19,7 @@
 \definecolor{darkred}{rgb}{0.5, 0.0, 0.0}
 \definecolor{darkgreen}{rgb}{0.0, 0.4, 0.0}
 \definecolor{darkblue}{rgb}{0.0, 0.0, 0.5}
+\definecolor{orange}{rgb}{0.767, 0.450, 0.0}
 \definecolor{verylightgray}{rgb}{0.9, 0.9, 0.9}
 
 % set up Beamer style with Stanford colors and logo
@@ -90,71 +91,84 @@
 \roadmap{1}
 
 
-%\input naturalli.tex
-%
-%
-%%%%%%%%%%%%%%%%%%%% 
-%% Are we done?
-%%%%%%%%%%%%%%%%%%%% 
-%\begin{frame}{}
-%\begin{center}
-%\hh{Success?} \\
-%\vspace{2ex}
-%\includegraphics[height=4cm]{../img/fish.jpg}
-%\end{center}
-%\end{frame}
-%
-%%%%%%%%%%%%%%%%%%%% 
-%% What are we bad at
-%%%%%%%%%%%%%%%%%%%% 
-%\def\title{Two Big Problems}
-%\begin{frame}[noframenumbering]{\title}
-%
-%\begin{center}
-%\includegraphics[height=3cm]{../img/hurdle.jpg}
-%\end{center}
-%
-%\hh{1. People don't speak in atomic utterances}
-%\begin{itemize}
-%\uncover<2->{
-%  \item Where was Obama born?
-%    \begin{itemize}
-%    \item \w{Born in Hawaii, 
-%             Obama is a graduate of Columbia 
-%             University and Harvard Law School.} \\
-%           \uncover<3->{$\Rightarrow$ \w{Obama was born in Hawaii}}.
-%     \end{itemize}
-%}
-%\end{itemize}
-%\vspace{2ex}
-%
-%\hh{2. What about the other 50\% recall?} \\
-%\end{frame}
-%
-%\roadmap{1}
-%\roadmap{2}
-%
-%
-%\input openie.tex
-%
-%
-%\roadmap{2}
-%\roadmap{3}
-%
-%
-%\input science.tex
+\input naturalli.tex
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Are we done?
+%%%%%%%%%%%%%%%%%%% 
+\begin{frame}{}
+\begin{center}
+\hh{Success?} \\
+\vspace{2ex}
+\includegraphics[height=4cm]{../img/fish.jpg}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% What are we bad at
+%%%%%%%%%%%%%%%%%%% 
+\def\title{Not Yet!}
+\begin{frame}[noframenumbering]{\title}
+
+\begin{center}
+\includegraphics[height=3cm]{../img/hurdle.jpg}
+\end{center}
+
+\hh{The internet doesn't speak in atomic utterances}
+\begin{itemize}
+\uncover<2->{
+  \item Where was Obama born?
+    \begin{itemize}
+    \item \w{Born in Hawaii, 
+             Obama is a graduate of Columbia 
+             University and Harvard Law School.} \\
+           \uncover<3->{$\Rightarrow$ \w{Obama was born in Hawaii}}.
+     \end{itemize}
+   \pause
+   \pause
+   \pause
+  \item Let's store the inferred fact instead
+}
+\end{itemize}
+\end{frame}
+
+\roadmap{1}
+\roadmap{2}
+
+
+\input openie.tex
+
+
+\roadmap{2}
+\roadmap{3}
+
+
+\input science.tex
 
 
 \input future.tex
 
-%\input thanks.tex
+\input thanks.tex
 
 
-
+%
+% References
+%
+\newcommand{\backupbegin}{
+   \newcounter{framenumberappendix}
+   \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumberappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumberappendix}} 
+}
+\backupbegin
 \begin{frame}[allowframebreaks]
-  \frametitle{References}
-  \bibliographystyle{apalike}
-  \bibliography{../ref}
+    \frametitle{References}
+    \bibliographystyle{apalike}
+    {\small \bibliography{../ref}}
 \end{frame}
+\backupend
 
 \end{document}

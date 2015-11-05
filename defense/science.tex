@@ -110,47 +110,119 @@
 \end{center}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%% 
+% Big Picture
+%%%%%%%%%%%%%%%%%%% 
+\def\title{Big Picture}
+\begin{frame}{\title}
+\hh{Run our usual search}
+\begin{enumerate}
+\item If we find a premise, great!
+\pause
+\item If not, use lexical classifier as an \textit{evaluation function}
+\end{enumerate}
+\vspace{1ex}
+
+\begin{center}
+\includegraphics[height=3cm]{../img/chess.png}
+\end{center}
+\vspace{1ex}
+\pause
+
+\hh{Visit 1M nodes / second:} We have to be fast!
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%% 
-% Evaluation Function
+% Evaluation Function (Classifier)
 %%%%%%%%%%%%%%%%%%% 
-\def\title{Disecting Our Systems}
+\def\title{Dissecting Our Classifier}
 \begin{frame}{\title}
 \hh{Anatomy of a Classifier}
 \begin{itemize}
 \item Features $f$ (matching / mismatched / unmatched words)
 \item Weights $w$
-\item Entailment pair $x$; entailment judgment $y \in \{\textrm{entailed}, \textrm{neutral}\}$
+\item Entailment pair $x$
 \end{itemize}
 
 \begin{center}
-$p(y \mid x) 
-  = g\left(- w^{\textrm{T}} f_y(x)\right)
-%  = \frac{1}{1 + \exp({- w^{\textrm{T}} f(x)})}$
-$
+$p(\textrm{entail} \mid x) = \frac{1}{1 + \exp\left(-w^{\textrm{T}} f(x)\right)}$ \\
+\pause
+\vspace{3ex}
+$p(\textrm{entail} \mid x)$ monotone w.r.t. $\left(w^{\textrm{T}} f(x)\right)$ \\
 \end{center}
 \pause
 \vspace{1ex}
 
+\begin{itemize}
+\item Only need $w^{\textrm{T}} f(x)$ during search to compute $\max p(\textrm{entail} \mid x)$
+\item $w^{\textrm{T}} f(x)$ is our evaluation function
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Evaluation Function (Search)
+%%%%%%%%%%%%%%%%%%% 
+\def\title{Incorporating our Evaluation Function}
+\begin{frame}{\title}
 \hh{Anatomy of a Search Step}
 \begin{enumerate}
 \item Mutate a word, or
 \item Delete a word, or
 \item Insert a word.
 \end{enumerate}
-\pause
-\vspace{1ex}
 
 \begin{center}
-\hh{Additive updates on $f_y(x)$ directly}
+\hh{Each step updates a small number of features}
 \end{center}
+
+\begin{center}
+\only<1-2>{
+  \textcolor{darkgreen}{$w^{\textrm{T}}$} \textcolor{darkblue}{$f(x)$} = \textcolor{darkred}{$v$}
+  \textcolor{white}{$x_i$} \\
+}
+\only<3->{
+  \textcolor{darkred}{$v'$}
+    = \textcolor{darkred}{$v$} 
+    - \textcolor{darkgreen}{$w_i$} $\cdot$ \textcolor{darkblue}{$f_i$}
+    + \textcolor{orange}{$w_i$} $\cdot$ \textcolor{orange}{$f_i$}
+    \\
+}
+\vspace{1ex}
+\only<1>{\includegraphics[height=2cm]{../img/dot.png}}
+\only<2->{\includegraphics[height=2cm]{../img/dot-selected.png}}
+\end{center}
+
 \end{frame}
 
 
+%%%%%%%%%%%%%%%%%%% 
+% Synthesis
+%%%%%%%%%%%%%%%%%%% 
+\def\title{Why Is This Important?}
+\begin{frame}{\title}
+\begin{center}
+\includegraphics[height=2cm]{../img/efficient.png}
+\end{center}
+
+\hh{Faster Search = Deeper Reasoning} 
+\begin{itemize}
+\item \textbf{Speed:} Around 1M search states visited per second
+\item \textbf{Memory:} 32 byte search states
+\end{itemize}
+\vspace{2ex}
+\pause
+
+\hh{Speed:} Don't re-featurize at every timestep.
+\vspace{2ex}
+\pause
+
+\hh{Memory:} Never store intermediate fact as String.
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%% 
-% Evaluation Function
+% Evaluation Function (Example)
 %%%%%%%%%%%%%%%%%%% 
 
 
@@ -158,7 +230,7 @@ $
 \newcommand{\rnode}[2]{|(#1#2)| \w{\textcolor{darkblue}{\textbf{#1}}}\textcolor{white}{#2}}
 \newcommand{\bnode}[2]{|(#1#2)| \w{\textcolor{darkblue}{\textcolor{darkred}{\textbf{#1}}}}\textcolor{white}{#2}}
 
-\def\title{Incremental Updates}
+\def\title{An Example Search}
 
 %
 % Frame 1
@@ -290,30 +362,6 @@ Bias                 & -2.0  & 1
 \end{center}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%% 
-% Synthesis
-%%%%%%%%%%%%%%%%%%% 
-\def\title{Why Is This Important?}
-\begin{frame}{\title}
-\begin{center}
-\includegraphics[height=2cm]{../img/efficient.png}
-\end{center}
-
-\hh{Faster Search = Deeper Reasoning} 
-\begin{itemize}
-\item \textbf{Speed:} Around 1M search states visited per second
-\item \textbf{Memory:} 32 byte search states
-\end{itemize}
-\vspace{2ex}
-\pause
-
-\hh{Speed:} Don't re-featurize at every timestep.
-\vspace{2ex}
-\pause
-
-\hh{Memory:} Never store intermediate fact as String.
-\end{frame}
-
 
 %%%%%%%%%%%%%%%%%%% 
 % Synthesis
@@ -382,7 +430,41 @@ Bias                 & -2.0  & 1
 \def\whistle{\raisebox{-2.5mm}{\includegraphics[height=5mm]{../img/whistle.jpg}}}
 \def\title{Solving 4$^{th}$ Grade Science}
 
-\begin{frame}{\title}
+%
+% Frame 1
+%
+\begin{frame}[t]{\title}
+\hh{Multiple choice questions from real 4$^{th}$ grade science exams} \\
+\vspace{2ex}
+\pause
+
+\textbf{Which activity is an example of a good health habit?}
+\begin{enumerate}
+\item[(A)] Watching television
+\item[(B)] Smoking cigarettes
+\item[(C)] Eating candy
+\item[(D)] Exercising every day
+\end{enumerate}
+\vspace{2ex}
+\pause
+
+\textbf{In our corpus:}
+\begin{itemize}
+\item \w{Plasma TV's can display up to 16 million colors $\dots$ great for watching TV $\dots$ also make a good screen.}
+\item \w{Not smoking or drinking alcohol is good for health, regardless of whether clothing is worn or not.}
+\item \w{Eating candy for diner is an example of a poor health habit.}
+\item \w{Healthy is exercising}
+\end{itemize}
+
+\end{frame}
+
+
+%
+% Frame 2
+%
+\begin{frame}[t,noframenumbering]{\title}
+\footnotetext<.->{\cite{key:2015hixon-aristo}}
+
 \hh{Multiple choice questions from real 4$^{th}$ grade science exams}
 \begin{center}
 \begin{tabular}{lcc}
@@ -390,14 +472,14 @@ Bias                 & -2.0  & 1
 \textbf{System}                & \textbf{Train}     & \textbf{Test} \\
 \hline
 \sc{Knowbot}                    & 45                & \only<4->{$-$} \\
-\sc{Knowbot (oracle)}           & 57                & \only<4->{$-$} \\
+\sc{Knowbot} (oracle)           & 57                & \only<4->{$-$} \\
 \hline
 \pause
 IR Baseline                     & 49                & \only<4->{42} \\
 My Thesis                       & 52                & \only<4->{51} \\
 \hline
 \pause
-IR Baseline (More Data)         & 62                & \only<4->{58} \\
+More Data + IR Baseline         & 62                & \only<4->{58} \\
 More Data + My Thesis           & \textbf<3-4>{65}  & \only<4->{\textbf<4>{61}} \\
 \hline
 \pause
@@ -411,7 +493,6 @@ My Thesis + \bell + \whistle   & \textbf{74}        & \textbf{67} \\
 \hh{We're able to pass 4$^{th}$ grade science!}
 
 \end{center}
-
 \end{frame}
 
 
