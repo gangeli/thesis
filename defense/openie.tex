@@ -230,39 +230,39 @@
 %%%%%%%%%%%%%%%%%%%
 % RELATION MAPPING
 %%%%%%%%%%%%%%%%%%%
-\def\title{Prerequisite Task: Text $\rightarrow$ KBP Relations}
-\begin{frame}{\title}
-\begin{enumerate}
-  \item Hand-coded mapping. \\
-        (Same as UW; both over 1-2 weeks)
-        \pause
-        \vspace{1em}
-
-  \item Learned relation mapping.
-  \begin{itemize}
-    \item For each type signature $t_1, t_2$;
-    \item For an text relation $r_o$ and KBP relation $r_k$;
-    \pause
-    \item Compute:
-      \begin{center}
-        $
-        p(r_k, r_o \mid t_1, t_2) = \frac{
-          \textrm{count}(r_k, r_o,  t_1, t_2)
-        }{
-          \sum_{r_k', r_o'}\textrm{count}(r_k', r_o', t_1, t_2)
-        }
-        $.
-      \end{center}
-    \pause
-    \item Rank by PMI$^2(r_o, r_k \mid t_1, t_2)$:
-      \begin{center}
-        $
-        \textrm{PMI}^2(r_k, r_o \mid t_1, t_2) = \log \left( \frac{p(r_k, r_o \mid t_1, t_2)^2}{p(r_k \mid t_1, t_2) \cdot p(r_o \mid t_1, t_2)} \right)
-        $.
-      \end{center}
-  \end{itemize}
-\end{enumerate}
-\end{frame}
+%\def\title{Prerequisite Task: Text $\rightarrow$ KBP Relations}
+%\begin{frame}{\title}
+%\begin{enumerate}
+%  \item Hand-coded mapping. \\
+%        (Same as UW; both over 1-2 weeks)
+%        \pause
+%        \vspace{1em}
+%
+%  \item Learned relation mapping.
+%  \begin{itemize}
+%    \item For each type signature $t_1, t_2$;
+%    \item For an text relation $r_o$ and KBP relation $r_k$;
+%    \pause
+%    \item Compute:
+%      \begin{center}
+%        $
+%        p(r_k, r_o \mid t_1, t_2) = \frac{
+%          \textrm{count}(r_k, r_o,  t_1, t_2)
+%        }{
+%          \sum_{r_k', r_o'}\textrm{count}(r_k', r_o', t_1, t_2)
+%        }
+%        $.
+%      \end{center}
+%    \pause
+%    \item Rank by PMI$^2(r_o, r_k \mid t_1, t_2)$:
+%      \begin{center}
+%        $
+%        \textrm{PMI}^2(r_k, r_o \mid t_1, t_2) = \log \left( \frac{p(r_k, r_o \mid t_1, t_2)^2}{p(r_k \mid t_1, t_2) \cdot p(r_o \mid t_1, t_2)} \right)
+%        $.
+%      \end{center}
+%  \end{itemize}
+%\end{enumerate}
+%\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%

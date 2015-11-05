@@ -199,23 +199,21 @@ $p(\textrm{entail} \mid x)$ monotone w.r.t. $\left(w^{\textrm{T}} f(x)\right)$ \
 %%%%%%%%%%%%%%%%%%% 
 % Synthesis
 %%%%%%%%%%%%%%%%%%% 
-\def\title{Why Is This Important?}
+\def\title{Why is this Important?}
 \begin{frame}{\title}
 \begin{center}
 \includegraphics[height=2cm]{../img/efficient.png}
 \end{center}
 
-\hh{Faster Search = Deeper Reasoning} 
+\hh{Faster Search $\Rightarrow$ Deeper Reasoning} 
 \begin{itemize}
 \item \textbf{Speed:} Around 1M search states visited per second
 \item \textbf{Memory:} 32 byte search states
 \end{itemize}
 \vspace{2ex}
-\pause
 
 \hh{Speed:} Don't re-featurize at every timestep.
 \vspace{2ex}
-\pause
 
 \hh{Memory:} Never store intermediate fact as String.
 \end{frame}
@@ -323,44 +321,44 @@ Bias                 & -2.0  & 1
 \end{frame}
 
 
+%%
+%% Frame 4
+%%
+%\begin{frame}[t,fragile,noframenumbering]{\title}
+%\vspace{-5ex}
+%\begin{center}
 %
-% Frame 4
+%\begin{tikzpicture}
+%\matrix[column sep=-0.0em,row sep=0.75cm,matrix of nodes,row 2/.style={coordinate}] (m) {
+%% First sentence
+%\rnode{Forms}{$^p$} & \hnode{of} & \rnode{precipitation}{$^p$} & \bnode{include}{$^p$} & \rnode{rain}{$^p$} & \hnode{and} & \rnode{sleet}{$^p$} \\
+%\\
+%% Second sentence
+%\rnode{Rain}{$^c$} & \hnode{} & \bnode{}{} & \hnode{are} & \rnode{forms}{$^c$} & \hnode{of} & \rnode{precipitation}{$^c$} \\
+%};
+%\begin{scope}[every path/.style={line width=4pt,white,double=black},every to/.style={arm}, arm angleA=-90, arm angleB=90, arm length=5mm]
+% \draw [draw=green] (rain$^p$) to (Rain$^c$);
+% \draw [draw=green] (Forms$^p$) to (forms$^c$);
+% \draw [draw=green] (precipitation$^p$) to (precipitation$^c$);
+%\end{scope}
+%\end{tikzpicture}
+%\vspace{1ex}
 %
-\begin{frame}[t,fragile,noframenumbering]{\title}
-\vspace{-5ex}
-\begin{center}
-
-\begin{tikzpicture}
-\matrix[column sep=-0.0em,row sep=0.75cm,matrix of nodes,row 2/.style={coordinate}] (m) {
-% First sentence
-\rnode{Forms}{$^p$} & \hnode{of} & \rnode{precipitation}{$^p$} & \bnode{include}{$^p$} & \rnode{rain}{$^p$} & \hnode{} & \rnode{}{} \\
-\\
-% Second sentence
-\rnode{Rain}{$^c$} & \hnode{and} & \bnode{snow}{$^c$} & \hnode{are} & \rnode{forms}{$^c$} & \hnode{of} & \rnode{precipitation}{$^c$} \\
-};
-\begin{scope}[every path/.style={line width=4pt,white,double=black},every to/.style={arm}, arm angleA=-90, arm angleB=90, arm length=5mm]
- \draw [draw=green] (rain$^p$) to (Rain$^c$);
- \draw [draw=green] (Forms$^p$) to (forms$^c$);
- \draw [draw=green] (precipitation$^p$) to (precipitation$^c$);
-\end{scope}
-\end{tikzpicture}
-\vspace{1ex}
-
-\hh{Score $w^{\textrm{T}} f(x)$:} 
-  \only<1>{2.5 $-$ -1 $+$ -0.75}
-  \only<2->{2.75}
-\vspace{2ex}
-
-\begin{tabular}{lrr}
-\textbf{Feature} & \textbf{$w$} & \textbf{$f(x)$} \\
-Matching words       &  2.0  & 3 \\
-Mismatched words     & -1.0  & \textbf{0} \\
-Unmatched premise    & -0.5  & 1 \\
-Unmatched consequent & -0.75 & \textbf{1} \\
-Bias                 & -2.0  & 1 
-\end{tabular}
-\end{center}
-\end{frame}
+%\hh{Score $w^{\textrm{T}} f(x)$:} 
+%  \only<1>{2.5 $-$ -1 $+$ -0.5}
+%  \only<2->{2.0}
+%\vspace{2ex}
+%
+%\begin{tabular}{lrr}
+%\textbf{Feature} & \textbf{$w$} & \textbf{$f(x)$} \\
+%Matching words       &  2.0  & 3 \\
+%Mismatched words     & -1.0  & \textbf{0} \\
+%Unmatched premise    & -0.5  & \textbf{2} \\
+%Unmatched consequent & -0.75 & 0 \\
+%Bias                 & -2.0  & 1 
+%\end{tabular}
+%\end{center}
+%\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%% 
@@ -407,7 +405,7 @@ Bias                 & -2.0  & 1
 \vspace{1ex}
 \pause
 
-\hh{Long Premises}
+\hh{Complex Premises}
 \begin{itemize}
 \item Split the premise into atomic clauses
 \item Shorten each clause w/ natural logic
@@ -416,7 +414,7 @@ Bias                 & -2.0  & 1
 \vspace{1ex}
 \pause
 
-\hh{High Recall}
+\hh{Evaluation Function}
 \begin{itemize}
 \item Use lexical classifier as evaluation function
 \item Detect likely entailment / contradictions
@@ -476,15 +474,15 @@ Bias                 & -2.0  & 1
 \hline
 \pause
 IR Baseline                     & 49                & \only<4->{42} \\
-My Thesis                       & 52                & \only<4->{51} \\
+This Thesis                     & 52                & \only<4->{51} \\
 \hline
 \pause
 More Data + IR Baseline         & 62                & \only<4->{58} \\
-More Data + My Thesis           & \textbf<3-4>{65}  & \only<4->{\textbf<4>{61}} \\
+More Data + This Thesis         & \textbf<3-4>{65}  & \only<4->{\textbf<4>{61}} \\
 \hline
 \pause
 \pause
-My Thesis + \bell + \whistle   & \textbf{74}        & \textbf{67} \\
+This Thesis + \bell + \whistle   & \textbf{74}        & \textbf{67} \\
 \hline
 \end{tabular}
 \pause
