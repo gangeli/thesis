@@ -1,0 +1,385 @@
+% Stanford University PhD thesis style -- modifications to the report style
+% For LaTeX version 2.09
+%
+% 
+% $Header: /u1/pallas/tex/suthesis.doc,v 1.2 89/02/22 09:37:45 pallas Exp $
+% edit by Joseph Pallas
+
+% Modified by Emma Pease 5/7/92
+%   added singlespace environment from doublespace.sty
+%   added switches for variant title pages
+%   modified the figure environment according to changes in latex.tex
+%   corrected the signature page due to University rule changes
+%   added an optional third reader to signature page
+% Corrected a spacing problem with style changes 5/14/92 - Emma
+% Modified by Emma Pease 1/10/95
+% Modified for latex2e  5/17/95
+%   changed \@xfloat and \@footnotetext to reflect latex2e changes
+% Modified for latex2e 6/22/95 (Emma Pease)
+%   changed singlespace environment so it would work (taken from doublespace.sty)
+% Modified 9/8/95 (Emma Pease)
+%   removed doublespace.sty commands and explicitely inputted
+%   doublespace
+% Modified 12/17/96 (Emma Pease)
+%   added optional \coprincipaladvisor (\coprincipaladviser)
+% Modified 5/29/98
+%   replaced the required doublespace.sty by setspace.sty
+% Modified 8/21/98
+%   added a \businessthesis for the school of business
+% Modified 8/22/98 
+%   added a \lawthesis
+% Modified 8/23/98
+%   spelling error in \businessthesis def corrected
+
+%%%%%
+%%%%%   PRELIMS
+%%%%%
+
+\typeout{Document Style Option `suthesis' for latex2e <$Date: 08/23/98 $>.}
+
+% First thing we do is make sure that report has been loaded.  A
+% common error is to try to use suthesis as a documentstyle.
+\@ifundefined{chapter}{\@latexerr{The `suthesis' option should be used
+with the `report' document style}{You should probably read the
+suthesis documentation.}}{}
+
+%%%%%
+%%%%%   DOCUMENTATION
+%%%%%
+
+\long\def\comment#1{}
+\comment{
+
+  Example of use:
+    \documentstyle[12pt,suthesis]{report}
+    \begin{document}
+    \title{How to Write Theses\\
+            With Two Line Titles}
+    \author{John Henry Candidate}
+    \principaladviser{John Parker}
+    \firstreader{John Green}
+    \secondreader{John BigBooty\\(Another Department)}
+    \thirdreader{Jane Supernumerary} %if needed
+ 
+    \beforepreface
+    \prefacesection{Preface}
+        This thesis tells you all you need to know about...
+    \prefacesection{Acknowledgements}
+        I would like to thank...
+    \afterpreface
+ 
+    \chapter{Introduction}
+         ...
+    \chapter{Conclusions}
+         ...
+    \appendix
+    \chapter{A Long Proof}
+         ...
+    \bibliographystyle{plain}
+    \bibliography{mybib}
+    \end{document}
+
+Documentation: 
+    This style file modifies the standard report style to follow the
+    Graduate Degree Support Section of the Registrar's Office's
+    "Directions for Preparing Doctoral Dissertations".  It sets the
+    margins and interline spacing and disallows page breaks at
+    hyphens.
+
+    The \beforepreface command creates the title page, a copyright page
+    (optionally), and a signature page.  Then the user should put
+    preface section(s), using the \prefacesection{section title}
+    command.  The \afterpreface command then produces the tables of
+    contents, tables and figures, and sets things up to start
+    the main body (on arabic page 1).
+    
+    The following commands can control what goes in the front matter
+    material:
+    
+        \title{thesis title}
+        \author{author's name}
+        \dept{author's department}
+                - Computer Science if omitted
+The following switches allow for special title pages
+        \committeethesis - for a thesis in a committee (no dept.)
+                           use \dept{committee name}
+        \programthesis - for a thesis in a program (no dept.)
+                           use \dept{program name}
+        \educationthesis - for the School of Education. \dept doesn't matter
+        \businessthesis - for the GraduateSchool of Business. \dept doesn't matter
+        \lawthesis - for the School of law. \dept doesn't matter
+        \humanitiesthesis - for a thesis also submitted to the Graduate
+                            Program in Humanities
+        \specialthesis  - for a Graduate Special thesis
+        \industrialthesis - for a thesis in Industrial Engineering
+        \dualthesis     - for a thesis in a dual language department.
+                          Also define \language{language}.
+
+        \principaladviser{the principal advisor's name}
+           (or \principaladvisor, if you prefer advisor spelled with o)
+        \coprincipaladviser{optional second principal advisor's name}
+           (or \coprincipaladvisor, use only if you have two principal
+           advisors only for the second one)
+        \firstreader{the first reader's name}
+        \secondreader{the second reader's name}
+        \thirdreader{optional third reader's name}
+        \submitdate{month year in which submitted to GPO}
+                - date LaTeX'd if omitted
+        \copyrightyear{year degree conferred (next year if submitted in Dec.)}
+                - year LaTeX'd (or next year, in December) if omitted
+        \copyrighttrue or \copyrightfalse
+                - produce or don't produce a copyright page (true by default)
+        \figurespagetrue or \figurespagefalse
+                - produce or don't produce a List of Figures page
+                  (true by default)
+        \tablespagetrue or \tablespagefalse
+                - produce or don't produce a List of Tables page
+                  (true by default)
+
+This style uses interline spacing that is 1.3 times normal, except
+in the figure and table environments where normal spacing is used.
+That can be changed by doing:
+    \renewcommand{\baselinestretch}{1.6}
+(or whatever you want instead of 1.6)
+Unfortunately, that command probably won't take effect unless it comes
+before the \begin{document} or is followed by something like \small
+\normalsize. 
+
+You can also set any particular section in singlespacing mode by using
+the singlespace environment.  For example
+
+\begin{quote}
+\begin{singlespace}
+...
+\end{singlespace}
+\end{quote}
+
+makes the quote singlespaced.
+
+The example at the beginning shows the 12pt substyle being used.  This
+seems to give acceptable looking results, but it may be omitted to get
+smaller print.
+
+}
+
+%%%%%
+%%%%%   SETUP DOUBLESPACING
+%%%%%
+
+% include doublespace.sty for some of the stuff below
+
+\RequirePackage{setspace}
+
+
+% Use 1.3 times the normal baseline-to-baseline skip
+\setstretch{1.3}
+
+
+%%%%%
+%%%%%   SETUP MARGINS AND PENALTIES NEEDED FOR STANFORD THESIS
+%%%%%
+
+% We need 1" margins except on the binding edge, where it is 1 1/2"
+% Theses are single-sided, so we don't care about \evensidemargin
+\oddsidemargin 0.5in \evensidemargin 0in
+\marginparwidth 40pt \marginparsep 10pt
+\topmargin 0pt \headsep .5in
+\textheight 8.1in \textwidth 6in
+
+% Disallow page breaks at hyphens (this will give some underfull vbox's,
+% so an alternative is to use \brokenpenalty=100 and manually search
+% for and fix such page breaks)
+\brokenpenalty=10000
+
+%%%%%
+%%%%%   SETUP COMMANDS PECULIAR TO THESES
+%%%%%
+
+% \author, \title are defined in report; here are the rest of the
+% front matter defining macros
+\def\dept#1{\gdef\@dept{#1}}
+\def\advis@r{Adviser} % default spelling
+\def\principaladviser#1{\gdef\@principaladviser{#1}}
+\def\principaladvisor#1{\gdef\@principaladviser{#1}\gdef\advis@r{Advisor}}
+\def\coprincipaladvisor#1{\gdef\@coprincipaladviser{#1}\gdef\advis@r{Co-Advisor}}
+\def\coprincipaladviser#1{\gdef\@coprincipaladviser{#1}\gdef\advis@r{Co-Adviser}}
+\def\firstreader#1{\gdef\@firstreader{#1}}
+\def\secondreader#1{\gdef\@secondreader{#1}}
+\def\thirdreader#1{\gdef\@thirdreader{#1}}
+\def\submitdate#1{\gdef\@submitdate{#1}}
+\def\copyrightyear#1{\gdef\@copyrightyear{#1}} % \author, \title in report
+% needed only for dual language departments
+\def\language#1{\gdef\@language{#1}} \def\@language{babel}
+\def\@title{}\def\@author{}\def\@dept{computer science}
+\def\@principaladviser{}\def\@firstreader{}\def\@secondreader{}
+\def\@coprincipaladviser{*}
+\def\@thirdreader{*}
+\def\@submitdate{\ifcase\the\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space \number\the\year}
+% Stanford says that December theses should have the next year as the
+% copyright year
+\ifnum\month=12
+    \@tempcnta=\year \advance\@tempcnta by 1
+    \edef\@copyrightyear{\number\the\@tempcnta}
+\else
+    \def\@copyrightyear{\number\the\year}
+\fi
+\newif\ifcopyright \newif\iffigurespage \newif\iftablespage
+\copyrighttrue \figurespagetrue \tablespagetrue
+
+
+\def\@standardsub{submitted to the department of \lowercase\expandafter{\@dept}\\
+                and the committee on graduate studies}
+\def\@standardend{}
+
+\def\committeethesis{\let\@whichsub=\@committeesub}
+\def\programthesis{\let\@whichsub=\@programsub}
+\def\educationthesis{\let\@whichsub=\@educationsub}
+\def\businessthesis{\let\@whichsub=\@businesssub}
+\def\lawthesis{\let\@whichsub=\@lawsub}
+\def\humanitiesthesis{\let\@whichsub=\@humanitiessub%
+\let\@whichend=\@humanitiesend}
+\def\specialthesis{\let\@whichsub=\@specialsub%
+\let\@whichend=\@specialend}
+\def\industrialthesis{\let\@whichsub=\@industrialsub%
+\let\@whichend=\@industrialend}
+\def\dualthesis{\let\@whichsub=\@dualsub%
+\let\@whichend=\@dualend}
+
+
+\def\@committeesub{submitted to the Committee on \lowercase\expandafter{\@dept}\\
+                and the committee on graduate studies}
+\def\@programsub{submitted to the Program in \lowercase\expandafter{\@dept}\\
+                and the committee on graduate studies}
+\def\@educationsub{submitted to the school of education\\
+                and the committee on graduate studies}
+\def\@businesssub{submitted to the graduate school of business\\ and the
+  committee on graduate studies}
+\def\@lawsub{submitted to the school of law\\
+                and the committee on graduate studies}
+
+\def\@humantiessub{submitted to the Department of \lowercase\expandafter{\@dept},\\
+                the graduate program in humanities,\\
+                and the committee on graduate studies}
+\def\@humantiesend{\\in\\ \lowercase\expandafter{\@dept} and humanities}
+
+\def\@specialsub{submitted to the Committee on Graduate Studies}
+\def\@specialend{\\in\\ \lowercase\expandafter{\@dept}}
+
+\def\@industrialsub{submitted to the\\ department of industrial
+engineering and engineering management\\ and the committee on graduate studies}
+\def\@industrialend{\\in\\ industrial engineering}
+
+\def\@dualsub{submitted to the department of \lowercase\expandafter{\@dept}\\
+and the committee on graduate studies}
+\def\@dualend{\\in\\ \lowercase\expandafter{\@language}}
+
+
+\let\@whichend=\@standardend
+\let\@whichsub=\@standardsub
+
+
+\def\titlep{%
+        \thispagestyle{empty}%
+        \null\vskip1in%
+        \begin{center}
+                \Large\uppercase\expandafter{\@title}
+        \end{center}
+        \vfill
+        \begin{center}
+                \sc a dissertation\\
+                \lowercase\expandafter{\@whichsub}\\
+                of stanford university\\
+                in partial fulfillment of the requirements\\
+                for the degree of\\
+                doctor of philosophy \lowercase\expandafter{\@whichend}
+        \end{center}
+        \vfill
+        \begin{center}
+                \rm By\\
+                \@author\\
+                \@submitdate\\
+        \end{center}\vskip.5in\newpage}
+
+\def\copyrightpage{%
+        \null\vfill
+        \begin{center}
+                \large
+                \copyright\ Copyright \@copyrightyear\ by \@author\\
+                All Rights Reserved
+        \end{center}
+        \vfill\newpage}
+
+\long\def\signature#1{%
+\begin{center}
+\begin{minipage}{4in}
+\parindent=0pt
+I certify that I have read this dissertation and that in my opinion
+it is fully adequate, in scope and quality, as a dissertation for the degree
+of Doctor of Philosophy.
+\par
+\vspace{.5in}
+\hbox to 4in{\hfil\shortstack{\vrule width 3in height 0.4pt\\#1}}
+\end{minipage}
+\end{center}}
+
+\def\signaturepage{%
+        \signature{\@principaladviser\\(Principal \advis@r)}
+        \vfill
+% if second principal advisor
+        \if*\@coprincipaladviser \else
+        \signature{\@coprincipaladviser\\(Principal \advis@r)}
+        \vfill\fi
+        \signature\@firstreader
+        \vfill
+        \signature\@secondreader
+        \vfill
+% if thirdreader then do \signature\@thirdreader \vfill
+        \if*\@thirdreader \else 
+        \signature\@thirdreader
+        \vfill\fi
+        \begin{center}
+        \begin{minipage}{4in}
+        Approved for the University Committee on Graduate Studies:\par
+        \vspace{.5in}
+        \hbox to 4in{\hfil\shortstack{\vrule width 3in height 0.4pt}}
+        \end{minipage}
+        \end{center}}
+
+\def\beforepreface{
+        \pagenumbering{roman}
+        \pagestyle{plain}
+        \titlep
+        \ifcopyright\copyrightpage\fi
+        \signaturepage}
+
+\def\prefacesection#1{%
+        \chapter*{#1}
+        \addcontentsline{toc}{chapter}{#1}}
+
+\def\afterpreface{\newpage
+        \tableofcontents
+        \newpage
+        \iftablespage
+                \listoftables
+                \newpage
+        \fi
+        \iffigurespage
+                \listoffigures
+                \newpage
+        \fi
+        \pagenumbering{arabic}
+        \pagestyle{headings}}
+
+% Redefine \thebibliography to go to a new page and put an entry in the
+% table of contents
+\let\@ldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{\newpage
+        \addcontentsline{toc}{chapter}{Bibliography}
+        \@ldthebibliography{#1}}
+
+% Start out normal
+\pagestyle{headings}
+
