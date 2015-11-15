@@ -1,0 +1,208 @@
+\Section{result}{Evaluation}
+% Introduce KBP
+We evaluate our approach in the context of a real-world end-to-end 
+  relation extraction task -- the TAC KBP Slot Filling challenge.
+In Slot Filling, we are given a large unlabeled corpus of text, a fixed
+  schema of relations (see \refsec{mapping}), and a set of
+  query entities.
+The task is to find all relation triples in the corpus that have as a subject
+  the query entity, and as a relation one of the defined relations.
+This can be viewed intuitively as populating Wikipedia Infoboxes from a large
+  unstructured corpus of text.
+%  as the task of automatically filling in structured information
+%  -- like Wikipedia Infoboxes -- from a large unstructured corpus of text.
+% Motivate KBP
+%We use the KBP task to evaluate open IE in a real-world, end-to-end task.
+%  where it can compete with a range of other approaches.
+
+% Comparison
+We compare our approach to the University of Washington submission to
+  TAC-KBP 2013 \cite{key:2013soderland-kbp}.
+Their system used OpenIE v4.0 (a successor to Ollie) 
+  run over the KBP corpus and then they generated a mapping from the 
+  extracted relations to the fixed schema.
+% Differences
+Unlike our system, Open IE v4.0 employs a semantic role
+  component extracting structured SRL frames, alongside a conventional
+  open IE system.
+%Our system does not make use of such structured information.
+Furthermore, the UW submission allows for extracting relations and entities
+  from substrings of an open IE triple argument.
+For example, from the triple \textit{(Smith; was appointed; acting director of Acme
+  Corporation)}, they extract that Smith is employed by Acme Corporation.
+We disallow such extractions, passing the burden of finding correct
+  precise extractions to the open IE system itself (see \refsec{extraction}).
+
+% Misc differences
+%Both the UW submission and our system use an entity linker
+%  and a coreference system.
+For entity linking, the UW submission uses Tom Lin's entity linker
+  \cite{key:2012lin-el}; our submission uses the Illinois Wikifier 
+  \cite{key:2011ratinov-el} without the relational inference component, for
+  efficiency.
+For coreference, UW uses the Stanford coreference system
+  \cite{key:stanford-coref}; we employ a variant of the simple coref system
+  described in \cite{key:2014pink-kbp}.
+%  which removes the need for syntactic
+%  parsing and was shown to not reduce end-to-end recall by a significant
+%  amount.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{lrrr}
+\hline
+\textbf{System}                & \multicolumn{1}{c}{\textbf{P}}    
+                               & \multicolumn{1}{c}{\textbf{R}}    
+                               & \multicolumn{1}{c}{\textbf{F$_1$}} \\
+\hline
+UW Official$^*$                & \textbf{69.8} & 11.4          & 19.6 \\
+\hline
+Ollie$^\dagger$                & 57.4          & 4.8           & 8.9  \\
+$~~$ + Nominal Rels$^*$        & 57.7          & 11.8          & 19.6 \\
+\hline
+Our System                     & ~~~~          & ~~~           & ~~~  \\
+$~~$ - Nominal Rels$^\dagger$  & 64.3          & 8.6           & 15.2 \\
+$~~$ + Nominal Rels$^*$        & 61.9          & 13.9          & 22.7 \\
+$~~$ + Alt. Name               & 57.8          & 17.8          & 27.1 \\
+$~~$ + Alt. Name + Website     & 58.6          & \textbf{18.6} & \textbf{28.3} \\
+\hline
+\end{tabular}
+\end{center}
+\caption{\label{tab:results}
+A summary of our results on the end-to-end KBP Slot Filling task.
+UW official is the submission made to the 2013 challenge.
+The second row is the accuracy of Ollie embedded in our framework,
+  and of Ollie evaluated with nominal relations from our system.
+%We also include results for Ollie augmented with the nominal 
+%  relations from our system.
+Lastly, we report our system, our system with nominal relations removed,
+  and our system combined with an alternate names detector and rule-based
+  website detector.
+Comparable systems are marked with a dagger$^\dagger$ or  asterisk$^*$.
+%We also run Ollie in the same framework as our open IE system
+%We compare against an official submission to the challenge using
+%  Open IE v4.0 (UW Official), as well as the performance of our system
+%  using Ollie or Exemplar as the backing open IE system.
+}
+\end{table}
+
+% Report results (KBP)
+We report our results in \reftab{results}.\footnote{
+  All results are reported with the \texttt{anydoc} flag set to true
+    in the evaluation script, meaning that only the truth of the extracted
+    knowledge base entry and not the associated provenance is scored.
+  In absence of human evaluators, this is in order to not penalize our 
+    system unfairly for extracting a new correct provenance.
+  }
+UW Official refers to the official submission in the 2013 challenge;
+  we show a 3.1 F$_1$ improvement (to 22.7 F$_1$) over this submission, 
+  evaluated using a comparable approach.
+A common technique in KBP systems but not employed by the official UW
+  submission in 2013 is to add alternate names 
+  based on entity linking and coreference.
+Additionally, websites are often extracted using heuristic name-matching
+  as they are hard to capture with traditional relation extraction 
+  techniques.
+If we make use of both of these, our end-to-end accuracy becomes 28.2 F$_1$.
+%If we add in alternate name relations extracted from entity linking and
+%  coreference -- a common technique not employed by UW Official -- then
+%  our approach can achieve an end-to-end F$_1$ of 25.7.
+
+% Report Results (Ablation)
+We attempt to remove the variance in scores from the influence of 
+  other components in an end-to-end KBP system.
+We ran the Ollie open IE system \cite{key:2012mausam-ollie} in an identical
+  framework to ours, and report accuracy in \reftab{results}.
+Note that when an argument to an Ollie extraction contains a named entity, 
+  we take the argument to be that named entity.
+The low performance of this system can be partially attributed to its inability
+  to extract nominal relations.
+To normalize for this, we report results when the Ollie extractions are
+  supplemented with the nominal relations produced by our system
+  (Ollie + Nominal Rels in \reftab{results}).
+Conversely, we can remove the nominal relation extractions from
+  our system; in both cases we outperform Ollie on the task.
+
+\Subsection{pr}{Discussion}
+% PR Curve Figure
+\Fig{img/pr_curve_ollie.pdf}{0.75}{pr}{
+A precision/recall curve for Ollie and our system (without nominals).
+For clarity, recall is plotted on a range from 0 to 0.15.
+}
+
+% PR Curve Description
+We plot a precision/recall curve of our extractions in \reffig{pr} in order 
+  to get an informal sense of the calibration of our confidence estimates.
+Since confidences only apply to standard extractions, we plot the curves
+  without including any of the nominal relations.
+The confidence of a KBP extraction in our system is calculated as the sum
+  of the confidences of the open IE extractions that support it.
+So, for instance, if we find (Obama; be bear in; Hawaii) $n$ times with
+  confidences $c_1 \dots c_n$, the confidence of the KBP extraction would be
+  $\sum_{i=0}^n c_i$.
+It is therefore important to note that the curve in \reffig{pr} necessarily
+  conflates the confidences of individual extractions, and the frequency
+  of an extraction.
+
+% Why the dip?
+With this in mind, the curves lend some interesting insights.
+Although our system is very high precision on the most confident extractions,
+  it has a large dip in precision early in the curve.
+This suggests that the model is extracting multiple instances of a bad
+  relation.
+Systematic errors in the clause splitter are the likely cause of these errors.
+While the approach of splitting sentences into clauses generalizes better
+  to out-of-domain text, it is reasonable that the errors made in the
+  clause splitter manifest across a range of sentences more often than
+  the fine-grained patterns of Ollie would.
+
+% But, we do well afterwards
+On the right half of the PR curve, however, our system achieves both higher precision
+  and extends to a higher recall than Ollie.
+Furthermore, the curve is relatively smooth near the tail, suggesting
+  that indeed we are learning a reasonable estimate of confidence for
+  extractions that have only one supporting instance in the text
+  -- empirically, 46\% of our extractions.
+
+% Aggregate statistics
+In total, we extract \num{42662862} open IE triples which link to a pair
+  of entities in the corpus (i.e., are candidate KBP extractions),
+  covering \num{1180770} relation types.
+\num{202797} of these relation types appear in more than 10 extraction instances;
+  \num{28782} in more than 100 instances, and \num{4079} in more than 1000 instances.
+\num{308293} relation types appear only once.
+Note that our system
+  over-produces extractions when both a general and specific extraction are
+  warranted; therefore these numbers are an overestimate of the number
+  of semantically meaningful facts.
+
+For comparison, Ollie extracted \num{12274319} triples, covering
+  \num{2873239} relation types.
+\num{1983300} of these appeared only once;
+  \num{69010} appeared in more than 10 instances, \num{7951} in more than 100
+  instances, and \num{870} in more than 1000 instances.
+    
+
+
+
+
+
+
+%The persistent improvement in accuracy suggests that our gains are not
+%  entirely from the addition of these relations.
+
+%We report two versions of our system: one making use of alternate names
+%  via coref and entity linking, and another using only the relations from
+%  our system.
+%The second of these is a more fair comparision to the UW Official score,
+%  which does not make use of coreference for alternate names.
+%
+%% Report results (ablation)
+%In addition, we run our system with our relation extraction component replaced
+%  with Ollie \cite{key:2012mausam-ollie} run over the same corpus.
+%These offer a more isolated comparison between the systems, removing
+%  other conflating factors in the evaluation.
+
+% Demo
+%An anonymous demo of our system available at
+%  \url{http://128.12.224.119/openie/}.

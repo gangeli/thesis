@@ -1,0 +1,345 @@
+\Section{results}{Evaluation}
+
+
+%We evaluate our system in two settings:
+%  we sanity check that our modifications to NaturalLI have not hindered
+%  its ability to capture strict logical entailments on the FraCaS test suite,
+%  and then evaluate the system on answering multiple choice science questions
+%  from the Aristo dataset.
+%
+%%
+%% FraCaS
+%%
+%\Subsection{fracas}{FraCaS}
+%\def\a#1{\textbf{#1}}
+%\begin{table}
+%\begin{center}
+%  \resizebox{0.48\textwidth}{!}{
+%  \begin{tabular}{llcccccccc}
+%    \hline
+%    $\mathsection$ & Category & Count & \multicolumn{2}{c}{Precision} & \multicolumn{2}{c}{Recall} & \multicolumn{3}{c}{Accuracy} \\
+%                   &          &       & \blue{N} & M08          & \blue{N} & M08          & \blue{N}  & M08 & A14 \\
+%    \hline
+%                          % Pme           P07   Rme          R08   Ame         A07  A08
+%    \a{1} & \a{Quantifiers}  & \a{44} & \a{\blue{ }}  & \a{95}  & \a{\blue{   }} & \a{100} & \a{\blue{}} & \a{97} & \a{95} \\
+%    \a{5} & \a{Adjectives}   & \a{15} & \a{\blue{ }}  & \a{71}  & \a{\blue{   }} & \a{83}  & \a{\blue{}} & \a{80} & \a{73} \\
+%    \a{6} & \a{Comparatives} & \a{16} & \a{\blue{ }}  & \a{88}  & \a{\blue{   }} & \a{89}  & \a{\blue{}} & \a{81} & \a{87} \\
+%    \hline                                                                                                                 
+%\multicolumn{2}{l}{\a{Total}}                                                                                              
+%                         & \a{75}     & \a{\blue{ }}  & \a{89}  & \a{\blue{   }}  & \a{94}  & \a{\blue{}} & \a{90} & \a{89} \\
+%    \hline
+%  \end{tabular}
+%  }
+%  \caption{
+%    \label{tab:fracas}
+%    Results on the FraCaS textual entailment suite.
+%    N is this work; M08 is \newcite{key:2008maccartney-natlog};
+%    A14 is the original NaturalLI implementation in
+%      \newcite{key:2014angeli-naturalli}.
+%    Note that these results assume gold parse trees, and
+%      that following prior work this is not a blind test set.
+%  }
+%\end{center}
+%\end{table}
+%
+%% Intro to FraCaS
+%The FraCaS corpus \cite{key:1996cooper-fracas}
+%  is a small corpus of entailment problems, aimed at providing a
+%  comprehensive test of a system's handling of various
+%  entailment patterns.
+%We process the corpus following \newcite{key:2007maccartney-natlog} and
+%  \newcite{key:2014angeli-naturalli}.
+%Results are reported in \reftab{fracas}.
+%
+%% Qualify results
+%The results confirm that moving to dependency trees has not hindered the
+%  system's ability to capture valid entailments.
+%Although, it should be noted that the evaluation assumes gold dependency
+%  trees, and following prior work the test suite is not a blind test
+%  set.
+
+%
+% Aristo
+%
+% What is Aristo?
+We evaluate our entailment system on the Regents Science Exam portion of
+  the Aristo dataset \cite{key:2013clark-aristo,key:2015clark-aristo}.
+The dataset consists of a collection of multiple-choice science questions
+  from the New York Regents 4$^{\textrm{th}}$ Grade Science Exams
+  \cite{key:NYSED}.
+Each multiple choice option is translated to a candidate hypotheses.
+A large corpus of text is given as a knowledge base;
+  the task is to find support in this knowledge base for the hypothesis.
+
+% Why do we use it?
+Our system is in many ways well-suited to the dataset.
+Although certainly many of the facts require complex reasoning
+  (see \refsec{aristo-analysis}), the majority can be
+  answered from a single premise.
+%  -- allowing Natural Logic to be used
+%  as the inference formalism.
+Unlike FraCaS or the RTE challenges, however, the task does not have explicit
+  premises to run inference from, but rather must infer the truth of the
+  hypothesis from a large collection of supporting text.
+This makes NaturalLI a good candidate for an approach.
+However, the queries in the Aristo dataset are relatively longer, complete
+  sentences than the common sense reasoning task in
+  \newcite{key:2014angeli-naturalli}, necessitating the 
+  improvements in \refsecs{naturalli}{softsignal}.
+%Unlike the common-sense reasoning task in \newcite{key:2014angeli-naturalli}
+%  though,
+%  the queries in the Aristo dataset are relatively longer, complete sentences.
+%This necessitates the 
+
+\Subsection{aristo-data}{Data Processing}
+% Corpora
+We make use of two collections of unlabeled corpora for our experiments.
+The first of these is the Barron's study guide (\textsc{Barron's}), 
+  consisting of \num{1200} sentences.
+This is the corpus used by \newcite{key:2015hixon-aristo} for their conversational
+  dialog engine \knowbot, and therefore constitutes a more fair comparison against 
+  their results.
+However, we also make use of the full \textsc{Scitext} corpus \cite{key:2014clark-aristo}.
+This corpus consists of \num{1316278} supporting sentences, 
+  including the Barron's study guide alongside 
+  simple Wikipedia, dictionaries, and a science textbook.
+
+% Pre-processing
+Since we lose all document context when searching over the corpus with NaturalLI,
+  we first pre-process the corpus to resolve high-precision cases of
+  pronominal coreference, via a set of simple high-precision sieves.
+%The corpus is then filtered for non-ascii characters (yielding \num{945956} sentences),
+  %and exact duplicate sentences are removed.
+%This results in a total of \num{822748} facts in the supporting corpus.
+Filtering to remove duplicate sentences and sentences containing
+    non-ASCII characters yields a total of \num{822748} facts in the supporting corpus.
+
+% Lucene
+These sentences were then indexed using Solr.
+The set of promising premises for the soft alignment in \refsec{softsignal}, as well as
+  the Solr score feature in the lexical classifier (\refsec{softsignal-classifier}),
+  were obtained by querying Solr using the default similarity metric and scoring function.
+% Questions to Candidates
+On the query side, questions were converted to answers using the same methodology as
+  \newcite{key:2015hixon-aristo}.
+In cases where the question contained multiple sentences, only the last sentence
+  was considered.
+%As discussed in \refsec{aristo-analysis}, 
+%  this renders these multi-sentence questions effectively out of scope for the model.
+
+%
+% Mutliple Choice as Entailment
+%
+\Subsection{aristo-train}{Training an Entailment Classifier}
+To train a soft entailment classifier, we needed a set of positive
+  and negative entailment instances.
+These were collected on Mechanical Turk. % from a set of candidate entailment pairs.
+In particular, for each true hypothesis in the training set and for each sentence
+  in the Barron's study guide, we found the top 8 results from Solr and considered
+  these to be candidate entailments.
+These were then shown to Turkers, who decided whether the premise entailed the
+  hypothesis, the hypothesis entailed the premise, both, or neither.
+%Note that each pair was shown to only one Turker, lowering the cost of
+%  data collection, but consequently resulting in a somewhat noisy dataset.
+The data was augmented with additional negatives, collected by taking
+  the top 10 Solr results for each false hypothesis in the training set.
+This yielded a total of \num{21306} examples.
+%which was used to train a simple logistic regression classifier.
+
+The scores returned from NaturalLI incorporate negation in two ways:
+  if NaturalLI finds a contradictory premise, the score is set to zero.
+If NaturalLI finds a soft negation (see \refsec{softsignal-keywords}),
+  and did not find an explicit supporting premise, the score is discounted
+  by 0.75 -- a value tuned on the training set.
+For all systems, any premise which did not contain the candidate answer to the
+  multiple choice query was discounted by a value tuned on the training
+  set.
+
+%Note that despite these, the system is relatively domain agnostic -- no
+%  lexical features or domain-specific reasoning is employed.
+
+
+% Some definitions
+\def\t#1{\small{#1}}
+\def\b#1{\t{\textbf{#1}}}
+\def\m#1{\t{\textcolor{darkblue}{#1}}}
+\def\c#1{\b{\textcolor{darkblue}{#1}}}
+\def\colspaceS{2.0mm}
+\def\colspaceM{3.0mm}
+\def\colspaceL{5.0mm}
+
+%
+% RESULTS TABLE
+%
+% The table
+\begin{table}
+\begin{center}
+\begin{tabular}{l@{\hskip \colspaceL}c@{\hskip \colspaceS}c@{\hskip \colspaceL}c@{\hskip \colspaceS}c}
+\toprule
+\textbf{System} & \multicolumn{2}{l}{\textbf{Barron's}} & \multicolumn{2}{l}{\textbf{\textsc{Scitext}}} \\
+ & Train & Test & Train & Test \\     %barrons              %all
+\toprule                          %train    %test      %train    %test
+\t{\textsc{Knowbot} (held-out)} & \t{45}  & \t{--}   & \t{--}  & \t{--} \\
+\t{\textsc{Knowbot} (oracle)}   & \t{57}  & \t{--}   & \t{--}  & \t{--} \\
+\midrule                                                           
+\t{Solr Only}                   & \t{49}  & \t{42}   & \t{62}  & \t{58} \\
+\t{Classifier}                  & \t{53}  & \t{52}   & \t{68}  & \t{60} \\
+\t{$~~$ + Solr}                 & \t{53}  & \t{48}   & \t{66}  & \t{64} \\
+\midrule                                                           
+\t{Evaluation Function}         & \t{52}  & \b{54}   & \t{61}  & \t{63} \\
+\t{$~~$ + Solr}                 & \t{50}  & \t{45}   & \t{62}  & \t{58} \\
+\m{NaturalLI}                   & \m{52}  & \m{51}   & \m{65}  & \m{61} \\
+\m{$~~$ + Solr}                 & \c{55}  & \m{49}   & \m{73}  & \m{61} \\
+\m{$~~$ + Solr + Classifier}    & \c{55}  & \m{49}   & \c{74}  & \c{67} \\
+\bottomrule
+\end{tabular}
+\end{center}
+% The caption
+\caption{
+\label{tab:aristonaturalli}
+Accuracy of various systems on the Aristo science questions dataset.
+Results are reported using only the Barron's study guide as the supporting
+  text, and using all of \textsc{Scitext}.
+\textsc{Knowbot} is the dialog system presented in \newcite{key:2015hixon-aristo}.
+The held-out version uses additional facts from other question's dialogs;
+  the oracle version made use of human input on the question it was 
+  answering.
+The test set did not exist at the time \textsc{Knowbot} was published.
+}
+\end{table}
+
+%
+% Results
+%
+\Subsection{aristo-results}{Experimental Results}
+We present results on the Aristo dataset in \reftab{aristonaturalli},
+  alongside prior work and strong baselines.
+The test set for this corpus consists of only 68 examples,
+  and therefore both perceived large differences in model scores 
+  and the apparent best system should be interpreted cautiously.
+We propose that NaturalLI consistently achieves the best training accuracy,
+  and is more stable between configurations on the test set.
+For instance,
+  it may be consistently discarding lexically similar but actually contradictory
+  premises that often confuse some subset of the baselines.
+
+% Prior work
+\textsc{Knowbot} is the dialog system presented in 
+  \newcite{key:2015hixon-aristo}.
+We report numbers for two variants of the system:
+  \textit{held-out} is the system's performance when it is not allowed
+  to use the dialog collected from humans for the example it is answering;
+  \textit{oracle} is the full system.
+%Note that the \textit{oracle} variant is a human-in-the-loop system.
+
+% Baselines
+We additionally present three baselines.
+The first simply uses Solr's IR confidence to rank
+  entailment (\textit{Solr Only} in \reftab{aristonaturalli}).
+The max IR score of any premise given a hypothesis is taken
+  as the score for that hypothesis.
+Furthermore, we report results for the entailment classifier defined
+  in \refsec{softsignal-classifier} (\textit{Classifier}), optionally
+  including the Solr score as a feature.
+We also report performance of the evaluation function in NaturalLI
+  applied directly to the premise and hypothesis, without any inference
+  (\textit{Evaluation Function}).
+
+% Evaluate NaturalLI
+Last, we evaluate NaturalLI with the improvements presented in this paper
+  (\textit{NaturalLI} in \reftab{aristonaturalli}).
+We additionally tune weights for a 
+  simple model combination with
+  (1) Solr (with weight 6:1 for NaturalLI) and 
+  (2) the standalone classifier (with weight 24:1 for NaturalLI).
+%  as well as as a model which takes a weighted combination of the scores
+%  produced by NaturalLI and Solr, tuned on the training set to
+%  a weight of 6.0 to NaturalLI.
+Empirically, both parameters were observed to be fairly robust.
+
+
+%Results on the Aristo dataset are reported in \reftab{aristonaturalli}.
+%\textit{NaturalLI} denotes our system, using NaturalLI inferences incorporating
+%  the soft classifier.
+%%Note that this already performs as well as prior work published on the dataset,
+%%  and scales gracefully to a larger supporting corpus.
+%%
+%We additionally report results for a number of traditional baselines.
+%The simplest of these is to rank answers based on the Solr score returned by
+%  Solr.
+%This turned out to be a surprisingly strong baseline -- furthermore, as the supporting
+%  corpus size increases, the scores become significantly better calibrated, and
+%  performance improves dramatically.
+%
+%Our second baseline uses only the keyword overlap classifier, either with or without
+%  the Solr scores included as a feature.
+%Both of these baselines offer a boost over using the Solr score alone -- although
+%  it's interesting to note that the Solr score actively hurts the classifier's
+%  performance if the corpus size is small (i.e, when run on the Barron's corpus).
+%
+%Lastly, we present results for the combination of NaturalLI with a soft classifier,
+%  and show that it outperforms both prior work and the above baselines.
+%In fact, on the training set, the classifier can nearly pass the exam with a score
+%  of \todo{hopefully 70?}.
+
+
+
+%
+% DISCUSSION
+%
+\Subsection{aristo-analysis}{Discussion}
+
+% Multi-premise sentences
+We analyze some common types of errors made by the system on the training set.
+The most common error can be attributed to the question requiring complex reasoning
+  about multiple premises.
+\num{29} of \num{108} questions in the training set (26\%) contain multiple
+  premises.
+Some of these cases can be recovered from 
+  (e.g., \w{This happens because the smooth road has less friction.}), 
+  while others are trivially out of scope for our method 
+  (e.g., \w{The volume of water most likely decreased.}).
+%Although there is usually still some signal for which answer is most likely to be correct,
+%  these questions are fundamentally out-of-scope for the approach.
+%Empirically, we correctly predict \todo{XYZ} of these questions, performing somewhat 
+%  but not substantially above random chance.
+
+Another class of errors which deserves mention are cases where a system produces
+  the same score for multiple answers.
+This occurs fairly frequently in the standalone classifier 
+  (7\% of examples in training; 4\% loss from random guesses),
+  and especially often in NaturalLI (11\%; 6\% loss from random guesses).
+This offers some insight into why incorporating other models -- even with
+  low weight -- can offer significant boosts in the performance
+  of NaturalLI.
+Both this and the previous class could be further mitigated
+  by having a notion of a \textit{process}; e.g., as in
+  \newcite{key:2014berant-bioprocess}.
+%Empirically, NaturalLI is forced to guess on 33\% more examples than the
+%  alignment feature classifier.
+%This alone accounts for 6.5 points of accuracy -- on errors which are often
+
+
+% Other errors
+Other questions are simply not supported by any single sentence in the corpus.
+For example, \w{A human offspring can inherit blue eyes} has
+  no support in the corpus that does not require significant multi-step inferences.
+
+A remaining chunk of errors are of course classification errors.
+For example, \w{Water freezing is an example of a gas changing to a solid}
+  is marked as the best hypothesis, supported incorrectly by 
+  \w{An ice cube is an example of matter that changes from a solid to a liquid to a gas},
+  which after mutating \w{water} to \w{ice cube} matches every keyword in the
+  hypothesis.
+  
+
+%% Drop from align features to NaturalLI?
+%A peculiarity of the results is the drop in accuracy from the alignment
+%  features to NaturalLI.
+%We hypothesize that this is a result of missing a few alignments that
+%  are not trivial from tokens alone -- e.g., aligning \w{freezing water} and
+%  \w{water}.
+%Empirically, NaturalLI is forced to guess on 33\% more examples than the
+%  alignment feature classifier.
+%This alone accounts for 6.5 points of accuracy -- on errors which are often
+%  easily corrected by any additional signal (in this case, Solr).

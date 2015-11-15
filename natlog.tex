@@ -1,0 +1,486 @@
+% --------------------
+% NATURAL LOGIC
+% --------------------
+\chapter{Natural Logic}
+
+Much of the underpinnings of this work rely on the theoretical framework
+  laid by Natural Logic
+  \cite{key:1986benthem-natlog,key:1991valencia-natlog}.
+Broadly, Natural Logic aims to capture a subset of valid logical
+  inferences by appealing directly to the structure of language,
+  as opposed to running deduction on an abstract logical form.
+In part, this lends itself to computationally efficient inference;
+  in another part, it frees the system from parsing to an abstract
+  logic -- this is particularly relevant in our case, where the set
+  of potential antecedents is very large.
+
+A working approximation for Natural Logic is as a principled formalism
+  for and extension of syllogistic reasoning.
+In this analogy, the minor premise
+  (e.g., \textit{All Greeks are men}) is encoded implicitly,
+  and an inference is made from the major premise to the consequent:
+  (e.g., \textit{All men are mortal} $\Rightarrow$ \textit{All Greeks are mortal}).
+This style of reasoning is warranted from an analysis of the monotonicity
+  of quantifiers, reviewed in \refsec{natlog-mono}.
+
+The additional expressive power of Natural Logic is derived from two
+  sources: in part, the logic does not rely on template matching,
+  allowing inferences to be made over patterns nested within a larger
+  context, and allowing inferences to be chained.
+In another part, we can make use of MacCartney's expanded entailment
+  relations, described in \refsec{natlog-exclusion}.
+We conclude the section with a novel result showing that the state
+  space of the MacCartney-style derivations can be collapsed to a
+  simpler representation (\refsec{natlog-collapsed}), and by
+  elaborating on the limitations of Natural Logic (\refsec{natlog-limitations}).
+
+%We briefly motivate this analogy in \refsec{natlog-syllogism},
+%  review recent theory on Natural Logic in
+%  \refsecs{natlog-mono}{natlog-exclusion}, and propose a collapsed
+%  represenation of MacCartney's entailment relations in
+%  \refsec{natlog-collapsed}.
+%Syllogistic reasoning can be considered a first approximation to
+%  Natural Logic, as is presented in \refsec{natlog-syllogism}.
+%A brief introduction beyond this first approximation is presented
+%  in the subsequent sections.
+%\refsec{natlog-mono} introduces \textit{monotonicity} in the context
+%  of natural language to form the basis of natural logic;
+%  \refsec{natlog-exclusion} extends this formalism for reasoning about
+%  a wider range of phenomena.
+\newcite{key:2014icard-natlog} offers a more thorough summary of the
+  field, and provides the source for much of the notation and
+  exposition presented here.
+
+%
+% MONOTONICITY
+%
+\Section{natlog-mono}{Monotonicity in Natural Logic}
+Monotonicity in Natural Logic may be viewed analogously to monotonicity
+  in calculus.
+More precisely, a function can be one of \textit{monotone},
+  \textit{antitone}, or \textit{non-monotone} in each of its
+  arguments.\footnote{
+    \textit{Monotone} and \textit{antitone} are often referenced
+    as \textit{upwards monotone} and \textit{downwards monotone}.
+  }
+Intuitively, the function $f(x,y,z) = x - y + (z-2)^2$ is
+  monotone in $x$, antitone in $y$, and non-monotone in $z$.
+At its heart, Natural Logic makes use of this monotonicity information
+  and the partial ordering over the domain and range of the function
+  to draw inferences over the formula for $f$ without evaluating
+  any part of the function explicitly.
+For instance, we can safely say that $f(1,1,1) \leq f(2,1,1)$, whereas
+  $f(1,1,1) \geq f(1,2,1)$ by appealing directly to surface form of
+  the expression (The substitution of `$2$' in place of `$1$').
+
+Formally, we define a function $f:\sD_1 \rightarrow \sD_2$ and a partial
+  ordering $\le_1$ over $\sD_1$ and $\le_2$ over $\sD_2$.
+If we set $\sD_1 = \sD_2 = \sR$, and take $\le_1 = \le_2 = \le$ to be
+  the conventional ``less than or equal to'' over real numbers,
+  we can derive the monotonicity of the functions in our example above.
+%For instance, $f(x) = x + c$ is monotone; $g(x) = -x$ is antitone;
+%  $h(x) = (x-2)^2$ is non-monotone.
+
+However, we can equally well define a partial ordering over sets:
+  $x \le_e y \Leftrightarrow x \cap y = x$.
+Similarly, we can define a partial ordering over functions
+  $f : \sD_1 \rightarrow \sD_2$:
+  $f \le_1 g \Leftrightarrow \forall x ~~ f(x) \leq_2 g(x)$
+  and truth values:
+  $x \le_t y \Leftrightarrow x = F \lor y = T$.
+This allows us to adapt our definition of monotonicity to denotational
+  semantics in natural language.
+
+Let the denotation of a phrase, marked \denote{\cdot}, be the set of
+  entities in the universe to which that phrase refers.
+Equivalently, we may consider each phrase as a predicate, and the denotation
+  of a phrase is the set of entities for which the predicate holds.
+We define the set $e$ to be the set of entities in our discourse space,
+  with the partial ordering over sets: $\le_e$.
+We define the set $t$ to be the set of truth values: $\{T, F\}$.
+It should not go unnoticed that Modus Ponens ($x \Rightarrow y$)
+  and $x \le_t y$ are equivalent.
+Note that functions $e \rightarrow t$ follow the partial ordering over
+  functions.
+
+We define the denotation of quantifiers in the conventional
+  fashion as functions $e \rightarrow (e \rightarrow t)$.
+However, we can further mark the arguments to these quantifiers as
+  potentially monotone or antitone.
+For instance, the quantifier \textit{all} is antitone in its first
+  argument and monotone in its second:
+  $e \xrightarrow{-} (e \xrightarrow{+} t)$.\footnote{
+    These markings can, in fact, be elegantly incorporated into the
+    type system \cite{key:2014icard-natlog} of a CCG.
+  }
+These markings confirm our intuition that, e.g., 
+  \textit{all \textbf{cats} have tails}
+  implies 
+  \textit{all \textbf{tabby cats} have tails}.
+Furthermore, as the default context is taken to be monotone
+  axiomatically, we see that we can appeal to the partial order
+  over quantifiers (functions) to conclude that
+  \textit{\textbf{all} cats have tails}
+  implies 
+  \textit{\textbf{some} cats have tails}.
+
+\paragraph{Proof Theory}
+We can produce proofs in Natural Logic by composing
+  function application from atomic facts.
+Returning to the arithmetic cast in the beginning of the section, we
+  can construct a proof that $2^{-4} < 2^{-3}$ via:
+
+\begin{prooftree}
+\AxiomC{$3 \leq 4$}
+\RightLabel{\scriptsize{$-x$ is antitone}}
+\UnaryInfC{$-4 \leq -3$}
+\RightLabel{\scriptsize{$2^x$ is monotone}}
+\UnaryInfC{$2^{-4} \leq 2^{-3}$}
+\end{prooftree}
+
+We can then appeal implicitly to this proof to ask whether what relation
+  a substitution of $3$ for $4$ will produce in $2^{-4}$ -- in this case
+  one of $\leq$, $\geq$, or unknown -- without evaluating either
+  expression.
+
+
+Returning to natural language, we can provide a proof for
+  \textit{all tabby cats have tails}, given in \reffig{catsproof}.
+That is to say, on the given parse of the respective sentences,
+  \denoteT{All cats have tails} $\leq_t$ \denoteT{All tabby cats have tails}.
+We again note that $\leq_t$ is precisely Modus
+  Ponens ($\Rightarrow$) -- thus, we have arrived at our expected
+  entailment relation.
+
+\begin{figure*}
+  \begin{prooftree}
+  \AxiomC{\denoteT{tabby cats} $~\le_e~$ \denoteT{cats}}
+  \RightLabel{\scriptsize{\denoteT{All} antitone in subject}}
+  \UnaryInfC{$
+    \denoteT{all}\left(\denoteT{cats}\right)\left(\cdot\right)
+    ~\le_{e \rightarrow t}~
+    \denoteT{all}\left(\denoteT{tabby cats}\right)\left(\cdot\right)
+  $}
+  \AxiomC{\denoteT{have tails} $~\le_e~$ \denoteT{have tails}}
+%  \RightLabel{\scriptsize{\denoteT{All} monotone in object}}
+  \BinaryInfC{$
+    \denoteT{all}\left(\denoteT{cats}\right)\left(\denoteT{have tails}\right)
+    ~~\le_{t}~~
+    \denoteT{all}\left(\denoteT{tabby cats}\right)\left(\denoteT{have tails}\right)
+  $}
+  \RightLabel{\scriptsize{By axiom}}
+  \UnaryInfC{$
+    \denoteT{all cats have tails}
+    ~~\le_{t}~~
+    \denoteT{all tabby cats have tails}
+  $}
+  \end{prooftree}
+\caption{\label{fig:catsproof}
+  A proof in Natural Logic for \textit{all tabby cats have tails} from
+    the premise \textit{all cats have tails}.
+  Note that $\le_t$ is equivalent to entailment ($\Rightarrow$).
+  The last step, marked valid axiomatically, is elaborated on in
+    Definition 8 of \newcite{key:2014icard-natlog}.
+} 
+\end{figure*}
+
+
+%
+% EXCLUSION
+%
+\Section{natlog-exclusion}{Reasoning with Exclusion}
+The Natural Logic of \refsec{natlog-mono} has dealt only with the
+  entailment relation.
+Work by \newcite{key:2009maccartney-natlog}, building off of
+  \newcite{key:2007maccartney-natlog} and
+  \newcite{key:2008maccartney-natlog},
+  has focused on extending the set of atomic relations
+  beyond $\leq$ (subset; entailment) and 
+  $\geq$ (superset; reverse entailment).
+%We adopt the semantics of \newcite{key:2012icard-natlog}, although in this
+%  work for simplicity we do not make use of their extended
+%  monotonicity markings.
+%A more thorough treatment of the soundness and completeness of the
+%  proof theory described here can be found in
+%  \newcite{key:2013djalali-natlog}.
+
+\newcite{key:2014icard-natlog} noted that the partial ordering of
+  $\leq_e$ can be formulated as a \textit{bounded distributive
+  lattice} to encompass the original relations of
+  \newcite{key:2007maccartney-natlog}.
+In particular, for every domain we can define a set of possible 
+  elements $\sX$, binary operators $\land$ and $\lor$,
+  and a minimum and maximum element $\bot$ and $\top$ respectively.
+By example, for the domain of entities we can define $\sX$ to be
+  the power set of our domain of entities, $\land=\cap$,
+  $\lor=\cup$, $\bot=\{\}$, and $\top=E$, where $E$ is the universe
+  of possible entities.
+We then define the set of MacCartney relations, noting that
+  $\forward$ and $\reverse$ are identical to the definitions of
+  $\lte_e$ and $\gte_e$ from the previous section respectively:\footnote{
+    We adopt the semantics of \newcite{key:2012icard-natlog}, 
+    in which the relations are not mutually exclusive.
+  }
+
+\begin{center}
+\begin{tabular}{lcl}
+  $x \forward y$ & $\Leftrightarrow$ & $x \land y = x$ \\
+  $x \reverse y$ & $\Leftrightarrow$ & $x \lor y = x$ \\
+  $x \alternate y$ & $\Leftrightarrow$ & $x \land y = \bot$ \\
+  $x \cover y$ & $\Leftrightarrow$ & $x \lor y = \top$ \\
+  \vspace{-0.5em} & & \\
+  $x \equivalent y$ & $\Leftrightarrow$ & $x \forward y~~\textrm{and}~~x \reverse y$ \\
+  $x \negate y$ & $\Leftrightarrow$ & $x \alternate y~~\textrm{and}~~x \cover y$ \\
+  $x \independent y$ & & Always true
+\end{tabular}
+\end{center}
+
+Making use of this extended set of relations, we are faced with two
+  questions:
+  we must define how monotonicity projects these relations up the
+  proof tree,
+  and we must define how a sequence of edits compose to determine the
+  relation between the first and last sentence in the sequence.
+
+% -- Projection Table --
+% I'm assuming the context is additive and multiplicative
+% See Lemma 2.4 (p.11) of http://link.springer.com/article/10.1007%2Fs11225-012-9425-8
+\begin{table}
+	\begin{center}
+	\begin{tabular}{c|cc}
+    \textbf{Relation} & \multicolumn{2}{|c}{\textbf{Projection in Context}} \\
+             & Monotone & Antitone \\
+    \hline
+    $e_1 \forward     e_2$ & $t_1 \forward     t_2$ & $t_1 \reverse     t_2$ \\ 
+    $e_1 \reverse     e_2$ & $t_1 \reverse     t_2$ & $t_1 \forward     t_2$ \\ 
+    $e_1 \alternate   e_2$ & $t_1 \alternate   t_2$ & $t_1 \cover t_2$ \\ 
+    $e_1 \cover       e_2$ & $t_1 \cover       t_2$ & $t_1 \alternate       t_2$ \\ 
+    $e_1 \equivalent  e_2$ & $t_1 \equivalent  t_2$ & $t_1 \equivalent  t_2$ \\ 
+    $e_1 \negate      e_2$ & $t_1 \negate      t_2$ & $t_1 \negate   t_2$ \\ 
+    $e_1 \independent e_2$ & $t_1 \independent t_2$ & $t_1 \independent t_2$
+	\end{tabular}
+	%(caption)
+	\caption{
+    The projection table used for a relation between a phrase $e_1$ and
+      its candidate mutation $e_2$, in terms of the produced relation
+      between truth value $t_1$ and the new truth value $t_2$.
+    Values are given for when the entities are in a monotone and
+      antitone context.
+		\label{tab:projectivity}
+	}
+	\end{center}
+\end{table}
+
+\reftab{projectivity} outlines the (simplified) table used for projecting
+  relations between entities in monotone and antitone contexts.
+Note that in monotone contexts, the relation projects up without
+  change;
+  in antitone contexts, forward and reverse entailment
+  ($\forward$ and $\reverse$) are flipped, as are cover and
+  alternation ($\cover$ and $\alternate$).
+In full generality, quantifiers are tagged not only with monotonicity
+  but also \textit{additivity} and \textit{multiplicativity};
+  for simplicity we assume all quantifiers are both additive and
+  multiplicative.
+See Lemma 2.4\ in \newcite{key:2012icard-natlog} for a more careful
+  analysis.
+
+% -- Join Table--
+\begin{table}
+	\begin{center}
+	\begin{tabular}{|c||c|c|c|c|c|}
+    \hline
+    $\bowtie$ & $\forward$ & $\reverse$ & $\negate$ & $\alternate$ & $\cover$ \\
+    \hline
+    $\forward$ & $\forward$ & $\independent$ & $\alternate$ & $\alternate$ & $\independent$ \\
+    $\reverse$ & $\independent$ & $\reverse$ & $\cover$ & $\independent$ & $\cover$ \\
+    $\negate$ & $\cover$ & $\alternate$ & $\equivalent$ & $\reverse$ & $\forward$ \\
+    $\alternate$ & $\independent$ & $\alternate$ & $\forward$ & $\independent$ & $\forward$ \\
+    $\cover$ & $\cover$ & $\independent$ & $\reverse$ & $\reverse$ & $\independent$ \\
+    \hline
+	\end{tabular}
+	%(caption)
+	\caption{
+    The join table, as copied from \newcite{key:2012icard-natlog}.
+    Note that the $\independent$ always joins to yield $\independent$,
+    and $\equivalent$ always joins to yield the input relation.
+		\label{tab:join}
+	}
+	\end{center}
+\end{table}
+
+The composition of relations through an inference chain is given in
+  a \textit{join table}, copied in \reftab{join}.
+
+%Note that unlike in the original MacCartney formulation, these relations
+%  are not mutually exclusive; in fact, a hierarchy of informativeness
+%  emerges where, e.g., \negate subsumes \alternate and \cover.
+%
+%We are now faced with two issues which need resolving to generalize
+%  the proofs from \refsec{natlog-mono}.
+%First, we need to resolve how the monotonicity of the function application
+%  projects the relation in the argument.
+%Implicitly used in the proofs so far is the notion that antitone contexts
+%  will flip $\leq$ and $\geq$, whereas monotone contexts will not.
+%This relation is preserved for $\forward$ and $\reverse$.
+%\newcite{key:2012icard-natlog} present an enriched tagging of 
+%  monotonicity which allows the other relations (i.e.,
+%  \negate, \alternate, \cover) to project meaningfully.
+%This work does not make use of this semantics, although it is not
+%  theoretically impossible to do so -- practically, this prohibits
+%  our system from reasoning about antonyms.
+%
+%The second issue is determining how these relations project through
+%  the proof tree.
+
+
+\begin{figure*}
+\begin{center}
+  \begin{tabular}{cc}
+    \resizebox{0.48\textwidth}{!}{\completeFSA} &
+      \resizebox{0.48\textwidth}{!}{\collapsedFSA} \\
+    (a) & (b)
+  \end{tabular}
+\end{center}
+\caption{
+  \label{fig:fsa}
+  (a) The join table in \reftab{join} expressed as a finite state automata.
+  Omitted edges go to the unknown state (\independent), with the exception of
+    omitted edges from $\equivalent$, which go to the state of the edge
+    type.
+  Green states (\equivalent, \forward) denote valid inferences;
+    red states (\alternate, \negate) denote invalid inferences;
+    blue states (\reverse, \cover) denote inferences of unknown validity.
+  (b) The join table collapsed into the three meaningful states over truth
+  values.
+}
+\end{figure*}
+
+\reffig{fsa}a visualizes the join table as a finite state automata.
+The edges in the automata denote a step in a logical derivation;
+  for instance, attempting to derive \textit{all cats have tails}
+  from \textit{all felines have tails}.
+The label of the edge denotes the relation between the mutated
+  \textbf{entity} in the derivation.
+In our example, \textit{felines} $\forward_e$ \textit{cats},
+  and therefore we would take the edge labeled with \forward.
+
+States in the automata denote the relation between the
+  \textbf{truth value} of
+  the antecedent, and the truth value of the consequent given the
+  mutations so far.
+We may consider as a motivating example the inference from
+  \textit{all felines have tails} to \textit{no cats have tails}:
+
+\vspace{1em}
+\noindent\resizebox{0.48\textwidth}{!}{
+  \begin{tabular}{llcc}
+  \textbf{Mutation} & \textbf{Fact} & \textbf{Edge} & \textbf{State} \\
+  & \textit{all felines have tails} & & \equivalent \\
+  \textit{feline} \reverse\ \textit{cat} & \textit{all cats have tails} & \forward & \forward \\
+  \textit{all} \negate\ \textit{no} & \textit{no cats have tails} & \negate & \alternate
+  \end{tabular}
+}
+\vspace{1em}
+
+The second column shows the surface form of the fact as the derivation
+  progresses.
+The first column shows the mutation applied to the previous fact to get
+  the new surface form.
+The third column shows the edge to take in the FSA -- this is derived
+  from the projections in \reftab{projectivity}.
+For example, since \textit{all} is antitone in its first argument
+  (\textit{felines}), a mutation of type \reverse\ projects to an edge
+  type of \forward.
+The first three columns can be viewed as shorthand for a
+  formal proof tree like that provided in \reffig{catsproof}.
+The last column shows the relationship between the first fact
+  and the fact on this row of the derivation.
+In our example derivation, we conclude that:
+
+\begin{center}
+  \textit{all felines have tails}
+  \alternate\ \textit{no cats have tails}.
+\end{center}
+
+%
+% COLLAPSED STATES
+%
+\Section{natlog-collapsed}{Collapsed Join Table}
+Although the full join table is useful when we would like fine-grained
+  semantic comparisons, for our application we care only whether
+  an inference is \textit{valid}, \textit{invalid}, and \textit{unknown}.
+To illustrate, we do not care that \textit{all felines have tails}
+  is in any particular set theoretic relation with
+  \textit{no cats have tails}; we only care that this is a verifiably
+  invalid inference.
+
+To this end, we make two novel contributions to the theory of Natural
+  Logic:
+first, we show that the join table can be simplified in the case where
+  we only care about the validity of an inference; and, second, we
+  propose weighting the edges in this finite state automata in such
+  a way as to collapse the \textit{unknown} state into one of 
+  either \textit{valid} or \textit{invalid}, with low probability.
+
+The first of these contributions, illustrated in \reffig{fsa}b,
+  makes use of two observations.
+First, if we cluster the seven MacCartney relations\footnote{
+  The seventh relation (\independent) is not shown in the FSA for
+  clarity, but clusters into the unknown class.
+  }, the transitions into and out of each class is identical independent
+  of which specific state one is in.
+This clustering -- trivial intuitively -- is also the clustering used
+  by \newcite{key:2008maccartney-natlog} for evaluating inference
+  tasks.
+
+Furthermore, although there are transitions between the states clustered
+  into the unknown category, at no point is there a valid transition
+  from a node in the cluster to a node outside of it.
+This is a generalization of the well-known observation that long
+  derivations tend to the unknown state (\independent), from which
+  it is impossible to escape.
+Here, we observe that even if a derivation enters a seemingly-informative
+  state (\reverse, \cover) it is nonetheless doomed to produce a
+  final judgment of unknown.
+
+The second observation -- that we can run probabilistic inference and
+  collapse the unknown state into a penalty on the probability of
+  validity/invalidity -- is discussed in the next section.
+
+%
+% LIMITATIONS
+%
+\Section{natlog-limitations}{Limitations and Future Work}
+Natural Logic is not intended to be a complete solution for natural
+  language inference.
+Although the formalism covers a reasonable range of intuitive inference
+  patterns, the current theory is unable to capture the full range
+  of logical inferences.
+For example, DeMorgan's laws 
+%  ($\lnot(A \lor B) \models \lnot A \land \lnot B$),
+  cannot be inferred in the framework,
+  including their extensions to quantification
+  (e.g., \textit{not all students study} $\models$ \textit{some students don't study}).
+Furthermore, Natural Logic does not elegantly handle inferences
+  making use of multiple antecedents; for instance, the law of
+  excluded middle is not derivable according to current theory.
+
+\newcite{key:2008maccartney-natlog} point out that Natural Logic is
+  not amenable to reasoning over relational implication
+  (\textit{Eve was let go} $\models$ \textit{Eve lost her job};
+   \textit{Aho, a trader at UBS} $\models$ \textit{Aho works for UBS};
+   etc.).
+We contest that these are special cases of monotone reasoning, where
+  relations are treated as functions and ordered in the same way as
+  quantifiers.
+That is, if a relation $r_1$ entails another relation $r_2$ then
+  $r_1 \leq_r r_2$, where $\leq_r$ is an ordering of functions from
+  a list of entities to truth values: $\be^n \rightarrow \{T,F\}$.
+In fact, under certain conditions Natural Logic can warrant inference
+  over meronymy
+  (\textit{Obama was born in Hawaii} $\models$ \textit{Obama was born in the US}),
+  and potentially other orderings as well.
+We leave this for future work.
+
+

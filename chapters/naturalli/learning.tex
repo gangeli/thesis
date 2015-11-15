@@ -1,0 +1,132 @@
+\Section{learning}{Learning Transition Costs}
+%The learning task can be viewed as a constrained optimization problem.
+We describe our procedure for learning the transition costs $\theta$.
+Our training data $\sD$ consists of query facts $q$ and their associated
+  gold truth values $y$.
+Equation \refeqn{prob} gives us a probability that a particular inference
+  is \textit{valid}; we axiomatically consider a valid inference from
+  a known premise to be justification for the truth of the query.
+This is at the expense of the (often incorrect) assumption that our 
+  database is clean and only contains true facts.
+%  note that this is subtly different from our objective of
+%  determining if the query is \textit{true}.
+%Nonetheless, we take these two ($p(\textit{valid})$ and $p(\textit{true})$) to be
+%  equivalent for our experiments, which corresponds to the (often
+%  incorrect) assumption that our database is clean and only contains
+%  true facts.
+%trivially, we define the probability that a
+%  fact is true as the probability that an inference from a premise to
+%  that fact is valid.
+%  we assume that every fact in our database is true, which allows us
+%  to use the equation as a proxy for the probability that a fact
+%  is true.
+
+We optimize the likelihood of our gold annotations according to
+  this probability, subject to
+  the constraint that all elements in our cost vector $\theta$ be
+  non-negative.
+We run the search algorithm described in \refsec{inference} on every
+  query $q_i \in \sD$.
+This produces the highest confidence path $x_1$, along with its
+  inference state $v_i$.
+We now have annotated tuples: $( (x_i, v_i), y_i )$ for every
+  element in our training set.
+Analogous to logistic regression, the log likelihood of our training
+  data $\sD$, subject to costs $\theta$, is:
+
+%Subject to the constraint that all elements of the cost vector $\theta$ 
+%  must be non-negative, we optimize the probability from
+%  Equation \refeqn{prob} compared against the gold annotation.
+%As training data, we are given a number of facts, annotated with a
+%  truth value of \textit{true} or \textit{false}.
+%We assume that all facts in our database are true; therefore,
+%  $p(\textrm{valid})$ corresponds directly to $p(\textrm{true})$.
+%
+%We learn costs using an iterative algorithm.
+%At each iteration, we take the costs from the previous iteration
+%  and run search over every example to obtain candidate paths.
+%We then construct a supervised training set $\sD$ with entries
+%  $((x_i, v_i), y_i)$ corresponding to the predicted path $x_i$,
+%  the predicted inference state $v_i$, and the ground truth $y_i$.
+%Analogous to logistic regression,
+%  the log-likelihood of the training data becomes:
+
+\begin{align*}
+\l_\theta(\sD&) = \sum_{0 \leq i < |\sD|} \Big[
+    y_i \log \left(\frac{v_i}{2} + \frac{1}{1 + e^{v_i \theta \cdot \bef(x_i)}} \right) \\
+    &+ (1 - y_i) \log \left(\frac{-v_i}{2} + \frac{1}{1 + e^{-v_i \theta \cdot \bef(x_i)}} \right)
+  \Big],
+\end{align*}
+
+\noindent where $y_i$ is 1 if the example is annotated true and 0
+  otherwise, and $\bef(x_i)$ are the features extracted for path $x_i$.
+The objective function is the negative log likelihood with
+  an $L_2$ regularization term and a log barrier function to 
+  prohibit negative costs:
+
+\begin{equation*}
+O(\sD) = -\l_\theta(\sD) 
+  + \frac{1}{2 \sigma^2}\|\theta\|_2^2
+  - \epsilon \log(\theta).
+\end{equation*}
+
+We optimize this objective using conjugate gradient descent.
+Although the objective is non-convex, in practice we can find a good
+  initialization of weights to reduce the risk of arriving at
+  local optima.
+
+An elegant property of this formulation is that the weights we are
+  optimizing correspond directly to the costs used during search.
+This creates a positive feedback loop -- as better weights are learned,
+  the search algorithm is more likely to find confident paths, and
+  more data is available to train from.
+We therefore run this learning step for multiple epochs,
+  re-running search after each epoch.
+The weights for the first epoch are initialized to an approximation
+  of valid Natural Logic weights.
+Subsequent epochs initialize their weights to the output of the previous
+  epoch.
+
+
+%Therefore, we opt to \naive ly run a convex solver on the objective after
+%  each iteration, initialized to the weights from the previous
+%  iteration.
+%The weights for the first iteration are initialized to an approximation
+%  of valid Natural Logic weights.
+
+%We initialize the first iteration to these costs, and run
+%  conjugate gradient descent to convergence on a local minima
+%  on each subsequent iteration.
+%Lastly, after each iteration, the cost for any feature which has
+%  never fired during training is decreased by half.
+%This is to encourage the search to take these expensive edges, and
+%  learn an appropriate cost for them.
+
+
+
+%We learn costs using an iterative algorithm.
+%At each iteration, we take the costs from the previous iteration
+%  and run the derivation search over every example, providing
+%  a predicted probability of truth for each query fact.
+%Optimizing the likelihood of the training data according to
+%  Equation \refeqn{prob} is impractical as the objective is nonconvex;
+%  the rest of today is intended to be spent on implementing a piecewise
+%  optimization to mitigate this.
+%A simple heuristic (weight = 1 - \# times this feature fired in good examples
+%  / \# of times feature fired total) does ok, but is a little braindead.
+%
+%In particular, we construct a dataset of $(x,y)$ pairs, where $x$ is the
+%  featurized path for a particular example, and $y$ is whether the
+%  path ended in a correct state.
+%A correct state is defined trivially between \textit{valid} and
+%  \textit{invalid}.
+%In cases where the gold annotation contains a state of 
+%  \textit{unknown validity}, any prediction is marked incorrect.
+%
+%The resulting weights -- in one-to-one correspondence with the costs
+%  for our search -- are then negated and normalized via a bilinear
+%  transform to fall between 0 and $-5$, with a mean of $-1$.
+%A default weight of $-2$ is assigned for any feature which did not
+%  appear in the training data, excepting the case where a previous
+%  iteration of the algorithm had set a value for that weight, in
+%  which case the previous value is used.
