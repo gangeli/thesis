@@ -1,0 +1,87 @@
+Much of the underpinnings of this work rely on the theoretical framework
+  laid by natural logic
+  \cite{key:1986benthem-natlog,key:1991valencia-natlog}.
+Broadly, natural logic aims to capture a subset of valid logical
+  inferences by appealing directly to the structure of language,
+  as opposed to running deduction on an abstract logical form.
+That is to say, natural logic is primarily a \textit{proof theory}, where
+  the deductive system operates over natural language syntax.
+
+%
+% Example
+%
+To illustrate with an example, we can consider a simple premise:
+
+\begin{center}
+\ww{The cat ate a mouse.}
+\end{center}
+
+From this, we would like to logically infer the following:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{The cat ate a mouse.}}
+\have {2} {\ww{The cat ate a rodent.}}
+\have {3} {\ww{The cat ate an animal.}}
+\have {4} {\ww{The feline ate an animal.}}
+\have {5} {\ww{The carnivore ate an animal.}}
+\have {5} {\lnot ~~ \ww{No carnivore ate an animal.}}
+\end{nd}
+\]
+
+That is to say, if the cat ate a mouse, it is false that no carnivore ate an
+  animal, and this is by virtue of the proof presented above.
+This sort of proof appears strange from the perspective of propositional and
+  first-order logics, but it is not an altogether unfamiliar sort of reasoning.
+Natural logic traces its origins to the syllogistic reasoning of Aristotle:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{All cats eat mice.}}
+\hypo {2} {\ww{All cats are carnivores.}}
+\have {3} {\ww{All carnivores eat mice.}}
+\end{nd}
+\]
+
+%
+% Outline
+%
+This section will describe some of the motivations for natural logic,
+
+
+A working approximation for natural logic is as a principled formalism
+  for and extension of syllogistic reasoning.
+In this analogy, the minor premise
+  (e.g., \textit{All Greeks are men}) is encoded implicitly,
+  and an inference is made from the major premise to the consequent:
+  (e.g., \textit{All men are mortal} $\Rightarrow$ \textit{All Greeks are mortal}).
+This style of reasoning is warranted from an analysis of the monotonicity
+  of quantifiers, reviewed in \refsec{natlog-mono}.
+
+The additional expressive power of natural logic is derived from two
+  sources: in part, the logic does not rely on template matching,
+  allowing inferences to be made over patterns nested within a larger
+  context, and allowing inferences to be chained.
+In another part, we can make use of MacCartney's expanded entailment
+  relations, described in \refsec{natlog-exclusion}.
+We conclude the section with a novel result showing that the state
+  space of the MacCartney-style derivations can be collapsed to a
+  simpler representation (\refsec{natlog-collapsed}), and by
+  elaborating on the limitations of natural logic (\refsec{natlog-limitations}).
+
+%We briefly motivate this analogy in \refsec{natlog-syllogism},
+%  review recent theory on natural logic in
+%  \refsecs{natlog-mono}{natlog-exclusion}, and propose a collapsed
+%  represenation of MacCartney's entailment relations in
+%  \refsec{natlog-collapsed}.
+%Syllogistic reasoning can be considered a first approximation to
+%  natural logic, as is presented in \refsec{natlog-syllogism}.
+%A brief introduction beyond this first approximation is presented
+%  in the subsequent sections.
+%\refsec{natlog-mono} introduces \textit{monotonicity} in the context
+%  of natural language to form the basis of natural logic;
+%  \refsec{natlog-exclusion} extends this formalism for reasoning about
+%  a wider range of phenomena.
+\newcite{key:2014icard-natlog} offers a more thorough summary of the
+  field, and provides the source for much of the notation and
+  exposition presented here.

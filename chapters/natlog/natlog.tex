@@ -1,61 +1,13 @@
 % --------------------
 % NATURAL LOGIC
 % --------------------
-\chapter{Natural Logic}
-
-Much of the underpinnings of this work rely on the theoretical framework
-  laid by Natural Logic
-  \cite{key:1986benthem-natlog,key:1991valencia-natlog}.
-Broadly, Natural Logic aims to capture a subset of valid logical
-  inferences by appealing directly to the structure of language,
-  as opposed to running deduction on an abstract logical form.
-In part, this lends itself to computationally efficient inference;
-  in another part, it frees the system from parsing to an abstract
-  logic -- this is particularly relevant in our case, where the set
-  of potential antecedents is very large.
-
-A working approximation for Natural Logic is as a principled formalism
-  for and extension of syllogistic reasoning.
-In this analogy, the minor premise
-  (e.g., \textit{All Greeks are men}) is encoded implicitly,
-  and an inference is made from the major premise to the consequent:
-  (e.g., \textit{All men are mortal} $\Rightarrow$ \textit{All Greeks are mortal}).
-This style of reasoning is warranted from an analysis of the monotonicity
-  of quantifiers, reviewed in \refsec{natlog-mono}.
-
-The additional expressive power of Natural Logic is derived from two
-  sources: in part, the logic does not rely on template matching,
-  allowing inferences to be made over patterns nested within a larger
-  context, and allowing inferences to be chained.
-In another part, we can make use of MacCartney's expanded entailment
-  relations, described in \refsec{natlog-exclusion}.
-We conclude the section with a novel result showing that the state
-  space of the MacCartney-style derivations can be collapsed to a
-  simpler representation (\refsec{natlog-collapsed}), and by
-  elaborating on the limitations of Natural Logic (\refsec{natlog-limitations}).
-
-%We briefly motivate this analogy in \refsec{natlog-syllogism},
-%  review recent theory on Natural Logic in
-%  \refsecs{natlog-mono}{natlog-exclusion}, and propose a collapsed
-%  represenation of MacCartney's entailment relations in
-%  \refsec{natlog-collapsed}.
-%Syllogistic reasoning can be considered a first approximation to
-%  Natural Logic, as is presented in \refsec{natlog-syllogism}.
-%A brief introduction beyond this first approximation is presented
-%  in the subsequent sections.
-%\refsec{natlog-mono} introduces \textit{monotonicity} in the context
-%  of natural language to form the basis of natural logic;
-%  \refsec{natlog-exclusion} extends this formalism for reasoning about
-%  a wider range of phenomena.
-\newcite{key:2014icard-natlog} offers a more thorough summary of the
-  field, and provides the source for much of the notation and
-  exposition presented here.
+\chapter{natural logic}
 
 %
 % MONOTONICITY
 %
-\Section{natlog-mono}{Monotonicity in Natural Logic}
-Monotonicity in Natural Logic may be viewed analogously to monotonicity
+\Section{natlog-mono}{Monotonicity in natural logic}
+Monotonicity in natural logic may be viewed analogously to monotonicity
   in calculus.
 More precisely, a function can be one of \textit{monotone},
   \textit{antitone}, or \textit{non-monotone} in each of its
@@ -65,7 +17,7 @@ More precisely, a function can be one of \textit{monotone},
   }
 Intuitively, the function $f(x,y,z) = x - y + (z-2)^2$ is
   monotone in $x$, antitone in $y$, and non-monotone in $z$.
-At its heart, Natural Logic makes use of this monotonicity information
+At its heart, natural logic makes use of this monotonicity information
   and the partial ordering over the domain and range of the function
   to draw inferences over the formula for $f$ without evaluating
   any part of the function explicitly.
@@ -125,7 +77,7 @@ Furthermore, as the default context is taken to be monotone
   \textit{\textbf{some} cats have tails}.
 
 \paragraph{Proof Theory}
-We can produce proofs in Natural Logic by composing
+We can produce proofs in natural logic by composing
   function application from atomic facts.
 Returning to the arithmetic cast in the beginning of the section, we
   can construct a proof that $2^{-4} < 2^{-3}$ via:
@@ -176,7 +128,7 @@ We again note that $\leq_t$ is precisely Modus
   $}
   \end{prooftree}
 \caption{\label{fig:catsproof}
-  A proof in Natural Logic for \textit{all tabby cats have tails} from
+  A proof in natural logic for \textit{all tabby cats have tails} from
     the premise \textit{all cats have tails}.
   Note that $\le_t$ is equivalent to entailment ($\Rightarrow$).
   The last step, marked valid axiomatically, is elaborated on in
@@ -189,7 +141,7 @@ We again note that $\leq_t$ is precisely Modus
 % EXCLUSION
 %
 \Section{natlog-exclusion}{Reasoning with Exclusion}
-The Natural Logic of \refsec{natlog-mono} has dealt only with the
+The natural logic of \refsec{natlog-mono} has dealt only with the
   entailment relation.
 Work by \newcite{key:2009maccartney-natlog}, building off of
   \newcite{key:2007maccartney-natlog} and
@@ -452,7 +404,7 @@ The second observation -- that we can run probabilistic inference and
 % LIMITATIONS
 %
 \Section{natlog-limitations}{Limitations and Future Work}
-Natural Logic is not intended to be a complete solution for natural
+natural logic is not intended to be a complete solution for natural
   language inference.
 Although the formalism covers a reasonable range of intuitive inference
   patterns, the current theory is unable to capture the full range
@@ -462,11 +414,11 @@ For example, DeMorgan's laws
   cannot be inferred in the framework,
   including their extensions to quantification
   (e.g., \textit{not all students study} $\models$ \textit{some students don't study}).
-Furthermore, Natural Logic does not elegantly handle inferences
+Furthermore, natural logic does not elegantly handle inferences
   making use of multiple antecedents; for instance, the law of
   excluded middle is not derivable according to current theory.
 
-\newcite{key:2008maccartney-natlog} point out that Natural Logic is
+\newcite{key:2008maccartney-natlog} point out that natural logic is
   not amenable to reasoning over relational implication
   (\textit{Eve was let go} $\models$ \textit{Eve lost her job};
    \textit{Aho, a trader at UBS} $\models$ \textit{Aho works for UBS};
@@ -477,7 +429,7 @@ We contest that these are special cases of monotone reasoning, where
 That is, if a relation $r_1$ entails another relation $r_2$ then
   $r_1 \leq_r r_2$, where $\leq_r$ is an ordering of functions from
   a list of entities to truth values: $\be^n \rightarrow \{T,F\}$.
-In fact, under certain conditions Natural Logic can warrant inference
+In fact, under certain conditions natural logic can warrant inference
   over meronymy
   (\textit{Obama was born in Hawaii} $\models$ \textit{Obama was born in the US}),
   and potentially other orderings as well.

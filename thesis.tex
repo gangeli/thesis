@@ -7,6 +7,8 @@
 \usepackage{times,latexsym,amsfonts,amssymb,amsmath,graphicx,url,bbm,rotating}
 \usepackage{enumitem,multirow,hhline,stmaryrd,bussproofs,mathtools,siunitx,arydshln}
 \usepackage{booktabs,xcolor}
+% (custom libraries)
+\usepackage{fitch}
 % (inline references)
 \usepackage[square,sort,comma,numbers]{natbib}
 % (tikz)
@@ -48,42 +50,43 @@
 
 
 % -- Sections --
-% Introduction
-\input intro.tex
-
-% Related Work
-\input related.tex
+%% Introduction
+%\input intro.tex
+%
+%% Related Work
+%\input related.tex
 
 % Natural Logic
-\input natlog.tex
+\chapter{Natural Logic}
+\input chapters/natlog/intro.tex
 
-% NaturalLI
-\chapter{Common-Sense Reasoning}
-\input chapters/naturalli/intro.tex
-\input chapters/naturalli/maccartney.tex
-\input chapters/naturalli/search.tex
-\input chapters/naturalli/inference.tex
-\input chapters/naturalli/learning.tex
-\input chapters/naturalli/results.tex
-
-% OpenIE
-\chapter{Open Domain Information Extraction}
-\input chapters/openie/intro.tex
-\input chapters/openie/clause.tex
-\input chapters/openie/natlog.tex
-\input chapters/openie/openie2kbp.tex
-\input chapters/openie/result.tex
-
-% OpenIE
-\chapter{Open Domain Question Answering}
-\input chapters/qa/intro.tex
-\input chapters/qa/background.tex
-\input chapters/qa/naturalli_v2.tex
-\input chapters/qa/softsignal.tex
-\input chapters/qa/results.tex
-
-% Conclusion
-\input conclude.tex
+%% NaturalLI
+%\chapter{Common-Sense Reasoning}
+%\input chapters/naturalli/intro.tex
+%\input chapters/naturalli/maccartney.tex
+%\input chapters/naturalli/search.tex
+%\input chapters/naturalli/inference.tex
+%\input chapters/naturalli/learning.tex
+%\input chapters/naturalli/results.tex
+%
+%% OpenIE
+%\chapter{Open Domain Information Extraction}
+%\input chapters/openie/intro.tex
+%\input chapters/openie/clause.tex
+%\input chapters/openie/natlog.tex
+%\input chapters/openie/openie2kbp.tex
+%\input chapters/openie/result.tex
+%
+%% OpenIE
+%\chapter{Open Domain Question Answering}
+%\input chapters/qa/intro.tex
+%\input chapters/qa/background.tex
+%\input chapters/qa/naturalli_v2.tex
+%\input chapters/qa/softsignal.tex
+%\input chapters/qa/results.tex
+%
+%% Conclusion
+%\input conclude.tex
 
 
 % -- Appendix --
