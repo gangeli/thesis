@@ -1,21 +1,56 @@
-A key underlying formalism throughout much of this thesis is
-  the theoretical framework laid by natural logics.
-Broadly, natural logics aims to capture a subset of valid logical
+A recurring theme throughout this thesis will be the use of natural
+  logics for natural language tasks.
+%
+% Motivate Logic
+%
+I'll begin by motivating the use of logic \textit{at all} in natural language
+  tasks.
+A wide range of successful apporaches in NLP neither use nor need logical reasoning 
+  to perform their task:
+  statistical parsing, part-of-speech tagging, document classification, etc. are all
+  fairly agnostic to any logical phenomena in the documents they are operating over.
+However, as the field of NLP moves away from syntax and shallow classification tasks and
+  increasingly towards natural language \textit{understanding}, we are faced with a
+  necessity to understand meaning of sentences, and understand the implications that can
+  be drawn from them.
+
+Taking some simple examples across a few tasks: in relation extraction, it would be
+  incorrect to assume that Obama was born in Kenya from a sentence \ww{Obama was not
+  born in Kenya}.
+In sentiment, the sentence \ww{The movie's box office failure should not be taken as
+  indicative of its quality} should get positive sentiment.
+In question answering, returning \ww{Harrison Ford} for a query asking for all the female
+  stars of Star Wars would be incorrect.
+
+In all of these cases, a system must either explicitly or implicitly learn how to handle these
+  sorts of logical subtleties.
+Implicitly, a neural network or sufficiently powerful statistical classifier could learn how
+  to treat these queries, at the expense of an often unreasonably large amount of training data
+  (in the extreme, by simply memorizing the logic).
+Explicitly, a first order theorem prover or Markov Logic network could capture the logical
+  content of a sentence, at the expense of a drop in expresivity and computational
+  efficiency.
+In this chapter we'll motivate natural logics as an optimal midway between punting on handling
+  the logic and trusting in the underlying learning algorithm, and enforcing a rigid
+  logical framework on the problem.
+
+
+%
+% Introduce Natural Logics
+%
+Broadly, the aim of natural logics are to capture a subset of valid logical
   inferences by appealing directly to the structure of language,
   as opposed to running deduction on an abstract logical form.
 That is to say, a natural logic is primarily a \textit{proof theory}, where
   the deductive system operates over natural language syntax.
-
-%
-% Example
-%
 To illustrate with an example, we can consider a simple premise:
 
-\begin{center}
+\begin{displayquote}\ww{
 \ww{The cat ate a mouse.}
-\end{center}
+}\end{displayquote}
 
-From this, we would like to logically infer the following:
+From this, we can run the following logical derivation, using the syntax of natural
+  language as the proof language:
 
 \[
 \begin{nd}
@@ -32,7 +67,12 @@ That is to say, if the cat ate a mouse, it is false that no carnivore ate an
   animal, and this is by virtue of the proof presented above.
 This sort of proof appears strange from the perspective of propositional and
   first-order logics, but it is not an altogether unfamiliar sort of reasoning.
-Natural logics trace their origins to the syllogistic reasoning of Aristotle:
+Natural logics trace their origins to the syllogistic reasoning of Aristotle.
+For instance, we may write a simple syllogism as:
+
+%
+% Syllogisms
+%
 
 \[
 \begin{nd}
@@ -42,53 +82,186 @@ Natural logics trace their origins to the syllogistic reasoning of Aristotle:
 \end{nd}
 \]
 
+We can, in fact, chain these syllogisms in much the same way you would
+  chain a first-order proof.
+To introduce a motivating example, an Athenian philosopher might retort with the following
+  if a Persian invader claims that all heroes are Persians:
+
+
+\begin{displayquote}\ww{
+  Clearly you are wrong. You see, all Gods live on Mount Olympus.
+  Some heroes are Gods. And, of course, no one who lives on Mount Olympus
+  is Persian.
+}\end{displayquote}
+
+
+\begin{figure}
+\[
+\begin{nd}
+\hypo {1} {\forall x~~\textrm{God}(x) \supset \textrm{LivesOnOlympus}(x)}
+\hypo {2} {\exists x~~\textrm{Hero}(x) \land \textrm{God}(x)}
+\hypo {3} {\lnot \exists x~~\textrm{LivesOnOlympus}(x) \land \textrm{Persian}(x)}
+
+\open
+  \hypo {4} {\forall x~~\textrm{Hero(x)} \supset \textrm{Persian}(x)}
+  \open[a]
+    \hypo {5}  {\textrm{Hero}(a) \land \textrm{God}(a)}                          \Ee{2}
+    \have {6}  {\textrm{Hero}(a)}                                                \ae{5}
+    \have {7}  {\textrm{Hero(a)} \supset \textrm{Persian}(a)}                    \Ae{4}
+    \have {8}  {\textrm{Persian}(a)}                                             \ie{6,7}
+    \have {9}  {\textrm{God}(a)}                                                 \ae{5}
+    \have {10} {\textrm{God}(a) \supset \textrm{LivesOnOlympus}(a)}              \Ae{1}
+    \have {11} {\textrm{LivesOnOlympus}(a)}                                      \ie{9,10}
+    \have {12} {\textrm{LivesOnOlympus}(a) \land \textrm{Persian}(a)}            \ai{8,11} 
+    \have {13} {\exists x~~\textrm{LivesOnOlympus}(x) \land \textrm{Persian}(x)} \Ei{12} 
+  \close
+  \have {14} {\exists x~~\textrm{LivesOnOlympus}(x) \land \textrm{Persian}(x)}   \r{12} 
+  \have {15} {\bot}                                                              \by{$\bot$ I}{3,14}
+\close
+\have {16} {\lnot~~\forall x~~\textrm{Hero(x)} \supset \textrm{Persian}(x) }     \by{$\lnot$ I}{4--15}
+\end{nd}
+\]
+\caption{\label{fig:natlog-fol-syllogism}
+  A Fitch-style first order logic proof refuting \ww{``all heroes are Persian''} given the premises
+    \ww{``All Gods live on Mount Olympus,''} \ww{``Some heroes are Gods,''} and \ww{``No one who lives
+    on Mount Olympus is Persian.''}.
+  The proof follows a proof by contradiction (lines 4--15), hinging on showing that the hero-God
+    hypothesized in premise 2, and instantiated as $a$ on line 5, would have to be a Persian who lives
+    on Olympus.
+  This would contradict premise 3.
+}
+\end{figure}
+
+
+Our poor philosopher will have likely perished by this point -- lest a Greek hero
+  saves him, in which case then there would remain neither a need nor an audience for
+  his argument.
+But but I can still convince you, the reader, that this was a valid retort by constructing 
+  a first-order proof, given in \reffig{natlog-fol-syllogism}.
+The proof follows a proof by contradiction, showing that the hypothesized hero-God (\ww{``some
+  heroes are Gods''}) would have to both live on Olympus and be Persian -- a contradiction with
+  our premise: \ww{``no one who lives on Mount Olympus is Persian.''}
+
+To contrast with the first order logic proof, there also exists a natural logic proof of our
+  contradiction, based entirely on Aristotilean syllogisms,
+This proof makes use of two syllogistic patterns chained together, and one of the axiomatic
+  negations:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{All Gods live on Mount Olympus}}
+\hypo {2} {\ww{Some heroes are Gods}}
+\hypo {3} {\ww{Nobody who lives on Mount Olympus is Persian}}
+\have {4} {\ww{Some heroes live on Mount Olympus}}  \by{AII (Darii)}{1,2}
+\have {5} {\ww{Some heroes are not Persian}}        \by{EIO (Ferio)}{4,3}
+\have {6} {\lnot~~\ww{All heroes are Persian}}      \by{SaP $\bot$ SoP}{5}
+\end{nd}
+\]
+
+%
+% Motivation
+%
+This example -- and in particular the contrast between the two proof approaches above --
+  provides an excellent context for motivating why the enterprise of natural logics is worthwhile,
+  and why research in the area can have a large impact on natural language processing.
+I'll highlight three concrete motivations below: natural logics are easy to parse into,
+  this parsing is, in a sense, ``lossless,'' and the proofs have the potential to be much
+  more efficient than first order approaches.
+
+% Easy to parse into
+\paragraph{Natural logics are easy to parse into}
+The premises in the first order proof in \reffig{natlog-fol-syllogism} are necessarily no
+  longer in natural language, but parsed into a special logical form.
+Ignoring the aesthetics of the logical form itself, this mapping is by no means trivial;
+  in fact, semantic parsing is a sub-field of NLP in its own right
+  \cite{key:2008kate-semantics,key:2005zettlemoyer-semantics,key:2011liang-semantics,key:2013berant-sempre}.
+Even in our simple example, the second premise reads most naturally as \ww{``there exists
+  something which is a hero and a God;''} however, the utterance we parsed it from was
+  \ww{``some heroes are Gods.''}
+Even more subtly, consider the difference in form for the following two translations:
+
+
+\vspace{1em}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Sentence} & \textbf{Logical Form} \\
+\midrule
+\ww{Everyone on Mount Olympus is Persian} 
+  & $ \forall x~~\textrm{LivesOnOlympus}(x) \supset \textrm{Persian}(x) $ \\
+\ww{No one on Mount Olympus is Persian} 
+  & $ \lnot \exists x~~\textrm{LivesOnOlympus}(x) \land \textrm{Persian}(x)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{1em}
+
+Despite the lexical forms being nearly identical, the logical form has an entirely different
+  structure, changing not only the quantifier but also the connective ($\supset$ versus $\land$).
+By contrast, ``parsing to a logical form'' in syllogistic logic is nonexistent, and
+  in the more sophisticated natural logics later in this chapter generally reduces to a
+  shallow syntactic parse of the sentence.
+
+%  Lossless parsing
+\paragraph{Natural logic parsing is ``lossless''}
+In general, natural language has more semantic content than the logical propositions we
+  extract from it.
+This is evident in the necessity to retrain semantic parsers for new tasks, and underlies
+  the research agenda of defining general semantic representations -- e.g., the Abstract Meaning
+  Representation \cite{key:2013banarescu-amr}.
+Despite being picked to be as concise as possible, even our motivating example
+  has hints of this.
+The derivation in \reffig{natlog-fol-syllogism} has defined the predicates necessary
+  for our particular derivation (LivesOnOlympus, God, Hero, Persian); but, these are not
+  the only things that could be extracted from the sentences.
+Semantically, we could extract that Gods are alive.
+Pragmatically, we should extract that there exist heroes.
+
+In contrast, by operating over natural language directly, the limitations on what
+  natural logics can infer are entirely due to the limitations of the inference
+  mechanism, rather than limitations in what information was successfully extracted
+  from the sentence.
+
+\paragraph{Natural logic proof are efficient}
+Annecdotally, it should be clear that the proof in \reffig{natlog-fol-syllogism} is
+  longer and more nuanced than the corresponding syllogistic proof.
+In fact, to a first approximation, one could make a syllogistic theorem prover with
+  nothing more than regular expressions and a small search algorithm.
+Of course, more expressive natural logics have more difficult search problems;
+  but, nonetheless, they remain in the same spirit of searching over lexical mutations
+  rather than applying symbolic rule sets.
+
+Contrasting with approaches like Markov Logic Networks makes this difference especially salient
+  \cite{key:2006richardson-mln}.
+Formulating our motivating example as a Markov Logic Network requires outright instantiating
+  the denotations of our predicates on a closed world.
+That is, we must first enumerate all the heroes, Gods, and residents of Olympus.
+Thereafter, the task of grounding our formulae on this world and running a heavyweight
+  graphical model solver over the resulting Markov Network still remain.
+By contrast, natural logics are almost by definition a \textit{proof-theoretic} logic:
+  quantifiers can be reasoned over efficiently using only lexical mutation based proofs.
+Although they have a model-theoretic interpretation, actually simulating this model
+  would be impracital and unecessary.
+
+
+% What's missing?
+Of course, despite these advantages it would be unreasonable to advocate for syllogistic
+  reasoning as a practical formalism for modern AI applications.
+Syllogism tend not to allow for easy compositionality, and are generally restrictive in
+  the range of inferences they warrant.
+This thesis instead adopts variants of \textit{monotonicity calculus}
+  \cite{key:1986benthem-natlog,key:1991valencia-natlog}
+  -- a more general-purpose logic which handles a wide range of common phenomena in human
+  language, while nonetheless still operating over the syntax of the language itself.
+
+
 %
 % Outline
 %
-This section will describe some of the motivations for natural logic,
-
-%
-% Syllogisms
-%
-We \cite{key:1986benthem-natlog,key:1991valencia-natlog}.
-
-%
-% Sanchez Valencia-style Logic
-%
-
-A working approximation for natural logic is as a principled formalism
-  for and extension of syllogistic reasoning.
-In this analogy, the minor premise
-  (e.g., \textit{All Greeks are men}) is encoded implicitly,
-  and an inference is made from the major premise to the consequent:
-  (e.g., \textit{All men are mortal} $\Rightarrow$ \textit{All Greeks are mortal}).
-This style of reasoning is warranted from an analysis of the monotonicity
-  of quantifiers, reviewed in \refsec{natlog-mono}.
-
-The additional expressive power of natural logic is derived from two
-  sources: in part, the logic does not rely on template matching,
-  allowing inferences to be made over patterns nested within a larger
-  context, and allowing inferences to be chained.
-In another part, we can make use of MacCartney's expanded entailment
-  relations, described in \refsec{natlog-exclusion}.
-We conclude the section with a novel result showing that the state
-  space of the MacCartney-style derivations can be collapsed to a
-  simpler representation (\refsec{natlog-collapsed}), and by
-  elaborating on the limitations of natural logic (\refsec{natlog-limitations}).
-
-%We briefly motivate this analogy in \refsec{natlog-syllogism},
-%  review recent theory on natural logic in
-%  \refsecs{natlog-mono}{natlog-exclusion}, and propose a collapsed
-%  represenation of MacCartney's entailment relations in
-%  \refsec{natlog-collapsed}.
-%Syllogistic reasoning can be considered a first approximation to
-%  natural logic, as is presented in \refsec{natlog-syllogism}.
-%A brief introduction beyond this first approximation is presented
-%  in the subsequent sections.
-%\refsec{natlog-mono} introduces \textit{monotonicity} in the context
-%  of natural language to form the basis of natural logic;
-%  \refsec{natlog-exclusion} extends this formalism for reasoning about
-%  a wider range of phenomena.
-\newcite{key:2014icard-natlog} offers a more thorough summary of the
-  field, and provides the source for much of the notation and
-  exposition presented here.
+The remainder of chapter will review monotonicity 
+  calculus
+  to show that we can extend the class of logics warranted by language
+  beyond Aristotle's syllogisms (\refsec{natlog-mono}).
+We will then give a practical introduction to using natural logic for practical NLP
+  tasks (\refsec{natlog-nlp}), and
+  motivate further research into related formalisms (\refsec{natlog-propositional}).
