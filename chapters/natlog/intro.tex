@@ -59,7 +59,7 @@ From this, we can run the following logical derivation, using the syntax of natu
 \have {3} {\ww{The cat ate an animal.}}
 \have {4} {\ww{The feline ate an animal.}}
 \have {5} {\ww{The carnivore ate an animal.}}
-\have {5} {\lnot ~~ \ww{No carnivore ate an animal.}}
+\have {6} {\lnot ~~ \ww{No carnivore ate an animal.}}
 \end{nd}
 \]
 
@@ -258,10 +258,12 @@ This thesis instead adopts variants of \textit{monotonicity calculus}
 %
 % Outline
 %
-The remainder of chapter will review monotonicity 
-  calculus
-  to show that we can extend the class of logics warranted by language
-  beyond Aristotle's syllogisms (\refsec{natlog-mono}).
-We will then give a practical introduction to using natural logic for practical NLP
-  tasks (\refsec{natlog-nlp}), and
-  motivate further research into related formalisms (\refsec{natlog-propositional}).
+The remainder of chapter will review denotational semantics (\refsec{natlog-denotations})
+  as a prelude to introducing the monotonicity calculus of \newcite{key:1991valencia-natlog},
+  described in detail in \refsec{natlog-mono}.
+From here on, \textit{natural logic} will be used to refer to the monotonicity calculus
+  described in \newcite{key:1991valencia-natlog}.
+These sections are intended to give a \textit{model-theoretic} interpretation of the logic
+  that can then be used to justfiy the potentially ad-hoc seeming proof theory described
+  in \refsec{natlog-nlp}.
+We motivate further research into related formalisms in \refsec{natlog-propositional}.

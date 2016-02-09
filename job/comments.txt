@@ -1,0 +1,77 @@
+* Use words that have not been defined
+  - NaturalLI
+  - Fixed relation schema
+  - Open IE
+  - "Lexical Methods"
+  - "IR" -> "Information Retrieval"
+  - define "Open Domain"
+* Went fast through the introduction; intro was long
+* Slow down on first roadmap slide; how they increase flexibility
+* Bring up natural logic earlier
+* Not clear what your thesis is about
+  - cut a lot of the KB stuff
+* Downplay the 50% missing recall
+* Made ungrounded statements
+  - Fishy coref when speaking
+* Backup slide on math if asked
+* Pause more on the slide with the axes
+  - Compress prior work onto graph slide
+
+
+* Tick and check next to true/false facts
+* Put in slide on me being on the path to general purpose AI
+
+
+
+On slides:
+x 1: No one likes "facts;" change to "true statements"
+x 2: Start with the human sentence; then computer; then why it's confusing
+x   Disclaimer: the examples will seem obvious, but nontrivial for computer
+x   Change title?
+x 3: Want to reason over text: fixed relation schema? No -- use text.
+x    slide on "Ways to structure your knowledge base"
+x 4: Go away
+x 5: Candidate fact; two arrows to true/false
+x
+x 6: Slow down on defining the axes
+x    Be more assertive on "this is what I did"
+x    Introduce "natural logic" here: "formal reasoning with text over large corpora"
+x    Mugshot of me instead of "me"
+x 8: "city" -> "city council"
+x    Top sentence in black
+x    checks and crosses
+x    Drop this slide
+x 9: Drop related work
+x 10: Could directly introduce natural logic
+x 11: What do we need from a formalism? correct + fast
+x 12: Motivate Markov Logic
+x    Remind people that we want to figure out if something is true or not
+x 15: not "compromise"
+x     intro to: "does a given mutation to a sentence preserve its truth?"
+x 15.5: Add slide saying we're detouring to natural logic.
+x       Remind people on not my contribution
+x 17: Mention that the ordering is from WordNet
+x 20: Bolded word was hard to see.
+x 25: drop "NaturalLI"
+x     NaturalLI Only -> Inference Only
+x     "NaturalLI - Direct Lookup"
+x 26: Cut second point
+x     Cut "2" in "2 big problems"
+x     Say that we're munging premises to make it easier for NaturalLI
+x     "The internet does not speak in atomic utterances"
+x 27: Say what the arcs mean that I'm splitting on
+x 29: Include dataset size
+x     - Define "Penn Treebank" / "SVO triples"
+x 30: Ex mark next to false premises
+x 31: Explain "dependency" + "nominal" pattern
+x 31.5: Introduce task
+x       "Open IE relation" --> "text"
+x 38: Break into two slides
+x     Diagram to explain it?
+x 38: Why important? Put why it should be fast before introducing the method
+x 39: Rename "evaluation function" --> "lexical classifier integration?"
+x 40: Add examples
+
+
+
+
