@@ -117,3 +117,10 @@
       \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
     },
   }
+
+\newcommand\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw=darkred,inner sep=2pt] (char) {#1};}
+}
+\newcommand\noncircled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw=white,inner sep=2pt] (char) {#1};}
+}

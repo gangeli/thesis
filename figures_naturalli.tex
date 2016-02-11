@@ -45,12 +45,12 @@
 % A Finite State Automata for the collapsed inference states
 % -----
 %
-\newcommand\collapsedFSA{
+\newcommand\collapsedFSAImpl[3]{
   \begin{tikzpicture}[shorten >=1pt,node distance=2.0cm,auto,semithick,inner sep=2pt,bend angle=30,
     % (styles)
-    every state/.style={draw=red!100,very thick,fill=red!10},
-    accepting/.style={draw=blue!50,very thick,fill=blue!10},
-    initial/.style={draw=green!90,very thick,fill=green!10}
+    every state/.style={draw=red!100,very thick,fill=red!#1},
+    accepting/.style={draw=blue!50,very thick,fill=blue!#3},
+    initial/.style={draw=green!90,very thick,fill=green!#2}
     ]
 
     % (states)
@@ -70,6 +70,11 @@
 
   \end{tikzpicture}
 }
+
+\newcommand\collapsedFSA{\collapsedFSAImpl{10}{10}{10}}
+\newcommand\collapsedFSARed{\collapsedFSAImpl{50}{10}{10}}
+\newcommand\collapsedFSAGreen{\collapsedFSAImpl{10}{50}{10}}
+\newcommand\collapsedFSABlue{\collapsedFSAImpl{10}{10}{50}}
 
 %
 % -----
