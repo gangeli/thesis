@@ -1,6 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MOTIVATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\no{\monoUpR{}{\textbf{No$_{\downarrow \downarrow}$}}{}{}}
+\def\carnivores{\monoDownR{felines}{carnivores}{animal}{organism}}
+\def\eat{\monoDownR{slurp}{eat}{consume}{}}
+\def\animals{\monoDownR{chordate}{animals}{organism}{living thing}}
 
 %%%%%%%%%%%%%%%%%%% 
 % COMMON SENSE REASONING TEASER
@@ -26,14 +30,14 @@
 %%%%%%%%%%%%%%%%%%% 
 % TEASER
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{Start with a large knowledge base}
+\begin{frame}{Start with a large knowledge base (270M facts)}
 \begin{center}
   \hspace{0.8cm}
   \includegraphics[height=2.2cm]{../img/database.png}
 \end{center}
 \end{frame}
 
-\begin{frame}[noframenumbering]{Start with a large knowledge base}
+\begin{frame}[noframenumbering]{Start with a large knowledge base (270M facts)}
 \begin{center}
   \teaserManyPremises
 \end{center}
@@ -77,12 +81,6 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[noframenumbering]{Infer new facts...}
-\begin{center}
-  \teaserBlindInferenceNaturalOrder
-\end{center}
-\end{frame}
-
 
 %%%%%%%%%%%%%%%%%%% 
 % INFERENCE IS SEARCH
@@ -105,7 +103,7 @@
 \end{tabular}
 \end{frame}
 
-\input exampleSearch.tex
+%\input exampleSearch.tex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NATURAL LOGIC
@@ -115,7 +113,7 @@
 % MUTATIONS ARE LOGIC
 %%%%%%%%%%%%%%%%%%%
 \begin{frame}{A Search Problem Over Valid Inferences}
-\hh{Mutations have to be precise:}
+\hh{Transitions (mutations) have to be precise:}
 \vspace{2ex}
 
 \begin{center}
@@ -124,12 +122,70 @@
 \w{\textbf{The} carnivores eat animals} & \textbf{$\vDash$}       & \darkgreen{\textit{\textbf{Some} carnivores eat animals}}
 \end{tabular}
 \end{center}
+\vspace{2ex}
 \pause
 
-\begin{center}
-  \includegraphics[height=4cm]{../img/detour.png}
-\end{center}
+\hh{Transitions have to respect logical entailment}
+\begin{itemize}
+\item Logic should be fast (visit 1M nodes / sec).
+\item Logic should operate over text.
+\end{itemize}
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%% 
+% NATURAL LOGICS
+%%%%%%%%%%%%%%%%%%%
+\def\title{Natural Logics}
+\begin{frame}{\title}
+\begin{center}
+\hh{A class of proof-theoretic logics over the syntax of natural language.}
+\end{center}
+\pause
+\vspace{2ex}
+
+\hh{Perfect tool for large-scale logical inference}
+\begin{itemize}
+\item \textit{Instantaneous} and \textit{perfect} semantic parsing
+\item Fast inference
+\item Plays nice with lexical methods
+\item Handles common non-first-order phenomena
+\end{itemize}
+\end{frame}
+
+
+%\def\title{Monotonicity Calculus}
+%\begin{frame}{\title}
+%\begin{center}
+%\hh{Does a given mutation to a sentence preserve its truth?}
+%\end{center}
+%\vspace{1em}
+%\pause
+%
+%\hh{Logic over natural language}
+%\begin{itemize}
+%\item \textit{Instantaneous} and \textit{perfect} semantic parsing!
+%\item Plays nice with lexical methods
+%\end{itemize}
+%\vspace{1ex}
+%\pause
+%
+%\hh{Tractable}
+%\begin{itemize}
+%\item Polynomial time entailment checking \cite{key:2008maccartney-natlog}.
+%\end{itemize}
+%\vspace{1ex}
+%\pause
+%
+%\hh{Expressive (for common inferences)}
+%\begin{itemize}
+%\item Second-order phenomena; \w{most}; quantifier scoping
+%\pause
+%\item No free lunch: shallow quantification; single-premise only
+%\end{itemize}
+%\footnotetext<.->{\cite{key:1991valencia-natlog,key:2008maccartney-natlog,key:2014icard-natlog}}
+%\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%% 
 % PERSIANS EXAMPLE
@@ -179,43 +235,9 @@ $
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%% 
-% LOGIC AS BLACK BOX
+% SYLLOGISMS
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{Language Interpretation is a Black Box}
-\begin{tabular}{m{4cm} m{0.1cm} m{2.25cm} m{0.1cm} m{1cm}}
-  \w{All heroes are Persian} & $\Rightarrow$ & 
-    \includegraphics[height=2cm]{../img/complicated_machine.jpg} &
-    $\Rightarrow$ & $\{ true, false \}$ \\
-   \pause
-  
-  \w{All heroes are Persian} & $\Rightarrow$ & 
-    \hspace{1cm} $f$ & 
-    $\Rightarrow$ & $\{ true, false \}$
-\end{tabular}
-\pause
-\vspace{4ex}
-
-\hh{First Order Logic:} Evaluate $f$ in terms of predicates/connectives/etc. \\
-\vspace{2ex}
-\hh{Natural Logic:} What can we say about $f$ without evaluating it?
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%% 
-% LOGIC AS BLACK BOX
-%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Syllogisms: Invariants in $f$}
-\vspace{-4ex}
-\begin{center}
-\[ f(\w{All $x$ $y$}) \land f(\w{Some $z$ are $x$}) \vDash f(\w{Some $z$ $y$}) \]
-\[ f(\w{Some $z$ $y$}) \land f(\w{No $y$ are $q$}) \vDash f(\w{Some $z$ are not $q$}) \]
-\end{center}
-\vspace{2ex}
-
-\hh{Pattern matching $\Rightarrow$ Don't need to interpret $f$; $x$, $y$, $z$, $q$}
-\vspace{2ex}
-\pause
-
-\hh{Natural language proof theory:}
+\begin{frame}{Syllogisms: The First Natural Logic}
 \begin{center}
 \scalebox{0.5}{
   $
@@ -230,24 +252,91 @@ $
   $
 }
 \end{center}
+\vspace{2ex}
+\pause
+
+%\hh{Syllogisms have some nice properties}
+%\begin{itemize}
+%  \item More cognitively grounded
+%  \item Computationally efficient
+%  \item \textbf{Uses only the syntax of natural language}
+%\end{itemize}
+%\vspace{2ex}
+%\pause
+
+\hh{...But syllogisms are cripplingly unexpressive}
+
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%% 
+%% LOGIC AS BLACK BOX
+%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Language Interpretation is a Black Box}
+%\begin{tabular}{m{4cm} m{0.1cm} m{2.25cm} m{0.1cm} m{1cm}}
+%  \w{All heroes are Persian} & $\Rightarrow$ & 
+%    \includegraphics[height=2cm]{../img/complicated_machine.jpg} &
+%    $\Rightarrow$ & $\{ true, false \}$ \\
+%   \pause
+%  
+%  \w{All heroes are Persian} & $\Rightarrow$ & 
+%    \hspace{1cm} $f$ & 
+%    $\Rightarrow$ & $\{ true, false \}$
+%\end{tabular}
+%\pause
+%\vspace{4ex}
+%
+%\hh{First Order Logic:} Evaluate $f$ in terms of predicates/connectives/etc. \\
+%\vspace{2ex}
+%\hh{Natural Logic:} What can we say about $f$ without evaluating it?
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%%%%% 
+%% LOGIC AS BLACK BOX
+%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Syllogisms: Invariants in $f$}
+%\vspace{-4ex}
+%\begin{center}
+%\[ f(\w{All $x$ $y$}) \land f(\w{Some $z$ are $x$}) \vDash f(\w{Some $z$ $y$}) \]
+%\[ f(\w{Some $z$ $y$}) \land f(\w{No $y$ are $q$}) \vDash f(\w{Some $z$ are not $q$}) \]
+%\end{center}
+%\vspace{2ex}
+%
+%\hh{Pattern matching $\Rightarrow$ Don't need to interpret $f$; $x$, $y$, $z$, $q$}
+%\vspace{2ex}
+%\pause
+%
+%\hh{Natural language proof theory:}
+%\begin{center}
+%\scalebox{0.5}{
+%  $
+%  \begin{nd}
+%  \hypo {1} {\ww{All Gods live on Mount Olympus}}
+%  \hypo {2} {\ww{Some heroes are Gods}}
+%  \hypo {3} {\ww{Nobody who lives on Mount Olympus is Persian}}
+%  \have {4} {\ww{Some heroes live on Mount Olympus}}  \by{AII (Darii)}{1,2}
+%  \have {5} {\ww{Some heroes are not Persian}}        \by{EIO (Ferio)}{4,3}
+%  \have {6} {\lnot~~\ww{All heroes are Persian}}      \by{SaP $\bot$ SoP}{5}
+%  \end{nd}
+%  $
+%}
+%\end{center}
+%\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%% 
 % MONOTONICITY IN ALGEBRA
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{Beyond Syllogisms: Monotonicity}
+\begin{frame}{Beyond Syllogisms: Monotonicity Calculus}
 \begin{center}
   $f : X \rightarrow Y$ is \textit{monotone} w.r.t. partial orders 
     $\leq_X$, $\leq_Y~~$ 
     iff
-    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_0) \leq_Y f(x_1)$. \\
-  \vspace{1ex}
-  \textcolor<1>{white}{\textcolor<2->{darkred}{\textbf{Don't need to evaluate $f$.}}}
+    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_1) \geq_Y f(x_0)$. \\
 \end{center}
 \begin{center}
-  \includegraphics[height=6cm]{../img/monotonicity_math.pdf}
+  \includegraphics[height=5.5cm]{../img/monotonicity_math.pdf}
 \end{center}
+\footnotetext<.->{\cite{key:1991valencia-natlog,key:2014icard-natlog}}
 \end{frame}
 
 
@@ -255,14 +344,14 @@ $
 %%%%%%%%%%%%%%%%%%% 
 % MONOTONICITY IN LANGUAGE (<_Y)
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{Monotonicity in Language}
+\begin{frame}{Monotonicity Calculus}
 \begin{center}
   $f : X \rightarrow 
     \textcolor<2>{darkred}{Y}$ 
     is \textit{monotone} w.r.t. partial orders 
     $\leq_X$, \textcolor<2>{darkred}{$\leq_Y~~$} 
     iff
-    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_0) \leq_Y f(x_1)$. \\
+    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_1) \geq_Y f(x_0)$. \\
   \vspace{1ex}
   \hh{$f :$ denotations $\rightarrow$ truth values}
 \end{center}
@@ -297,7 +386,7 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
     is \textit{monotone} w.r.t. partial orders 
     $\leq_X$, $\leq_Y~~$
     iff
-    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_0) \leq_Y f(x_1)$. \\
+    $~~\forall x_0 \forall x_1 \geq_X x_0; ~~ f(x_1) \geq_Y f(x_0)$. \\
   \vspace{1ex}
   \hh{$f :$ denotations $\rightarrow$ truth values}
 \end{center}
@@ -329,25 +418,6 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
   \denote{cat} & $\subseteq$ & \denote{feline}
 \end{tabular}
 \end{center}
-\pause
-
-\begin{center}
-\hh{We write \forward\ for both  $\leq_X$ and $\leq_Y$.}
-\end{center}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%% 
-% REASONING WITH EXCLUSION
-%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Reasoning with Negation (Exclusion)}
-\begin{center}
-\begin{tabular}{ccc}
-\forwardVenn & \reverseVenn & \equivalentVenn \\
-\pause
-\negateVenn & \alternateVenn & \coverVenn
-\end{tabular}
-\end{center}
 \end{frame}
 
 
@@ -358,7 +428,7 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
 \def\header{
   \hh{Quantifiers are functions with monotonicity.} \\
   \vspace{2ex}
-  \hh{Words are in either upward, downward, or non-monotone (polarity) contexts.} \\
+  \hh{Words are in either upward, downward, or non-monotone contexts.} \\
   \vspace{2ex}
 }
 \def\blurb{
@@ -432,41 +502,27 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
 %%%%%%%%%%%%%%%%%%%
 \input example.tex
 	
+
+%%%%%%%%%%%%%%%%%%% 
+% REASONING WITH EXCLUSION
+%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Reasoning with Negation (Exclusion)}
+\begin{center}
+\begin{tabular}{ccc}
+\forwardVenn & \reverseVenn & \equivalentVenn \\
+\pause
+\negateVenn & \alternateVenn & \coverVenn
+\end{tabular}
+\end{center}
+\footnotetext<.->{\cite{key:2008maccartney-natlog}}
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%% 
 % TRANSITIVITY
 %%%%%%%%%%%%%%%%%%%
-\def\title{More Inferences: Transitivity}
+\def\title{``Join Table''}
 \begin{frame}{\title}
-\begin{center}
-	\begin{tabular}{|c||c|c|c|}
-    \hline
-    $\bowtie$ & $\equivalent$ & $\forward$ & $\reverse$ \\
-    \hline
-    $\equivalent$ & $\equivalent$ & $\forward$ & $\reverse$ \\
-    $\forward$ & $\forward$ & \noncircled{$\forward$} & $\independent$  \\
-    $\reverse$ & $\reverse$ & $\independent$ & $\reverse$  \\
-    $\negate$ & $\negate$ & $\cover$ & $\alternate$   \\
-    \hline
-	\end{tabular}
-\end{center}
-\end{frame}
-
-\begin{frame}[noframenumbering]{\title}
-\begin{center}
-	\begin{tabular}{|c||c|c|c|}
-    \hline
-    $\bowtie$ & $\equivalent$ & $\forward$ & $\reverse$ \\
-    \hline
-    $\equivalent$ & $\equivalent$ & $\forward$ & $\reverse$ \\
-    $\forward$ & $\forward$ & \circled{$\forward$} & $\independent$  \\
-    $\reverse$ & $\reverse$ & $\independent$ & $\reverse$  \\
-    $\negate$ & $\negate$ & $\cover$ & $\alternate$   \\
-    \hline
-	\end{tabular}
-\end{center}
-\end{frame}
-
-\begin{frame}[noframenumbering]{\title}
 \begin{center}
 	\begin{tabular}{|c||c|c|c|c|c|c|c|}
     \hline
@@ -484,6 +540,10 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
 \end{center}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%% 
+% TRANSITIVITY
+%%%%%%%%%%%%%%%%%%%
+\def\title{Contribution: Don't Need Join Table}
 \begin{frame}[noframenumbering]{\title}
 \begin{center}
   \scalebox{0.85}{\completeFSA}
@@ -500,24 +560,60 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% INFERENCE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%% 
-% REMINDER
-%%%%%%%%%%%%%%%%%%%
-\begin{frame}[noframenumbering]{Problem Setup}
-\begin{center}
-  \teaserFullDerivation
-\end{center}
-\end{frame}
+%%%%%%%%%%%%%%%%%%%% 
+%% MONOTONICITY CALCULUS
+%%%%%%%%%%%%%%%%%%%%
+%\def\title{Monotonicity Calculus}
+%\begin{frame}{\title}
+%\begin{center}
+%\hh{Does a given mutation to a sentence preserve its truth?}
+%\end{center}
+%\vspace{1em}
+%\pause
+%
+%\hh{Logic over natural language}
+%\begin{itemize}
+%\item \textit{Instantaneous} and \textit{perfect} semantic parsing!
+%\item Plays nice with lexical methods
+%\end{itemize}
+%\vspace{1ex}
+%\pause
+%
+%\hh{Tractable}
+%\begin{itemize}
+%\item Polynomial time entailment checking \cite{key:2008maccartney-natlog}.
+%\end{itemize}
+%\vspace{1ex}
+%\pause
+%
+%\hh{Expressive (for common inferences)}
+%\begin{itemize}
+%\item Second-order phenomena; \w{most}; quantifier scoping
+%\pause
+%\item No free lunch: shallow quantification; single-premise only
+%\end{itemize}
+%\footnotetext<.->{\cite{key:1991valencia-natlog,key:2008maccartney-natlog,key:2014icard-natlog}}
+%\end{frame}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INFERENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%%%%%%%%%%%%%%%%%%%% 
+%% REMINDER
+%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}[noframenumbering]{Problem Setup}
+%\begin{center}
+%  \teaserFullDerivation
+%\end{center}
+%\end{frame}
 
 %%%%%%%%%%%%%%%%%% 
 % EXAMPLE SEARCH
 %%%%%%%%%%%%%%%%%%
-\def\title{An Example Search (Revisited)}
+\def\title{An Example Search}
 \def\eat{\monoDownR{slurp}{eat}{consume}{}}
 \begin{frame}{\title}
   \begin{center}
@@ -660,7 +756,7 @@ false & false & \darkgreen{true}  & \darkgreen{\textcolor<2>{white}{true}}
 \vspace{1ex}
 \pause
 \hh{New Solution:} Treat text as the meaning representation!
-\vspace{2ex}
+\vspace{4ex}
 \pause
 
 \hh{Old Problem:} Collect ontologies of true facts.

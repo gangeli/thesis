@@ -361,65 +361,6 @@ Bias                 & -2.0  & 1
 %\end{frame}
 
 
-%%%%%%%%%%%%%%%%%%% 
-% Synthesis
-%%%%%%%%%%%%%%%%%%% 
-\def\title{The Full System}
-%
-% Frame 1
-%
-\begin{frame}{\title}
-\begin{center}
-\only<1>{\hh{Common Sense Reasoning}\textcolor{white}{p}}
-\only<2>{\hh{$+$ Complex Premises}\textcolor{white}{p}}
-\only<3>{\hh{$+$ Evaluation Function}\textcolor{white}{p}}
-
-\begin{tikzpicture}
-
-% horizontal axis
-\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexibility};
-% vertical axis
-\draw[->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
-
-\node at (1.0,3.5)  {\includegraphics[height=1cm]{../img/textrunner.jpg}};
-\node at (7.0,1.0)  {\includegraphics[height=1cm]{../img/pascal.png}};
-\node at (3.5,2.5)  [visible on=<1>] {\includegraphics[height=1cm]{../img/me.png}};
-\node at (3.5,3.5)  [visible on=<2>] {\includegraphics[height=1cm]{../img/me.png}};
-\node at (7.0,3.5)  [visible on=<3>] {\includegraphics[height=1cm]{../img/me.png}};
-
-\end{tikzpicture}
-\end{center}
-\end{frame}
-
-%
-% Frame 2
-%
-\begin{frame}[noframenumbering]{\title}
-
-\hh{Common Sense Facts}
-\begin{itemize}
-\item Natural logic inference as search
-\item Soft relaxation of ``strict'' inference
-\item 4x improvement in recall
-\end{itemize}
-\vspace{1ex}
-\pause
-
-\hh{Complex Premises}
-\begin{itemize}
-\item Split the premise into atomic clauses
-\item Shorten each clause w/ natural logic
-\item 3 F$_1$ improvement on knowledge base population
-\end{itemize}
-\vspace{1ex}
-\pause
-
-\hh{Evaluation Function}
-\begin{itemize}
-\item Use lexical classifier as evaluation function
-\item Detect likely entailment / contradictions
-\end{itemize}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%% 
 % Results
@@ -493,6 +434,68 @@ This Work + \bell + \whistle   & \textbf{74}        & \textbf{67} \\
 \end{center}
 \end{frame}
 
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Synthesis
+%%%%%%%%%%%%%%%%%%% 
+\def\title{The Full System}
+%%
+%% Frame 1
+%%
+%\begin{frame}{\title}
+%\begin{center}
+%\only<1>{\hh{Common Sense Reasoning}\textcolor{white}{p}}
+%\only<2>{\hh{$+$ Complex Premises}\textcolor{white}{p}}
+%\only<3>{\hh{$+$ Evaluation Function}\textcolor{white}{p}}
+%
+%\begin{tikzpicture}
+%
+%% horizontal axis
+%\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexibility};
+%% vertical axis
+%\draw[->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
+%
+%\node at (1.0,3.5)  {\includegraphics[height=1cm]{../img/textrunner.jpg}};
+%\node at (7.0,1.0)  {\includegraphics[height=1cm]{../img/pascal.png}};
+%\node at (3.5,2.5)  [visible on=<1>] {\includegraphics[height=1cm]{../img/me.png}};
+%\node at (3.5,3.5)  [visible on=<2>] {\includegraphics[height=1cm]{../img/me.png}};
+%\node at (7.0,3.5)  [visible on=<3>] {\includegraphics[height=1cm]{../img/me.png}};
+%
+%\end{tikzpicture}
+%\end{center}
+%\end{frame}
+
+%
+% Frame 2
+%
+\begin{frame}[noframenumbering]{\title}
+
+\hh{Common Sense Facts}
+\begin{itemize}
+\item Text is knowledge
+\item Soft natural logic inference as search
+\item 4x improvement in recall
+\end{itemize}
+\vspace{1ex}
+\pause
+
+\hh{Complex Premises}
+\begin{itemize}
+\item Split the premise into atomic clauses
+\item Shorten each clause w/ natural logic
+\item 3 F$_1$ improvement on knowledge base population
+\end{itemize}
+\vspace{1ex}
+\pause
+
+\hh{Evaluation Function}
+\begin{itemize}
+\item Use lexical classifier as evaluation function
+\item Detect likely entailment / contradictions
+\item 3\% improvement on science exam questions
+\end{itemize}
+\end{frame}
 
 
 

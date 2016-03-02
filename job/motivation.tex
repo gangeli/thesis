@@ -3,89 +3,87 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%% 
-% Knowledge = Facts
+% Idiot Savants
 %%%%%%%%%%%%%%%%%%% 
-\def\title{Learning ``\textit{Knowledge}?''}
+\def\title{Want: General Purpose AI}
 \begin{frame}{\title}
 \begin{center}
-\includegraphics[width=4cm]{../img/philosopher.png}
+\includegraphics[width=6cm]{../img/data.jpg}
 \end{center}
 \end{frame}
 
-
-%\begin{frame}[noframenumbering]{\title}
-%\begin{center}
-%\hh{Knowledge of syntactic structure?} \\
-%\vspace{5ex}
-%\treeBlank
-%\end{center}
-%\end{frame}
-
-
+%
+%
+%
+\def\title{Have: ``Idiot Savants''}
 \begin{frame}[noframenumbering]{\title}
 \begin{center}
-\hh{Knowledge = \textit{True Statements}} \\
+\includegraphics[width=4cm]{../img/parts.jpg}
+\end{center}
+
+\begin{itemize}
+  \item Relation extractors can't predict sentiment.
+  \item Sentiment analyzers can't produce parse trees.
+  \pause
+  \item Movie sentiment analyzers perform poorly on product reviews.
+\end{itemize}
+\end{frame}
+
+%
+%
+%
+\def\title{Towards Intelligence}
+\begin{frame}[noframenumbering]{\title}
+\hh{Glue systems together $\Rightarrow$ CoreNLP:} Great, but not ``intelligence''
+\begin{center}
+\includegraphics[height=3cm]{../img/bbq.jpg}
+\end{center}
+\pause
+
+\hh{Joint Models:} Difficult to scale
+\begin{center}
+\includegraphics[height=3cm]{../img/jenga.jpg}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%% 
+% Humans use Knowledge
+%%%%%%%%%%%%%%%%%%% 
+\def\title{How Are Humans Intelligent?}
+\begin{frame}{\title}
+\pause
+\begin{center}
+\hh{We leverage an immense amount of background knowledge.}
+\end{center}
+\pause
+\vspace{3ex}
+
+\begin{center}
+\textbf{\w{``The Good Dinosaur was Pixar 's second best movie in 2015''}}
+\end{center}
+%\vspace{1ex}
+%\hh{How does a sentiment analysis algorithm handle this?} \\
+%\vspace{1ex}
+%\hh{How does a human handle this?}
+%\pause
+%\pause
+%\pause
+%\begin{itemize}
+%  \item Pixar only released two movies in 2015.
+%\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%% 
+% Into Ph.D. Work
+%%%%%%%%%%%%%%%%%%% 
+\begin{frame}{My Ph.D. Work: A Key First Step}
+\begin{center}
+\hh{Knowledge = \textit{Justified true beliefs}} \\
 \vspace{5ex}
 \includegraphics[width=4cm]{../img/facts.png}
 \end{center}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%% 
-% Why is Knowledge Important
-%%%%%%%%%%%%%%%%%%% 
-\def\title{Why is Knowledge Important for the World?}
-\begin{frame}{\title}
-\begin{center}
-  \includegraphics[height=3.0cm]{../img/google-now-voice.png} \\
-  \vspace{2ex}
-  \hh{More knowledge in the world than is found in Freebase} \\
-\end{center}
-\end{frame}
-
-\begin{frame}[noframenumbering]{\title}
-\begin{center}
-  \includegraphics[height=3.0cm]{../img/medical-literature.jpg} \\
-  \vspace{2ex}
-  \hh{800,000 biomedical articles published in 2013} \\
-\end{center}
-\end{frame}
-
-\begin{frame}[noframenumbering]{\title}
-\begin{center}
-  \includegraphics[height=3.0cm]{../img/paper-stack.jpg} \\
-  \vspace{2ex}
-  \hh{90\% of scientific papers never cited; perhaps never read} \\
-\end{center}
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%% 
-% Why is Knowledge Important
-%%%%%%%%%%%%%%%%%%% 
-\def\title{Why is Knowledge Important for NLP?}
-\begin{frame}{\title}
-\begin{center}
-\textbf{\w{``The Good Dinosaur was \textcolor<3>{darkred}{Pixar} 's 
-           \textcolor<4>{darkred}{second best} movie in 2015''}}
-\end{center}
-\pause
-\vspace{1ex}
-\hh{Why does a computer think this is positive?} \\
-\vspace{1ex}
-\pause
-\pause
-\pause
-\hh{Why can humans interpret this review correctly?}
-\begin{itemize}
-  \item Pixar released two movies in 2015.
-  \item Pixar makes good movies.
-\end{itemize}
-\pause
-\vspace{2ex}
-\hh{Data gets you to $90\%$ accuracy -- knowledge for remaining $10\%$?} \\
 \end{frame}
 
 
@@ -322,13 +320,13 @@
 %%%%%%%%%%%%%%%%%%% 
 % Open Domain Knowledge
 %%%%%%%%%%%%%%%%%%%
-\begin{frame}{This Work}
+\begin{frame}{Text is Knowledge}
 \hh{Store Information as Text} (easier) \\
 \hh{Query Information as Text} (hard!)  \\
 \vspace{2ex}
 \pause
 
-\hh{Build a system that:} \\
+\hh{We need a system that:} \\
 \hspace{2ex}\textbf{Takes as input} a candidate textual statement. \\
 \hspace{2ex}\textbf{Produces as output} the truth of that statement. \\
 \vspace{1ex}
@@ -382,93 +380,93 @@
 
 
 
-%%%%%%%%%%%%%%%%%%% 
-% PRIOR WORK
-%%%%%%%%%%%%%%%%%%%
-\tikzset{
-  invisible/.style={opacity=0},
-  visible on/.style={alt=#1{}{invisible}},
-  alt/.code args={<#1>#2#3}{%
-    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
-  },
-}
-
+%%%%%%%%%%%%%%%%%%%% 
+%% PRIOR WORK
+%%%%%%%%%%%%%%%%%%%%
+%\tikzset{
+%  invisible/.style={opacity=0},
+%  visible on/.style={alt=#1{}{invisible}},
+%  alt/.code args={<#1>#2#3}{%
+%    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+%  },
+%}
 %
-% Frame 1
+%%
+%% Frame 1
+%%
+%\begin{frame}[t]{Prior Work}
+%\begin{center}
+%\only<1-2>{
+%  \textcolor<1>{white}{\textbf{Relation Extraction:} }
+%  \textcolor<1>{white}{\triple{Barack Obama}{born\_in}{???}}
+%  \textcolor{white}{p} % for spacing
+%}
+%\only<3>{\textbf{Open Relation Extraction:} \triple{rabbits}{eat}{???}}
+%\only<4>{\textbf{Entailment:} If \w{a watch measures time}, does \w{it measure volume}?\textcolor{white}{p}}
+%\vspace{1ex}
+%\begin{tikzpicture}
 %
-\begin{frame}[t]{Prior Work}
-\begin{center}
-\only<1-2>{
-  \textcolor<1>{white}{\textbf{Relation Extraction:} }
-  \textcolor<1>{white}{\triple{Barack Obama}{born\_in}{???}}
-  \textcolor{white}{p} % for spacing
-}
-\only<3>{\textbf{Open Relation Extraction:} \triple{rabbits}{eat}{???}}
-\only<4>{\textbf{Entailment:} If \w{a watch measures time}, does \w{it measure volume}?\textcolor{white}{p}}
-\vspace{1ex}
-\begin{tikzpicture}
-
-% horizontal axis
-\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexible Representation};
-
-\node at (1.0,1.0) [visible on=<2->]{\includegraphics[height=1cm]{../img/tac.jpg}};
-\node at (4.0,1.0) [visible on=<3->]{\includegraphics[height=1cm]{../img/textrunner.jpg}};
-\node at (7.0,1.0) [visible on=<4->]{\includegraphics[height=1cm]{../img/pascal.png}};
-
-% vertical axis
-\draw[->,invisible] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
-
-\end{tikzpicture}
-\end{center}
-\only<2>{\footnotetext<.->{\cite{key:2011hoffman-kbp,key:2012surdeanu-mimlre,key:2014angeli-active}}}
-\only<3>{\footnotetext<.->{\cite{key:2007banko-openie,key:2011fader-reverb,key:2012mausam-ollie}}}
-\only<4>{\footnotetext<.->{\cite{key:2006glickman-rte,key:2009maccartney-thesis}}}
-\end{frame}
-
-
-
+%% horizontal axis
+%\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexible Representation};
 %
-% Frame 2
+%\node at (1.0,1.0) [visible on=<2->]{\includegraphics[height=1cm]{../img/tac.jpg}};
+%\node at (4.0,1.0) [visible on=<3->]{\includegraphics[height=1cm]{../img/textrunner.jpg}};
+%\node at (7.0,1.0) [visible on=<4->]{\includegraphics[height=1cm]{../img/pascal.png}};
 %
-\begin{frame}[noframenumbering]{Textual Entailment}
-\hh{Single Premise:}\\
-\begin{center}
-\w{Mitsubishi Motors Corp.'s new vehicle sales in the US fell 46 percent in June.} \\
-\end{center}
-\vspace{2ex}
-
-\hh{Single Hypothesis:}\\
-\begin{center}
-\w{Mitsubishi sales rose 46 percent. }
-\end{center}
-\vspace{2ex}
-
-\hh{Classification Task:} 
-  If you accept the premise, would you accept the hypothesis?
-\end{frame}
-
+%% vertical axis
+%\draw[->,invisible] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
 %
-% Frame 3
+%\end{tikzpicture}
+%\end{center}
+%\only<2>{\footnotetext<.->{\cite{key:2011hoffman-kbp,key:2012surdeanu-mimlre,key:2014angeli-active}}}
+%\only<3>{\footnotetext<.->{\cite{key:2007banko-openie,key:2011fader-reverb,key:2012mausam-ollie}}}
+%\only<4>{\footnotetext<.->{\cite{key:2006glickman-rte,key:2009maccartney-thesis}}}
+%\end{frame}
 %
-\begin{frame}[noframenumbering]{Prior Work}
-\begin{center}
-\textcolor<1-2>{white}{\textbf{This Work:} Formal reasoning with text over large corpora}
-
-\begin{tikzpicture}
-
-% horizontal axis
-\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexible Representation};
-
-\node at (1.0,1.0) [visible on=<1>] {\includegraphics[height=1cm]{../img/tac.jpg}};
-\node at (4.0,1.0) [visible on=<1>] {\includegraphics[height=1cm]{../img/textrunner.jpg}};
-\node at (1.0,3.5) [visible on=<2->] {\includegraphics[height=1cm]{../img/tac.jpg}};
-\node at (4.0,3.5) [visible on=<2->] {\includegraphics[height=1cm]{../img/textrunner.jpg}};
-\node at (7.0,1.0) {\includegraphics[height=1cm]{../img/pascal.png}};
-\node at (7.0,3.5) [visible on=<3->] {\includegraphics[height=1cm]{../img/me.png}};
-
-% vertical axis
-\draw[->,visible on=<2->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
-
-\end{tikzpicture}
-\end{center}
-\end{frame}
+%
+%
+%%
+%% Frame 2
+%%
+%\begin{frame}[noframenumbering]{Textual Entailment}
+%\hh{Single Premise:}\\
+%\begin{center}
+%\w{Mitsubishi Motors Corp.'s new vehicle sales in the US fell 46 percent in June.} \\
+%\end{center}
+%\vspace{2ex}
+%
+%\hh{Single Hypothesis:}\\
+%\begin{center}
+%\w{Mitsubishi sales rose 46 percent. }
+%\end{center}
+%\vspace{2ex}
+%
+%\hh{Classification Task:} 
+%  If you accept the premise, would you accept the hypothesis?
+%\end{frame}
+%
+%%
+%% Frame 3
+%%
+%\begin{frame}[noframenumbering]{Prior Work}
+%\begin{center}
+%\textcolor<1-2>{white}{\textbf{This Work:} Formal reasoning with text over large corpora}
+%
+%\begin{tikzpicture}
+%
+%% horizontal axis
+%\draw[->] (0,0) -- (8,0) node[anchor=north] {Flexible Representation};
+%
+%\node at (1.0,1.0) [visible on=<1>] {\includegraphics[height=1cm]{../img/tac.jpg}};
+%\node at (4.0,1.0) [visible on=<1>] {\includegraphics[height=1cm]{../img/textrunner.jpg}};
+%\node at (1.0,3.5) [visible on=<2->] {\includegraphics[height=1cm]{../img/tac.jpg}};
+%\node at (4.0,3.5) [visible on=<2->] {\includegraphics[height=1cm]{../img/textrunner.jpg}};
+%\node at (7.0,1.0) {\includegraphics[height=1cm]{../img/pascal.png}};
+%\node at (7.0,3.5) [visible on=<3->] {\includegraphics[height=1cm]{../img/me.png}};
+%
+%% vertical axis
+%\draw[->,visible on=<2->] (0,0) -- (0,4) node[anchor=east,rotate=90,yshift=1ex,xshift=5ex] {Coverage};
+%
+%\end{tikzpicture}
+%\end{center}
+%\end{frame}
