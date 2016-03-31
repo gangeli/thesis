@@ -123,3 +123,10 @@
     \item\relax
   }
 {\endlist}
+
+\newcommand\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw=darkred,inner sep=2pt] (char) {#1};}
+}
+\newcommand\noncircled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw=white,inner sep=2pt] (char) {#1};}
+}
