@@ -19,8 +19,7 @@
 \newcommand\ww[1]{\textit{#1}}
 \newcommand{\indentitem}{\setlength\itemindent{25pt}}
 
-\newcommand\denote[1]{\ensuremath{\llbracket#1\rrbracket}}
-\newcommand\denoteT[1]{\ensuremath{\llbracket\textrm{#1}\rrbracket}}
+\newcommand\denote[1]{\ensuremath{\llbracket\ww{#1}\rrbracket}}
 
 \newcommand\forward{\ensuremath{\sqsubseteq}}
 \newcommand\nforward{\ensuremath{\not\sqsubseteq}}
@@ -117,3 +116,10 @@
       \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
     },
   }
+
+\newenvironment{lquote}{%
+  \list{}{%
+    \rightmargin0pt}%
+    \item\relax
+  }
+{\endlist}

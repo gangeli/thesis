@@ -201,7 +201,8 @@ For this, we need a theory of how to reason with \textit{exclusion} -- which we 
   review in the next section.
 Furthermore, our theory currently does not handle nested quantification.
 We introduce \textit{Polarity} and the mechanism for propagating monotonicity information
-  to determine the ``monotonicty'' of a sentence composed of multiple quantifiers.
+  to determine the ``monotonicty'' of a sentence composed of multiple quantifiers
+  in \refsec{natlog-mono-polarity}.
 
 
 
@@ -209,11 +210,475 @@ We introduce \textit{Polarity} and the mechanism for propagating monotonicity in
 % Exclusion
 %
 \Subsection{natlog-mono-exclusion}{Exclusion}
-Reasoning with exclusion is an extension of the monotonicity calculus of
-  \newcite{key:1991valencia-natlog}, introduced by
-  \newcite{key:2008maccartney-natlog} and formalized by
-  \newcite{key:2014icard-natlog}.
+Although the monotonicity calculus of \newcite{key:1991valencia-natlog} can already
+  do a range of interesting inferences, it is nonetheless still a very restricted
+  logic.
+This section explores reviews work by \newcite{key:2008maccartney-natlog} and
+  \newcite{key:2014icard-natlog} on how natural logic can be extended to handle
+  negation and antonomy by reasoning about \textit{exclusion}.
+Much of the notation is adapted from \newcite{key:2014icard-natlog}.
 
+
+\begin{figure}[th]
+\begin{center}
+\begin{tabular}{ccc}
+  \forwardVenn & \reverseVenn     & \equivalentVenn \\
+  \negateVenn  & \alternateVenn   & \coverVenn \\
+               & \independentVenn &
+
+\end{tabular}
+\end{center}
+\caption{
+\label{fig:natlog-setrelations}
+An enumeration of the possible relations between two sets $\varphi$ (dark green) and
+$\psi$ (light yellow).
+The top three relations are the simple relations used in monotonicity calculus; the middle three
+  are relevant for exclusion; the bottom relation denotes the case where nothing of interest
+  can be said about the two sets.
+}
+\end{figure}
+
+
+% Partially distributive lattice
+The foundations for exclusion come from the observation that there are more relations
+  you can define between sets than the subset / superset / equality relations
+  used in the monotonicity calculus described in \refsec{natlog-mono-general}.
+Given a set $\varphi$ and a set $\psi$, these relations are enumerated in \reffig{natlog-setrelations}.
+The top row correspond to the relations we are familiar with (\forward, \reverse, \equivalent)
+  along with their interpretation in natural logic.
+The middle row describes the three relations relevant for exclusion.
+The bottom row describes the independence relation, meaning that nothing of interest
+  can be said about the two relations.
+
+We review each of these four new relations, and their interpretation for our three
+  entity types: denotations, truth values, and functions.
+
+First, however; to extend these definition beyond sets, and therefore beyond denotations
+  to truth values and to functions, we introduce a bit of notation.
+In particular, we define a \textit{partially distributive lattice} as a 5-tuple:
+  $(\bD, \lor, \land, \bot, \top)$.
+This consists of a domain $\bD$ (the set of entities in the lattice), two binary operators
+  $\lor$ and $\land$ corresponding to a generalized sense of \textit{maximum} and
+  \textit{minimum} respectively,\footnote{
+    $\lor$ and $\land$ must also be commutative, associative, and idempotent; and they must
+    distribute over each other.
+  } and two elements in $\bD$, $\bot$ and $\top$, corresponding
+  intuitively to the smallest and largest element of $\bD$, respectively.
+
+For denotations, we define this lattice as follows, mirroring previous sections.
+\begin{lquote}
+$\bD$ is the power set of all denotations in $\sD_e$. \\
+$\lor$ is the union operator: $\cup$. \\
+$\land$ is the intersect operator: $\cap$. \\
+$\bot$ is the empty set: $\{\}$. \\
+$\top$ is the full domain of denotations: $\sD_e$.
+\end{lquote}
+
+For truth values, we define the lattice straightforwardly as:
+\begin{lquote}
+$\bD$ is the set $\{0, 1\}$, where 0 corresponds to false and 1 corresponds to true. \\
+$\lor$ maximum (i.e., $1 \lor 0 = 1$) \\
+$\land$ minimum (i.e., $1 \land 0 = 0$) \\
+$\bot$ is false: $0$. \\
+$\top$ is true: $1$.
+\end{lquote}
+
+
+Defining this lattice over functions is a bit more verbose, but intuitively analogous
+  to the denotation and truth value cases.
+Since the range of our functions is ordered (e.g., the domain of truth values $t$ is ordered
+  in a function $e \rightarrow t$),
+  and the range has a maximum and minimum element (e.g., true and false respectively for $t$),
+  we can from this define our ``largest'' and ``smallest'' functions $\top$ and $\bot$.
+$\top$ is the function which takes any element in its domain, and maps it to
+  the maximum element in the function's range.
+As a concrete example, for a function $e \rightarrow t$ this corresponds to a tautology --
+  e.g., \ww{$x$ is $x$} maps everything to $\top$ in the domain of truth values
+  (i.e., \textit{true}).
+The function corresponding to $\bot$, conversely, maps every element in its domain 
+  to the smallest element (i.e., $\bot$) in the function's range.
+
+We further define the $\lor$ and $\land$ of two function to be the element-wise $\lor$
+  and $\land$ of the functions.
+That is, for functions $f:A \rightarrow B$ and $g:A \rightarrow B$, 
+  $h = f \lor g$ iff $\forall x, h(x) = f(x) \lor g(x)$.
+$f \lor g$ is defined analogously.
+To summarize, the lattice for a function $f:A \rightarrow B$ is:
+
+\begin{lquote}
+$\bD$ is the set of all functions from $A$ to $B$. \\
+$\lor$ is the element-wise $\lor$ of the functions. \\
+$\land$ is the element-wise $\land$ of the functions. \\
+$\bot$ is the function mapping any $A$ to $\bot$ in $B$. \\
+$\bot$ is the function mapping any $A$ to $\top$ in $B$. \\
+\end{lquote}
+
+
+
+% Negation
+\paragraph{Negation (\negate)}
+From \reffig{natlog-setrelations}, two sets are in \textit{negation} 
+  if the union of the sets is the entire domain, and the
+  intersection of the sets is empty.
+That is, for two sets $\varphi$ and $\phi$,
+  $\varphi \cup \psi = \sD$ and $\varphi \cap \psi = \{\}$.
+Generalizing this to our lattice definition above, we say that two terms
+  are in negation with each other iff
+  $x \lor y = \top$ and $x \land y = \bot$.
+As the name would imply, the most natural examples of negation appearing for 
+  pairs of denotations usually involve some sort of morphological negation:
+\begin{lquote}
+\denote{cat} \negate\ \denote{noncat} \\
+\denote{living thing} \negate\ \denote{nonliving thing} \\
+\denote{possible thing} \negate\ \denote{impossible thing} \\
+\end{lquote}
+
+
+For truth values, negation (unsurprisingly) corresponds to logical negation.
+We can recover the truth table for negation straightforwardly from the definition
+  of the lattice, recalling that $\lor$ is $\max$, $\land$ is $\min$, $\top$ is 1,
+  and $\bot$ is 0: 
+  
+\begin{center}
+\begin{tabular}{cc|cc:c}
+  $x$ & $y$ & $x \lor y$ & $x \land y$    & $x \lor y = \top~$ and $~x \land y = \bot$ \\
+  \hline
+  0   &  0  &    0       &      0         &              0                \\
+  0   &  1  &    1       &      0         &              1                \\
+  1   &  0  &    1       &      0         &              1                \\
+  1   &  1  &    1       &      1         &              0                \\
+\end{tabular}
+\end{center}
+
+The definition of negation for functions likewise follows.
+Two functions $f$ and $g$ are then negations of each other ($f$ \negate\ $g$)
+  iff elementwise $\max(f, g)$ (i.e., $f \lor y$) always maps to $\top$, 
+  and $\min(f, g)$ (i.e., $f \land y$) always maps to $\bot$.
+To illustrate with a concrete example, the functions \ww{$x$ is living} and
+  \ww{$x$ is nonliving} are in negation, since for any $x$ it is either true that
+  it is living, or it's true that it is nonliving; and, for any $x$, it is
+  it is never true that it is both living and nonliving.
+This extends trivially to quantifiers.
+For example, \ww{no} and \ww{some} are negations of each other.
+
+
+The next two relations -- alternation (\alternate) and cover (\cover) -- can be
+  though of as holding one, but not both of the conditions of negation.
+In particular, two entities in the negation relation are also necessarily in the
+  alternation and cover relations.
+
+
+% Alternation
+\paragraph{Alternation (\alternate)}
+Alternation can be thought of as another form of negation, which is weaker in
+  some important respects which will become clear later.
+In the generalized case, two entities are in alternation iff $x \land y = \bot$.
+
+Two denotations are in \textit{alternation} if their intersection is empty.
+That is, for sets $\varphi$ and $\psi$, $\varphi \cap \psi = \{\}$,
+  but unlike negation we do not know anything about their union.
+This is commonly the relation which holds between antonyms and otherwise
+  contradictory nouns:
+
+\begin{lquote}
+\denote{cat} \alternate\ \denote{dog} \\
+\denote{genius} \alternate\ \denote{idiot} \\
+\denote{good deed} \alternate\ \denote{bad deed} \\
+\end{lquote}
+
+
+For truth values, alternation equates pragmatically to negation in the context of
+  proving entailment.
+That is, false \alternate\ false is true (whereas false \negate\ false is false);
+  however, this is only relevant if we are assuming that our premise is false.
+Since we are (axiomatically) assuming that our premise is true, this case will never
+  arise, and the truth table looks otherwise equivalent to full negation:
+ 
+
+\begin{center}
+\begin{tabular}{cc|cc:c}
+  $x$ & $y$ & $x \lor y$ & $x \land y$    & $x \land y = \bot~$ \\
+  \hline
+  0   &  0  &    0       &      0         &              1                \\
+  0   &  1  &    1       &      0         &              1                \\
+  1   &  0  &    1       &      0         &              1                \\
+  1   &  1  &    1       &      1         &              0                \\
+\end{tabular}
+\end{center}
+
+
+The intuition for when functions are in alternation becomes potentially hairy, but
+  not awful.
+Adjective antonyms are a clear example: \ww{hot $x$} \alternate\ \ww{cold $x$}, since
+  for any $x$ we know that $x$ is not both hot and cold.
+The quantifiers \ww{all} and \ww{no} are similarly in alternation.
+
+
+
+% Cover
+\paragraph{Cover (\cover)}
+In many ways, cover is the most strange of the relations in this section.
+For \textit{nearly} all intents and purposes, this relation indicates 
+  neither entailment nor negation between its two entities, but it occasionally
+  conveys a hint of negation.
+Concretely, cover behaves as negation
+  when reasoning about a counter-factual premise -- e.g.,
+  if in an entailment chain you have negated your premise -- and are now continuing
+  to reason about this presumed false intermediate statement.
+Formally, two entities are in the cover relation iff $x \lor y = \top$.
+
+For denotations, this is a quintessentially rare case ($\varphi \cup \psi = \sD$), 
+  and examples which don't amount to outright negation are almost always a bit contrived:
+\begin{lquote}
+\denote{animal} \cover\ \denote{non-cat} \\
+\denote{smartphone} \cover\ \denote{non-iphone} \\
+\end{lquote}
+
+
+The behavior of the cover relation becomes a bit more apparent in the case of
+  truth values.
+Analogous to how alternation (\alternate) was pragmatically negation when the premise
+  is true, cover is pragmatically negation when the premise is \textit{false}.
+We will, of course, never assume that the premise in a proof is false; but certainly
+  intermediate steps in the proof may find us with a presumed false statement.
+In these cases, the cover relation allows us to ``negate'' this false statement.
+
+\begin{center}
+\begin{tabular}{cc|cc:c}
+  $x$ & $y$ & $x \lor y$ & $x \land y$    & $x \lor y = \top~$ \\
+  \hline
+  0   &  0  &    0       &      0         &              0                \\
+  0   &  1  &    1       &      0         &              1                \\
+  1   &  0  &    1       &      0         &              1                \\
+  1   &  1  &    1       &      1         &              1                \\
+\end{tabular}
+\end{center}
+
+The cover relation is virtually unseen for functions, although of course the definition
+  still carries over fine.
+
+
+
+% Independence
+\paragraph{Independence (\independent)}
+The last relation is independence, which corresponds to no relation holding purely
+  by virtue of the constructed lattice.
+This is the case for, e.g.,
+\begin{lquote}
+\denote{cat} \independent\ \denote{black animal} \\
+\denote{happy} \independent\ \denote{excited} \\
+\denote{play} \independent\ \denote{run} \\
+\end{lquote}
+
+
+
+% Old relations
+\paragraph{The old relations (\forward, \reverse, \equivalent)}
+The relations from the simple monotonicity calculus in \refsec{natlog-mono-general}
+  of course also have generalized interpretations in the context of our lattice.
+The behavior remains identical to before.
+The generalized definitions are:
+\begin{lquote}
+$x \forward y$ iff $x \land y = x$ \\
+$x \reverse y$ iff $x \lor y = x$ \\
+$x \equivalent y$ iff $x \land y = x~$ and $~x \lor y = x$ \\
+\end{lquote}
+
+
+
+
+%
+% Composition
+%
+\Subsection{natlog-mono-composition}{Proofs with Exclusion}
+
+
+\begin{table}[t]
+	\begin{center}
+	\begin{tabular}{|c||c|c|c|c|c|c|c|}
+    \hline
+    $\bowtie$ & $\equivalent$ & $\forward$ & $\reverse$ & $\negate$ & $\alternate$ & $\cover$ & $\independent$ \\
+    \hline
+    $\equivalent$ & $\equivalent$ & $\forward$ & $\reverse$ & $\negate$ & $\alternate$ & $\cover$ & $\independent$ \\
+    $\forward$ & $\forward$ & $\forward$ & $\independent$ & $\alternate$ & $\alternate$ & $\independent$ & $\independent$ \\
+    $\reverse$ & $\reverse$ & $\independent$ & $\reverse$ & $\cover$ & $\independent$ & $\cover$ & $\independent$  \\
+    $\negate$ & $\negate$ & $\cover$ & $\alternate$ & $\equivalent$ & $\reverse$ & $\forward$ & $\independent$  \\
+    $\alternate$ & $\alternate$ & $\independent$ & $\alternate$ & $\forward$ & $\independent$ & $\forward$ & $\independent$  \\
+    $\cover$ & $\cover$ & $\cover$ & $\independent$ & $\reverse$ & $\reverse$ & $\independent$ & $\independent$  \\
+    $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ \\
+    \hline
+	\end{tabular}
+	%(caption)
+	\caption{
+    The join table as taken from \newcite{key:2012icard-natlog}.
+    Entries in the table are the result of joining a row with a
+      column.
+    Note that the $\independent$ always joins to yield $\independent$,
+    and $\equivalent$ always joins to yield the input relation.
+		\label{tab:natlog-jointable}
+	}
+	\end{center}
+\end{table}
+
+
+
+We showed how to run simple proofs in monotonicity calculus in 
+  \refsec{natlog-mono-general} by simply appealing to the transitivity of the
+  $\forward$ relation.
+In effect, we implicitly defined a transitivity table, or \textit{join table},
+  for how to assess the relation between $x$ and $z$ if we know the relation
+  between $x$ and $y$, and between $y$ and $z$.
+We then \textit{join} these two relations together with the $\bowtie$ operator defined
+  below to obtain the final relation between $x$ and $z$:
+	
+\begin{center}
+\begin{tabular}{|c||c|c|c|}
+  \hline
+  $\bowtie$ & $\equivalent$ & $\forward$ & $\reverse$ \\
+  \hline
+  $\equivalent$ & $\equivalent$ & $\forward$ & $\reverse$ \\
+  $\forward$ & $\forward$ & $\forward$ & $\independent$  \\
+  $\reverse$ & $\reverse$ & $\independent$ & $\reverse$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+As expected, we the transitivity of $\forward$ -- the key property needed to run our
+  proofs.
+We can define a similar join table for our full set of relations.
+This table is given in \reftab{natlog-jointable}.
+
+
+\begin{figure*}[t]
+\begin{center}
+  \begin{tabular}{cc}
+    \resizebox{0.48\textwidth}{!}{\completeFSA} &
+      \resizebox{0.48\textwidth}{!}{\collapsedFSA} \\
+    (a) & (b)
+  \end{tabular}
+\end{center}
+\caption{
+  \label{fig:natlog-fsa}
+  (a) Natural logic inference expressed as a finite state automaton.
+  Omitted edges go to the unknown state (\independent), with the exception of
+    omitted edges from $\equivalent$, which go to the state of the edge
+    type.
+  Green states (\equivalent, \forward) denote valid inferences;
+    red states (\alternate, \negate) denote invalid inferences;
+    blue states (\reverse, \cover) denote inferences of unknown validity.
+  (b) The join table collapsed into the three meaningful states over truth
+  values.
+}
+\end{figure*}
+
+However, a much more convenient representation of this join table
+  is as a finite state machine.
+We further will show that  we can losslessly collapse this
+  finite state machine into only three intuitive inference states.
+These observations allow us to formulate a proof as a path through this
+  collapsed state machine, making reasoning with exclusion almost as
+  simple as the original monotonicity proofs.
+
+We construct a
+  finite state machine over states
+  $s \in \{\textrm{\small{\forward}}, \textrm{\small{\reverse}}, \dots \}$.
+A machine in state $s_i$ corresponds to relation $s_i$
+  holding between the initial premise and the derived fact so far.
+States therefore correspond to states of \textit{logical validity}.
+The start state is \equivalent.
+Outgoing transitions correspond to \textit{inference steps}.
+Each transition is labeled with a projected relation
+  $\rho(r) \in \{\textrm{\small{\forward}}, \textrm{\small{\reverse}}, \dots\}$,
+  and spans from a source
+  state $s$ to a target $s'$ according to the join table.
+That is, the transition $s \xrightarrow{\rho(r)} s'$ exists iff
+  $s' = s \bowtie \rho(r)$.
+\reffig{natlog-fsa}a shows the automaton, with trivial edges
+  omitted for clarity.
+
+
+
+We further collapse this automaton into the three
+  meaningful states we use as output: 
+    \textit{valid} ($\varphi \Rightarrow \psi$),
+    \textit{invalid} ($\varphi \Rightarrow \lnot \psi$),
+  and \textit{unknown validity} ($\varphi \nRightarrow \psi$).
+We can cluster states in \reffig{natlog-fsa}a into these three categories.
+The relations \equivalent\ and \forward\ correspond to valid inferences;
+  \negate\ and \alternate\ correspond to invalid inferences;
+  \reverse, \cover\ and \independent\ correspond to unknown validity.
+This clustering mirrors that used by MacCartney for his textual
+  entailment experiments.
+
+Collapsing the FSA into the form in \reffig{natlog-fsa}b becomes straightforward
+  from observing the regularities in \reffig{natlog-fsa}a.
+Nodes in the valid cluster transition to invalid nodes
+  always and only on the relations \negate\ and \alternate.
+Symmetrically, invalid nodes transition to valid nodes always and only
+  on \negate\ and \cover.
+A similar pattern holds for the other transitions.
+
+Formally, for every relation $r$ and nodes $a_1$ and $a_2$ in
+  the same cluster, if we have transitions 
+  $a_1 \xrightarrow{r} b_1$ and $a_2 \xrightarrow{r} b_2$
+  then $b_1$ and $b_2$ are necessarily in the same cluster.
+As a concrete example, we can take $r = \negate$ and
+  the two states in the \textit{invalid} cluster:
+  $a_1 = \negate$, $a_2 = \alternate$.
+Although $\negate \xrightarrow{\negate} \equivalent$ and
+  $\alternate \xrightarrow{\negate} \forward$, both
+  \equivalent\ and \forward\ are in the same cluster (\textit{valid}).
+It is not trivial \textit{a priori} that the join table should have
+  this regularity, and it certainly simplifies the logic for
+  inference tasks.
+
+We can now return to our running example, augmented with negation, and
+  prove that if \ww{the cat ate a mouse} then it is false that
+  \textit{no carnivores ate an animal}.
+At each inference step, we note the transition we took to reach it form the previous
+  statement, and the new state we are in.
+
+\[
+\begin{nd}
+\hypo {1} {\ww{The cat ate a mouse.}}          
+\have {2} {\ww{The cat ate a rodent.}}         \by{rel: \forward$~~~$ state:$\Rightarrow$}{1}
+\have {3} {\ww{The cat ate an animal.}}        \by{rel: \forward$~~~$ state:$\Rightarrow$}{2}
+\have {4} {\ww{The feline ate an animal.}}     \by{rel: \forward$~~~$ state:$\Rightarrow$}{3}
+\have {5} {\ww{The carnivore ate an animal.}}  \by{rel: \forward$~~~$ state:$\Rightarrow$}{4}
+\have {5} {\ww{No carnivore ate an animal.}}   \by{rel: \negate$~~~$ state:$\Rightarrow \lnot$}{4}
+\end{nd}
+\]
+
+We then notice that the final state we end up in is $\Rightarrow \lnot$ -- that 
+  is, negation.
+Taking another example, to prove that if Spock is logical, then he is not very illogical:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{Spock is logical}}          
+\have {2} {\ww{Spock is illogical}}            \by{rel: \negate$~~~$ state:$\Rightarrow \lnot$}{1}
+\have {3} {\ww{Spock is very illogical}}       \by{rel: \reverse$~~~$ state:$\Rightarrow \lnot$}{2}
+\have {4} {\ww{Spock is not very illogical}}   \by{rel: \negate$~~~$ state:$\Rightarrow$}{3}
+\end{nd}
+\]
+
+
+A few final observations deserve passing remark.
+First, even though the
+  states \reverse\ and \cover\ appear meaningful, in fact there is no
+  ``escaping'' these states to either a valid or invalid
+  inference.
+Second, the hierarchy over relations presented in
+  \refsec{natlog-mono-exclusion} becomes even more apparent -- in particular,
+  \negate\ always behaves as negation, whereas its two ``weaker''
+  versions (\alternate\ and \cover) only behave as negation in certain
+  contexts.
+Lastly, with probabilistic inference,
+  transitioning to the unknown state can be replaced with staying in the
+  current state at a (potentially arbitrarily large) cost to the 
+  confidence of validity.
+This allows us to make use of only two states:
+  \textit{valid} and \textit{invalid}.
 
 
 

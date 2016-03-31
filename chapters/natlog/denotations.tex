@@ -225,7 +225,8 @@ To make this more formal, and to lay the notational groundwork for the rest of t
 So, now, $\llbracket cat \rrbracket \subseteq \sD_e$.
 We are now free to specify other domain for other types of lexical items.
 In our case, let us define $\sD_t$ as the domain of truth values.
-The natural way to define $\sD_t$ would be to say: $\sD_t = \{true, false\}$.
+The natural way to define $\sD_t$ would be to say: $\sD_t = \{true, false\}$
+  (equivalently, and as we'll find useful later, $\sD_t = \{1, 0\}$).
 The denotation of a sentence is an element in $\sD_t$:
 
 \begin{align*}
@@ -233,18 +234,19 @@ The denotation of a sentence is an element in $\sD_t$:
 \llbracket\ww{cats eat carrots}\rrbracket &= false \in \sD_t
 \end{align*}
 
-In this thesis we opt for this interpretation, but we should note that
-  in some formulations, $\sD_t$ is defined as a singleton set; e.g., the set $\{1\}$.
-The denotation of a sentence is then either the empty set ($\{\}$ -- corresponding to $false$)
-  or the singleton set ($\{1\}$ -- corresponding to $true$).
-The definitions are conceptually equivalent, but what we lose in clarity we gain in elegance:
-  like nouns, sentence denotations are in this case also sets:
-
-
-\begin{align*}
-\llbracket\ww{cats eat mice}\rrbracket &= \{1\} \subseteq \sD_t \\
-\llbracket\ww{cats eat carrots}\rrbracket &= \{\} \subseteq \sD_t
-\end{align*}
+% note[gabor]: This is wrong :(
+%In this thesis we opt for this interpretation, but we should note that
+%  in some formulations, $\sD_t$ is defined as a singleton set; e.g., the set $\{1\}$.
+%The denotation of a sentence is then either the empty set ($\{\}$ -- corresponding to $false$)
+%  or the singleton set ($\{1\}$ -- corresponding to $true$).
+%The definitions are conceptually equivalent, but what we lose in clarity we gain in elegance:
+%  like nouns, sentence denotations are in this case also sets:
+%
+%
+%\begin{align*}
+%\llbracket\ww{cats eat mice}\rrbracket &= \{1\} \subseteq \sD_t \\
+%\llbracket\ww{cats eat carrots}\rrbracket &= \{\} \subseteq \sD_t
+%\end{align*}
 
 
 % %%%%%
