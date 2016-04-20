@@ -686,3 +686,248 @@ This allows us to make use of only two states:
 % Polarity
 %
 \Subsection{natlog-mono-polarity}{Polarity: Composing Monotonicity}
+So far, we have been talking primarily about natural logic relations between lexical items.
+That is, \denote{cat} \forward\ \denote{animal}, and \denote{black cat} \forward\ \denote{cat},
+  and \denote{happy} \alternate\ \denote{sad}, and true \forward true, and so forth.
+For our proofs over sentences, we have limited ourselves to a single quantifier, which has
+  allowed us to reason about inferences directly based off of the monotonicity of the quantifier.
+In this section, we explore two important concepts to complete our theory of monotonicity
+  calculus:
+  we describe how we compose monotonicity when a lexical item is under the scope of multiple
+  quantifiers, and
+  we formally characterize how we can account for apparent nuances between the
+  behaviors of different quantifiers when dealing with exclusion.
+
+
+To motivate the discussion, we can consider a simple inference:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{No cats don't eat meat}}          
+\have {2} {\ww{No cats don't eat food}}        \by{\denote{meat} \forward\ \denote{food}}{1}
+\end{nd}
+\]
+
+Here, \ww{meat} is under the scope of two quantifiers: \ww{no} and \ww{n't} (not).\footnote{
+    Technically, we are abusing terminology; not all quantifiers in natural logic are
+    quantifiers in the linguistic sense.
+  }
+Recall that both of these quantifiers are downward monotone with respect to both of their
+  arguments.
+For example, when under the scope of a single negation, the following inference is invalid:
+
+\[
+\begin{nd}
+\hypo {1} {\ww{No mice eat meat}}          
+\have {2} {!~ \darkred{\ww{No mice eat food}}}        \by{\denote{meat} \forward\ \denote{food}}{1}
+\end{nd}
+\]
+
+To address this, we introduce a notion of \textit{polarity}.
+Polarity is a property we assign to lexical items.
+It can be thought of as a function which takes as input a relation which holds between a lexical
+  item and its mutation, and produces as output the relation that holds between the containing
+  sentences.
+For instance, the polarity of \ww{meat} in the sentence \ww{No mice eat meat} would
+  be a function which translates \forward to \reverse\ and \reverse\ to \forward.
+The polarity of \ww{meat} in the sentence \ww{No cats don't eat meat} would be a function
+  translating \forward\ to \forward\ and \reverse\ to \reverse.
+This is no different than monotonicity, and is in fact no more than the composition of
+  the monotonicities of the quantifiers acting on a lexical item.
+
+The algorithm for determining polarity is simple.
+Beginning from the lexical item in question, we list the quantifiers which have that lexical item
+  in their scope, and order that list from narrowest to broadest scope.
+This gives us a list $q_0, q_1, \dots q_n$.
+In our example, \ww{No cats don't eat meat}, the ordering for \ww{meat} would be
+  $q_0=\textit{n't}$ and $q_1=\textit{no}$.
+We begin with the identity function as our polarity;
+  then, for each quantifier $q_i$, we compose our polarity so far with
+  that function's monotonicity.
+
+In the simplest case, this takes the form of flipping an item's polarity between \textit{upward}
+  to \textit{downward} and visa versa for every downward monotone quantifier in its scope.
+For our double negation case above, we begin with an upward polarity, and flip the polarity twice
+  (once for \ww{no} and once for \ww{n't}) to arrive back at an upward polarity context.
+As we'll see in the next section, this process becomes more nuanced once we get into the exclusion
+  relations (\alternate, \negate, \cover), but for now this intuition is enough to formulate
+  a complete proof theory for monotonicity calculus.
+
+Following a variant of the notation in \newcite{key:2008maccartney-natlog}, we can a natural logic
+  proof as a table.
+Each row corresponds to a single lexical mutation on the previous row; the first row is the
+  premise fact.
+The first column is the (possibly partial) hypothesis.
+The second column is the lexical relation induced by the mutation performed to obtain the given
+  row.
+The third column is this relation \textit{projected} up the sentence, based on the lexical item's
+  polarity.
+The last column is the truth state of the proof, as determined by the previous proof state and the
+  projected relation (see \reffig{natlog-fsa}).
+To make this concrete, \reftab{natlog-mono-tabproof} shows an example inference
+  from \ww{no cats don't eat meat} negating that \ww{black cats don't eat food}.
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Sentence} & \textbf{Lexical Rel} & \textbf{Projected Rel} & \textbf{Truth} \\
+\midrule
+\ww{No cats don't eat meat}                   &          &          & $\Rightarrow$ \\
+\ww{No cats don't eat \textbf{food}}          & \forward & \forward & $\Rightarrow$ \\
+\ww{No \textbf{black cats} don't eat food}    & \reverse & \forward & $\Rightarrow$ \\
+\ww{\textbf{Some} black cats don't eat food}  & \negate  & \negate  & $\Rightarrow \lnot$ \\
+\bottomrule
+\end{tabular}
+\caption{\label{tab:natlog-mono-tabproof}
+  A tabular proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.
+  The first column tracks the sentence as it mutates.
+  The second column tracks the lexical natural logic relation induced by the mutation.
+  The third column tracks the lexical relation projected up the sentence.
+  The last column tracks the truth state of the proof, as determined by the FSA 
+    in \reffig{natlog-fsa}.
+}
+\end{center}
+\end{table}
+
+
+%A last note on our proof theory: the order of mutations is relevant to the proof.
+%A bad order will never give an incorrect answer, but may result in the inference being
+%  judged as unknown when in fact a different order would have found an entailment or
+%  contradiction relation.
+%for example, if we re-order the mutations in \reftab{natlog-mono-tabproof} we can easily
+%  end up in an unknown inference:
+%
+%\begin{center}
+%\begin{tabular}{lccc}
+%\toprule
+%\textbf{Sentence} & \textbf{Lexical Rel} & \textbf{Projected Rel} & \textbf{Truth} \\
+%\midrule
+%\ww{No cats don't eat meat}                   &          &          & $\Rightarrow$ \\
+%\ww{\textbf{Some} cats don't eat meat}        & \negate  & \negate  & $\Rightarrow \lnot$ \\
+%\ww{Some cats don't eat \textbf{food}}        & \forward & \reverse & $\nRightarrow$ \\
+%\bottomrule
+%\end{tabular}
+%\end{center}
+
+
+
+
+%
+% Additivity
+%
+\Subsection{natlog-mono-add}{Additive and Multiplicative Quantifiers}
+The last topic for this section deals with polarity when we are projecting one of the
+  exclusion relations through the sentence.
+For example, based on the proof theory in \refsec{natlog-mono-polarity}, if we assume that
+  the exclusion relations propagate up with the identity relation, we'd get incorrect
+  entalments like the following:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Sentence} & \textbf{Lexical Rel} & \textbf{Projected Rel} & \textbf{Truth} \\
+\midrule
+\ww{Every cat has a tail}          &            &             & $\Rightarrow$ \\
+\ww{Every \textbf{dog} has a tail} & \alternate & \alternate  & $\Rightarrow \lnot$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+That is to say, despite the fact that \denote{cat} \alternate\ \denote{dog}, it's not the case
+  that every cat having a tail contradicts every dog having a tail.
+To understand why, we introduce the notion of \textit{multiplicative} and \textit{additive}
+  quantifiers, described in more detail in \newcite{key:2014icard-natlog}.
+
+Recall that quantifiers are simply functions that map from, e.g., denotations to truth values.
+Recall further that each of our domains (denotations, truth values, etc.) can be described
+  in terms of a partially distributive lattice: $(\bD, \lor, \land, \bot, \top)$.
+The operator $\lor$ is intuitively a union operator, $\land$ is intuitively an intersect
+  operator.
+An upwards monotone quantifier is then:
+
+\begin{itemize}
+  \item \textit{multiplicative} iff $f(x \land y) = f(x) \land f(y)$.
+  \item \textit{additive}       iff $f(x \lor y) = f(x) \lor f(y)$.
+\end{itemize}
+
+Notice that a quantifier can be both additive and multiplicative, and can also be
+  neither additive or multiplicative.
+Conversly, a downwards monotone quantifier can be anti-additive and anti-multiplicative:
+
+\begin{itemize}
+  \item \textit{anti-multiplicative} iff $f(x \lor y) = f(x) \lor f(y)$.
+  \item \textit{anti-additive}       iff $f(x \land y) = f(x) \land f(y)$.
+\end{itemize}
+
+From our example above, we notice that according to this definition \textit{every} is
+  anti-additive in its first argument:
+  \ww{Every nook and cranny was searched} is equivalent to \ww{every nook was searched}
+    and \ww{every cranny was searched};
+  but, \ww{every Monday or Wednesday it rains} does implies neither that it rains every Monday,
+    or that it rains every Wednesday.\footnote{
+      Except on the reading of \ww{Monday or Wednesday} as \ww{Monday and Wednesday} -- which is
+        a separate, but quite interesting linguistic issue.
+    }
+We can also notice that the second argument of \ww{every} is multiplicative:
+  \ww{every cat likes sleeping and eating} entails that \ww{every cat likes sleeping} and
+  \ww{every cat likes eating}.
+In a similar vein, \ww{no} is anti-additive in both of its arguments;
+  \ww{some} is both additive and multiplicative in both its arguments; and so forth.
+
+
+\begin{table}[t]
+\begin{center}
+\begin{tabular}{rccccc}
+\toprule
+ & \forward & \reverse & \negate & \alternate & \cover \\
+\midrule
+upward                    & \forward & \reverse & \independent & \independent & \independent \\
+additive                  & \forward & \reverse & \cover & \independent & \cover \\
+multiplicative            & \forward & \reverse & \alternate & \alternate & \independent \\
+additive$+$multiplicative & \forward & \reverse & \negate & \alternate & \cover \\
+\midrule
+downward                             & \reverse & \forward & \independent & \independent & \independent \\
+anti-additive                        & \reverse & \forward & \alternate & \independent & \alternate \\
+anti-multiplicative                  & \reverse & \forward & \cover & \cover & \independent \\
+anti-additive$+$anti-multiplicative  & \reverse & \forward & \negate & \cover & \alternate \\
+\bottomrule
+\end{tabular}
+\caption{\label{tab:natlog-mono-add}
+  The definition of the monotonicity for quantifiers marked with additivity / multiplicativity
+    information.
+  Given that the argument in the domain of the quantifier is mutated according to the 
+    relation in the header, the resulting element in the range of the quantifier is guaranteed
+    to have mutated according to the relation in this table.
+  That is, for example, 
+    for an additive quantifier $f: \sX \rightarrow \sY$, if $x_0 \in \sX$, $x_1 \in \sX$,
+    $f(x_0) = y_0$, $f(x_1) = y_1$, and 
+    $x_0 \negate\ x_1$, then we can say that $y_0 \cover y_1$.
+}
+\end{center}
+\end{table}
+
+
+
+Now that we have a more precise notion of monotonicity beyond \textit{upward} 
+  and \textit{downward}, we can more accurately characterize the effect quantifiers have on
+  lexical relations as they project up the sentence.
+We give this refined function in \reftab{natlog-mono-add}.
+Note that for the core monotonicity relations (\forward\ and \reverse), the additivity and
+  multiplicativity of the quantifiers is irrelevant, but that these properties have a rather
+  large effect on the other three meaningful relations.
+Another interesting observation is that the symmetry between 
+  cover (\cover) and alternation (\alternate) that we see in the FSA in \reffig{natlog-fsa}
+  also appears in the monotonicity function.
+The difference between additive and anti-additive, multiplicative and anti-multiplicative, etc.,
+  is simply replacing all instances of \forward\ with \reverse\ (from the definition of
+  monotonicity), and all instances of \cover\ with \alternate, and visa versa.
+
+This concludes our exploration of monotonicity calculus.
+The subsequent section explores some ideas in extending natural logics to propositional 
+  reasoning; the remainder of the thesis thereafter will explore applications of natural logic
+  to large-scale open-domain reasoning problems.
+
+
+
+
