@@ -1,0 +1,461 @@
+\Section{natlog-propositional}{A Propositional Natural Logic}
+
+So far all of our natural logic proofs have had a single premise.
+This is not accidental -- a key shortcoming of monotonicity calculus and modern natural
+  logics is that by their very nature they operate on a single permise.
+That premise is mutated in well-specified ways which preserve entailment; but there's no
+  theory of how to combine multiple premises together for an inference.
+For example, the disjunctive syllogism is not supported by natural logic:
+
+
+\[
+\begin{nd}
+\hypo {1} {\ww{Either Bill or Ted stole the cookies.}}
+\hypo {2} {\ww{Ted did not steal the cookies.}}
+\have {3} {\ww{Bill stole the cookies.}}
+\end{nd}
+\]
+
+This section sketches a theoretical approach for performing these inferences by taking a hybrid
+  propositional and natural logic.
+In this way, we can leverage the relative strengths of both formalisms.
+Propositional logic has rich notions of the common connectives: conjunction, disjunction, etc.;
+  monotonicity calculus is complementary to propositional logic in its handling of quantifiers
+  and lexical entailment.
+At a high level, we would like a propositional logic to handle inferences between natural language
+  propositions, while deferring to a natural logic to handle the entailments within propositions.
+
+We briefly review propositional logic, and then show how we can perform hybrid natural logic
+  and propositional proofs.
+Lastly, we explore how we might build a practical system to parse a sentence into propositional
+  components, and the expected challenges therein.
+
+
+%
+%
+%
+\Subsection{natlog-propositional-review}{Propositional Logic}
+In propositional logic, we have propositions (usually denoted by capital letters), and connectives
+  between these propositions.
+A proposition has a truth value in a given model; propositions are things like ``cats have tails''
+  or ``the sky is blue''.
+A special proposition denotes contradiction ($\bot$) -- an axiomatically false statement.
+The connectives in propositional logic are a subset of the connectives in first order logic:
+  conjunction ($\land$), disjunction ($\lor$), and negation ($\lnot$).
+Propositional logic does not have predicates (e.g., $P(x)$), and we will not be considering
+  equality and identity (i.e., $P = Q$ or $x = y$).
+Furthermore, for simplicity, we will treat material implication axoimatically in terms of
+  the core connectives:
+
+\begin{center}
+  $ \lnot A \lor B \equivalent A \rightarrow B$
+\end{center}
+
+This section is not intended to be a formal introduction to propositional proofs,
+  but rather a review of the \textit{natural deduction} system and Fitch-style
+  proofs we will use in the remainder of this section 
+  \cite{key:1934jaskowski-deduction,key:1935gentzen-deduction1,key:1935gentzen-deduction2}.
+In particular, for each of our connectives (and the contradiction symbol), we define a rule
+  for when we can \textit{introduce} that connective, and when we can \textit{eliminate} the
+  connective.
+In the next section, we will show how we can augment these rules with monotonicity calculus.
+
+
+%
+%
+%
+\paragraph{Conjunction Rules ($\land$)}
+The two rules for conjunction are quite straightforward.
+We can always take as true either side of a conjunction, and we can introduce a conjunction
+  only if we can prove both conjuncts:
+
+\begin{center}
+\begin{tabular}{c@{\hspace{2cm}}c}
+  $
+  \begin{nd}
+  \hypo {1} {A \land B}
+  \have {2} {A}            \by{$\land$ E}{1}
+  \end{nd}
+  $
+&
+  $
+  \begin{nd}
+  \hypo {1} {A}
+  \hypo {2} {B}
+  \have {3} {A \land B}   \by{$\land$ I}{1,2}
+  \end{nd}
+  $ \\
+
+  $
+  \begin{nd}
+  \hypo {1} {A \land B}
+  \have {2} {B}            \by{$\land$ E}{1}
+  \end{nd}
+  $
+& \\
+\\
+\textbf{$\land$ elimination} & \textbf{$\land$ introduction}
+\end{tabular}
+\end{center}
+
+
+%
+%
+%
+\paragraph{Disjunction Rules ($\lor$)}
+Conjunction is, of course, quite boring on its own.
+Disjunction is a measure more interesting.
+Introducing disjunction is straightforward: if we know $A$, we also know that either $A$ or $B$.
+However, eliminating a disjunction requires reasoning by cases.
+We have to show that the same formula is true if it is true for all the disjuncts.
+Formally, the rules are:
+
+\begin{center}
+\begin{tabular}{c@{\hspace{2cm}}c}
+  $
+  \begin{nd}
+  \hypo {1} {A \lor B}
+  \open[]
+    \hypo         {2} {A}
+    \have[\vdots] {3} {\vdots}
+    \have[n]      {4} {Q}
+  \close
+  \open[]
+    \hypo         {5} {B}
+    \have[\vdots] {6} {\vdots}
+    \have[m]      {7} {Q}
+  \close
+  \have           {8} {Q}        \by{$\lor$ E}{4,7}
+  \end{nd}
+  $
+&
+  $
+  \begin{nd}
+  \hypo {1} {A}
+  \have {3} {A \lor B}   \by{$\lor$ I}{1}
+  \end{nd}
+  $ \\
+\\
+\textbf{$\lor$ elimination} & \textbf{$\lor$ introduction}
+\end{tabular}
+\end{center}
+
+
+%
+%
+%
+\paragraph{Negation Rules ($\lnot$)}
+Negation elimination is straightforward: we can eliminate double negations.
+Negation can be introduced, in turn, via a proof by contradiction:
+
+\begin{center}
+\begin{tabular}{c@{\hspace{2cm}}c}
+  $
+  \begin{nd}
+  \hypo {1} {\lnot \lnot A}
+  \have {2} {A}        \by{$\lnot$ E}{1}
+  \end{nd}
+  $
+&
+  $
+  \begin{nd}
+  \open[]
+    \hypo         {2} {A}
+    \have[\vdots] {3} {\vdots}
+    \have[n]      {4} {\bot}
+  \close
+  \have           {5} {\lnot A}        \by{$\lnot$ I}{2-4}
+  \end{nd}
+  $ \\
+\\
+\textbf{$\lnot$ elimination} & \textbf{$\lnot$ introduction}
+\end{tabular}
+\end{center}
+
+
+%
+%
+%
+\paragraph{Contradiction Rules ($\bot$)}
+Contradiction can be introduced when we derive a proposition and its negation.
+Contradiction elimination is clearly the least intuitive of the deduction rules:
+  if we have derived a contradiction, we can state any proposition as true.
+The Fitch rules for contradiction are:
+
+\begin{center}
+\begin{tabular}{c@{\hspace{2cm}}c}
+  $
+  \begin{nd}
+  \hypo {1} {\bot}
+  \have {2} {Q}        \by{$\bot$ E}{1}
+  \end{nd}
+  $
+&
+  $
+  \begin{nd}
+  \hypo         {2} {A}
+  \have[\vdots] {3} {\vdots}
+  \have[n]      {4} {\lnot A}
+  \have         {5} {\bot}        \by{$\bot$ I}{2,4}
+  \end{nd}
+  $ \\
+\\
+\textbf{$\lnot$ elimination} & \textbf{$\lnot$ introduction}
+\end{tabular}
+\end{center}
+
+The next section shows how we can adapt these rules to the incorporate natural logic.
+
+
+
+%
+%
+%
+\Subsection{natlog-propositional-hybrid}{A Hybrid Logic}
+
+In the previous section, we treated propositions as atomic units.
+A formula $A \lor B$ has no substructure beyond being a disjunction of two
+  propositions.
+However, in most cases, these propositions \textit{do} in fact have structure.
+Furthermore, most of the time we can express a proposition as a sentence.
+In this section we propose an extension to propositional logic which uses monotonicity
+  calculus to augment the semantics of these atomic propositions (conversly: an extension
+  to monotonicity calculus which incorporates propositional reasoning).
+
+Recall that in natural logic, a sentence is represented as a truth value.
+Whereas \denote{cat} is a set of entities which are cats, and verbs like \denote{run}
+  are denoted as functions from sets to truth values, a complete sentence
+  (e.g., \denote{cats run}) is either \textit{true} or \textit{false}.
+From this point, the propositional logic side of our proof theory no longer has to care about
+  the substructure of the sentence, and can treat it as an atomic proposition.
+
+Notationally, we define the space of well formed formulas in our hybrid logic analogously to how a
+  formula is defined in propositional logic:
+
+\begin{enumerate}
+\item \denote{x} is a well-formed formula iff $\denote{x} \in \{true, false\}$.
+      \denote{cat} is not a well-formed formula, but \denote{cats have tails} is.
+\item $\bot$ is a well-formed formula.
+\item If $F$ is a well-formed formula, so is $\lnot F$.
+\item If $F$ and $G$ are well-formed formulas, so is $F \land G$.
+\item If $F$ and $G$ are well-formed formulas, so is $F \lor G$.
+\end{enumerate}
+
+
+We now turn to our hybrid proof theory.
+Trivially, all of the inference rules of propositional logic hold, if we do not mutate
+  any of the atomic sentences.
+Likewise, trivially all of the natural logic inferences hold, if they are not embedded in
+  a larger propositional formula.
+Our task is then twofold:
+  (1) what natural logic inferences are warranted inside of a given propositional formula; and
+  (2) what \textit{additional} propositional inferences can be made by appealing to the semantics
+      of natural logic.
+
+The first of these questions is answered by noticing that the propositional connectives,
+  like natural language quantifiers, have monotonicity.
+Conjunction ($\land$) is upward monotone, and both additive and
+  multiplicative; disjunction ($\lor$) is upward monotone, but 
+  only additive.
+Conjunction is multiplicative because 
+  $(A \land B) \land C \vDash (A \land C) \land (B \land C)$,
+  and additive because
+  $(A \lor B) \land C \vDash (A \land C) \lor (B \land C)$.
+Analogously, disjunction is not multiplicative:
+  $(A \land B) \lor C \nvDash (A \land C) \lor (B \land C)$;
+  but it is additive:
+  $(A \lor B) \lor C \vDash (A \lor C) \lor (B \lor C)$.
+Negation, in turn, is downward monotone, and both anti-multiplicative but not anti-additive:
+  $\lnot (A \lor B) \vDash \lnot A \lor \lnot B$, but
+  $\lnot (A \land B) \nvDash \lnot A \land \lnot B$.
+
+From here, we can use our normal projection rules to mutate lexical items not only in a sentence,
+  but also embedded in a propositional formula.
+For example, the following is now a valid inference using only natural logic:
+
+~\newline
+$
+\begin{nd}
+\hypo {1} {\lnot \denote{all cats are friendly} \land \denote{all cats are cute}}
+\have {2} {\lnot \denote{all \textbf{felines} are friendly} \land \denote{all cats are cute}}        \by{\denote{cat} \forward\ \denote{feline}}{1}
+\have {3} {\lnot \denote{all felines are friendly} \land \denote{all \textbf{tabby cats} are cute}}        \by{\denote{cat} \reverse\ \denote{tabby cat}}{2}
+\end{nd}
+$
+~\newline
+
+Of course, we should be able to now apply the propositional rules 
+  from \refsec{natlog-propositional-review}:
+
+~\newline
+$
+\begin{ndresume}
+\have {4} {\denote{all tabby cats are cute}}        \by{$\land$ E}{3}
+\end{ndresume}
+$
+~\newline
+
+
+Perhaps the most interesting question is, what \textit{additional} inferences can we 
+  draw from this hybrid logic?
+In particular, our two logics each have their own notion of negation:
+  in monotonicity calculus, \negate, \alternate, and \cover\ each behave a bit like negation.
+In fact, this lets us define a new negation introduction rule in propositional logic.
+In short, if we derive a new sentence from a presupposed true premise, and it is in the natural logic
+  relations \negate\ or \alternate\ with the original sentence, we can introduce the negation
+  of the original sentence.
+Analogously, if we derive a new sentence from a presupposed false premise, and it is in the natural logic
+  relations \negate\ or \cover\ with the original sentence, we can introduce the negation
+  of the original sentence (to yield a double negation).
+This falls directly out of the state formulation of the finite state automata
+  described in \reffig{natlog-fsa}.
+Formally:
+
+
+
+\begin{center}
+\begin{tabular}{c@{\hspace{2cm}}c}
+  $
+  \begin{nd}
+  \hypo         {1} {\denote{X}}         \by{state:$\Rightarrow$}{}
+  \have[\vdots] {2} {\vdots}
+  \have[n]      {3} {\denote{Y}}         \by{state:$\lnot \Rightarrow$}{1-3}
+  \have         {4} {\lnot \denote{X}}   \by{$\lnot$ I}{1,3}
+  \end{nd}
+  $
+&
+  $
+  \begin{nd}
+  \hypo         {1} {\lnot \denote{X}}         \by{state:$\Rightarrow$}{}
+  \open[]
+  \hypo         {2} {\denote{X}}         \by{state:$\lnot \Rightarrow$}{1}
+  \have[\vdots] {3} {\vdots}
+  \have[n]      {4} {\denote{Y}}         \by{state:$\Rightarrow$}{2-4}
+  \close
+  \have         {5} {\lnot \lnot \denote{X}}   \by{$\lnot$ I}{1,2-4}
+  \end{nd}
+  $ \\
+\\
+\textbf{natural $\lnot$ introduction 1} & \textbf{natural $\lnot$ introduction 2}
+\end{tabular}
+\end{center}
+
+
+The added complication here is that we now have to keep track of whether introduced
+  formulas are presupposed to be true or false.
+For instance, line 2 in the right $\lnot$ introduction proof presupposes that the sentence
+  \denote{X} is false, and therefore the cover (\cover) relation can flip the truth of the sentence
+  to be true.
+Similarly, in the left proof we assume that our premises are true -- this is not necessarily the case
+  if, e.g., you are trying to prove your premises false.\footnote{
+    This is a problem even in vanilla natural logic proofs. If you believe the premise to be
+    false, you have to start in the false state of the finite state automata in
+    \reffig{natlog-fsa}.
+  }
+If this information is not available \textit{a priori} in the proof, the new negation introduction
+  rules are only warranted by the full negation relation (\negate).
+
+\begin{figure}[th]
+\begin{center}
+\[
+\begin{nd}
+\hypo {1} {\denote{Bill stole the cookies} \lor \denote{Ted stole the cookies}}
+\hypo {2} {\denote{Ted did not steal the cookies}}
+\open[]
+  \hypo {3} {\denote{Bill stole the cookies}}
+  \have {4} {\denote{Bill stole the cookies}}        \r{3}
+\close
+\open[]
+  \hypo {4} {\denote{Ted stole the cookies}}
+  \have {5} {\denote{Ted did steal the cookies}}     \by{\denote{steal} \equivalent\ \denote{did steal}; state:$\Rightarrow$}{4}
+  \have {6} {\denote{Ted did not steal the cookies}} \by{\denote{did} \negate\ \denote{did not}; state:$\lnot \Rightarrow$}{5}
+  \have {7} {\lnot \denote{Ted stole the cookies}}   \by{$\lnot$ I}{4,6}
+  \have {8} {\bot}                                   \by{$\bot$ I}{4,7}
+  \have {9} {\denote{Bill stole the cookies}}        \by{$\bot$ E}{8}
+\close
+\have {10} {\denote{Bill stole the cookies}}         \by{$\lor$ E}{1,3-4,4-9}
+\end{nd}
+\]
+\caption{\label{fig:natlog-propositional-simpleproof}
+  A hybrid propositional + natural logic proof showing the disjunctive syllogism.
+}
+\end{center}
+\end{figure}
+
+We can combine these insights to solve a syntactically simpler version of our motivating example
+  in \reffig{natlog-propositional-simpleproof}.
+
+
+
+%
+%
+%
+\Subsection{natlog-propositional-syntax}{Shallow Semantic Parsing}
+The hybrid proof system from \refsec{natlog-propositional-hybrid} lays out an elegant theory
+  for entailment when we are composing atomic sentences.
+However, in natural language, propositional statements are usually not said in a such a straightforward
+  way.
+Even taking our simple running example, it's much more natural to say
+  \ww{Either Bill or Ted stole the cookies} than \ww{Bill stole the cookies or Ted stole the cookies}.
+Therefore, it is clearly useful to have a semantic parser which takes as input a complex
+  utterance, and produces as output a hybrid natural/propositional logic formula.
+Such a parser would allow us to do powerful forms of logical reasoning, without requiring
+  a heavyweight logical representation (e.g., the Abstract Meaning Representation 
+  \cite{key:2013banarescu-amr}).
+In this section, we outline some of the challenges for such a parser.
+
+
+\paragraph{\ww{And} is not always conjunction}
+The classic case of this is a sentence like \ww{Jack and Jill are friends}, where of course
+  this sentence should not be parsed as \ww{Jack is friends} and \ww{Jill is friends}.
+However, there are more subtle cases of this as well.
+For example, consider the exchange:
+
+\begin{displayquote}
+\ww{What would you like for dinner?} \\
+\ww{Taco Bell and Pizza Hut are my choice.}
+\end{displayquote}
+
+Here, the utterance \ww{Taco Bell and Pizza Hut are my choice} has a meaning more akin to
+  \ww{Taco Bell is my choice} or \ww{Pizza Hut is my choice}.
+
+
+\paragraph{\ww{Or} is not always disjunction}
+Conversely, \ww{or} does not always imply a disjunction.
+For example, consider the exchange:
+
+\begin{displayquote}
+\ww{Can I have pets in the apartment?} \\
+\ww{Cats or dogs are ok.}
+\end{displayquote}
+
+Clearly here, the semantics of the second statement is: 
+  \denote{cats are ok} $\land$ \denote{dogs are ok}.
+
+
+\paragraph{\ww{Or} is often exclusive}
+In propositional logic, disjunction is not exclusive: $A \lor B$ does not
+  forbid $A \land B$.
+This is played out in many uses of the word \ww{or}; for example:
+  \ww{you should do your taxes or your homework}.
+However, in a surprising number of cases, \ww{or} implies an exclusive or.
+Take, for instance:
+
+\begin{displayquote}
+\ww{Do or do not; there is no try.} \\
+\ww{Either cats or dogs chase mice.} \\
+\ww{Jack or Jill is responsible for that.}
+\end{displayquote}
+
+Handling these and other phenomena in language is a nontrivial problem.
+However, this is true for any semantic parsing task; and if a good parser can be built
+  then propositional and natural logic provide a fast and expressive paradigm for solving
+  entailment tasks.
+
+The rest of this thesis will use various aspects of natural logic in practical applications,
+  focusing on large-scale textual inference and question answering tasks.
+The first challenge, addressed by the next chapter, is on extending the proof theory described
+  here to operate over not a single premise, but a very large set of candidate premises.
+That is, we are using natural logic to look for any supporting premise for a hypothesis 
+  in a very large collection of plain text.
+
+
