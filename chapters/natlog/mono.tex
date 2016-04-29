@@ -4,9 +4,9 @@
 % Intro with Algebra
 %
 We begin this section by reviewing monotonicity in its familiar context:
-  monotonicity of algabraic functions.
+  monotonicity of algebraic functions.
 For example, $f(x) = e^x - 1$ is a \textit{monotone} function -- as we increase $x$,
-  the value of $f(x)$ monotonicially increases.
+  the value of $f(x)$ monotonically increases.
 A function may also be \textit{antitone}: $f(x) = e^{-x}$ is antitone, since 
   the value of $f(x)$ decreases monotonically as $x$ increases.
 Lastly, a function can be \textit{nonmonotone} -- distinct from antitone -- if
@@ -54,7 +54,7 @@ The section will conclude by introducing the notion of \textit{polarity},
 %
 % Monotonicity in Language
 %
-\Subsection{natlog-mono-general}{Monotonicity in Langugage}
+\Subsection{natlog-mono-general}{Monotonicity in Language}
 
 In generality, a monotone function is a function between partially-ordered sets
   that preserves the given order.
@@ -162,7 +162,7 @@ For example, if \ww{all cats drink milk}, we can infer that
   \ww{all kittens drink milk} because 
   $\llbracket cat \rrbracket \reverse \llbracket kitten\rrbracket$.
 
-Like the visualization with monotone algebreic functions earlier in the section,
+Like the visualization with monotone algebraic functions earlier in the section,
   we can visualize monotonicity over denotations.
 In the chart below, the $x$ axis is an ordering over denotations.\footnote{
     In general this is a partial order; however, partial orders are difficult
@@ -202,7 +202,7 @@ For this, we need a theory of how to reason with \textit{exclusion} -- which we 
 Furthermore, our theory currently does not handle nested quantification.
 In \refsec{natlog-mono-polarity}
   we introduce \textit{Polarity} and the mechanism for propagating monotonicity information
-  to determine the ``monotonicty'' of a sentence composed of multiple quantifiers.
+  to determine the ``monotonicity'' of a sentence composed of multiple quantifiers.
 
 
 
@@ -825,7 +825,7 @@ The last topic for this section deals with polarity when we are projecting one o
   exclusion relations through the sentence.
 For example, based on the proof theory in \refsec{natlog-mono-polarity}, if we assume that
   the exclusion relations propagate up with the identity relation, we'd get incorrect
-  entalments like the following:
+  entailments like the following:
 
 \begin{center}
 \begin{tabular}{lccc}
@@ -857,7 +857,7 @@ An upwards monotone quantifier is then:
 
 Notice that a quantifier can be both additive and multiplicative, and can also be
   neither additive or multiplicative.
-Conversly, a downwards monotone quantifier can be anti-additive and anti-multiplicative:
+Conversely, a downwards monotone quantifier can be anti-additive and anti-multiplicative:
 
 \begin{itemize}
   \item \textit{anti-multiplicative} iff $f(x \lor y) = f(x) \lor f(y)$.
