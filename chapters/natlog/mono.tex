@@ -37,9 +37,12 @@ However, if we know some properties about the ``monotonicity'' of the language,
   between the original and our mutated text -- analogous to the greater-than
   relation in our algebraic example.
 
-In fact, this analog is much more direct than it may at first appear:
-  monotonicity calculus reasons about the functions defined in 
-  \refsecs{natlog-denotations-other}{natlog-denotations-quantifiers}.
+This analogy is much more direct than it may at first appear:
+  we defined a class of functions in 
+  \refsecs{natlog-denotations-other}{natlog-denotations-quantifiers},
+  and monotonicity calculus will be the calculus of valid inferences that
+  we can draw from reasoning about the monotonicity of these functions.
+%  monotonicity calculus reasons about the functions defined in 
 The remainder of this section will explore how to apply monotonicity to
   the denotational semantics in \refsec{natlog-denotations},
   and then introduce reasoning about exclusion (\refsec{natlog-mono-exclusion}).
@@ -98,11 +101,10 @@ This is the key insight tying together the concepts of monotonicity and entailme
 We also point out the unfortunate fact that the symbol for the material conditional
   is the same as the superset symbol, which would seem to evoke ``greater than'' rather
   than the ``less than'' it actually corresponds to.
-Unfortunately, I do not yet have the political capital to redefine either of these
-  symbols.
+Unfortunately, this thesis is not the place to redefine either of these symbols.
 
 Lastly: we must define a partial order over our inductively defined function types.
-We adopt the definition that a function is less than another function if, for all
+A function is less than another function if, for all
   values in the domain of the functions, the value of the first function is less than
   the value of the second.
 Formally: for two functions $f$ and $g$ with the same domain and range $\bX \rightarrow \bY$,
@@ -120,7 +122,7 @@ For the remainder of this thesis, we will collapse all of these partial orders
 
 % Monotonicity is entailment-preserving
 \paragraph{Monotonicity is Entailment-Preserving}
-An important insight from the partial orders above is that our partial order
+The most important insight from the partial orders above is that our partial order
   over truth values corresponds exactly to entailment.
 Although ``entailment'' is not particularly well-defined for the other denotation
   types (i.e., does \ww{cat} entail \ww{animal}?), for the purposes of monotonicity
@@ -137,7 +139,6 @@ If a sentence is true, and the function used to construct its denotation (i.e., 
   is monotone with respect to the denotation of a word, then replacing that word with
   another word whose denotation is a superset of the original word will maintain
   the truth of the sentence.
-
 Taking a concrete example: \ww{all} (a function $e \rightarrow (e \rightarrow t)$)
   is antitone in its first argument and monotone in its second.
 So, the sentence \ww{all cats drink milk} is antitone with respect to \ww{cats} and
@@ -155,7 +156,6 @@ Grounding an interpretation for \ww{all cats drink milk} would be rather
   difficult in the general case -- and certainly difficult for longer utterances.
 But by appealing to the monotonicity of quantifiers, we do not need to ground
   the sentence to run an entailment proof on it.
-
 Antitone functions behave analogously to monotone functions, but with the 
   direction of the lexical mutation reversed.
 For example, if \ww{all cats drink milk}, we can infer that 
@@ -200,9 +200,9 @@ However, we still lack the tools to infer that \ww{no carnivore ate an animal} i
 For this, we need a theory of how to reason with \textit{exclusion} -- which we will
   review in the next section.
 Furthermore, our theory currently does not handle nested quantification.
-We introduce \textit{Polarity} and the mechanism for propagating monotonicity information
-  to determine the ``monotonicty'' of a sentence composed of multiple quantifiers
-  in \refsec{natlog-mono-polarity}.
+In \refsec{natlog-mono-polarity}
+  we introduce \textit{Polarity} and the mechanism for propagating monotonicity information
+  to determine the ``monotonicty'' of a sentence composed of multiple quantifiers.
 
 
 
@@ -213,7 +213,7 @@ We introduce \textit{Polarity} and the mechanism for propagating monotonicity in
 Although the monotonicity calculus of \newcite{key:1991valencia-natlog} can already
   do a range of interesting inferences, it is nonetheless still a very restricted
   logic.
-This section explores reviews work by \newcite{key:2008maccartney-natlog} and
+This section reviews work by \newcite{key:2008maccartney-natlog} and
   \newcite{key:2014icard-natlog} on how natural logic can be extended to handle
   negation and antonomy by reasoning about \textit{exclusion}.
 Much of the notation is adapted from \newcite{key:2014icard-natlog}.
@@ -255,9 +255,10 @@ We review each of these four new relations, and their interpretation for our thr
 
 First, however; to extend these definition beyond sets, and therefore beyond denotations
   to truth values and to functions, we introduce a bit of notation.
-In particular, we define a \textit{partially distributive lattice} as a 5-tuple:
-  $(\bD, \lor, \land, \bot, \top)$.
-This consists of a domain $\bD$ (the set of entities in the lattice), two binary operators
+In particular, we define a \textit{partially distributive lattice}.
+This is  a 5-tuple:
+  $(\bD, \lor, \land, \bot, \top)$,
+  consisting of a domain $\bD$ (the set of entities in the lattice), two binary operators
   $\lor$ and $\land$ corresponding to a generalized sense of \textit{maximum} and
   \textit{minimum} respectively,\footnote{
     $\lor$ and $\land$ must also be commutative, associative, and idempotent; and they must
@@ -313,6 +314,9 @@ $\bot$ is the function mapping any $A$ to $\bot$ in $B$. \\
 $\bot$ is the function mapping any $A$ to $\top$ in $B$. \\
 \end{lquote}
 
+We can use our definition of this lattice to formally define the new relations in
+  \reffig{natlog-setrelations}, and give new interpretations to the relations
+  from above.
 
 
 % Negation
@@ -543,9 +547,9 @@ We then \textit{join} these two relations together with the $\bowtie$ operator d
 \end{tabular}
 \end{center}
 
-As expected, we the transitivity of $\forward$ -- the key property needed to run our
-  proofs.
-We can define a similar join table for our full set of relations.
+As expected, we see the the transitivity of $\forward$: this is the key property we
+  needed to run our proofs.
+We can now define a similar (if larger) join table for our full set of relations.
 This table is given in \reftab{natlog-jointable}.
 
 
@@ -688,7 +692,7 @@ This allows us to make use of only two states:
 \Subsection{natlog-mono-polarity}{Polarity: Composing Monotonicity}
 So far, we have been talking primarily about natural logic relations between lexical items.
 That is, \denote{cat} \forward\ \denote{animal}, and \denote{black cat} \forward\ \denote{cat},
-  and \denote{happy} \alternate\ \denote{sad}, and true \forward true, and so forth.
+  and \denote{happy} \alternate\ \denote{sad}, and true \forward\ true, and so forth.
 For our proofs over sentences, we have limited ourselves to a single quantifier, which has
   allowed us to reason about inferences directly based off of the monotonicity of the quantifier.
 In this section, we explore two important concepts to complete our theory of monotonicity

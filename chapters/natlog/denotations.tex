@@ -4,7 +4,7 @@ An underlying central concept behind monotonicity calculus (the natural logic us
   in terms of their effect on the set of objects in the world.
 To be precise, let's introduce a domain \sD, representing the set of all items and concepts
   in the world.
-We'll show this \sD as an empty box:
+We'll show this \sD\ as an empty box:
 
 \vspace{1em}
 \begin{center}
@@ -16,10 +16,10 @@ We'll show this \sD as an empty box:
 
 
 Now, we can start labeling items in this set.
-For example, this thesis is an item in the world; the your hand is likewise
+For example, this thesis is an item in the world; your hand is likewise
   an item in the world.
-We can write these statements as: \ww{this thesis}$ \in \sD$ and \ww{your hand}$ \in \sD$.
-We can also show them visually as:
+We can write these statements as: \ww{this thesis}$ \in \sD$ and \ww{your hand}$ \in \sD$;
+  visually, we might show the following:
 
 \vspace{1em}
 \begin{center}
@@ -39,11 +39,21 @@ We can also show them visually as:
 \end{center}
 \vspace{1em}
 
-Already we are grounding bits of language (\ww{this thesis}; \ww{your hand})
-  in terms of the denotation of that language in the set $\sD$.
-This section will review a general theory for grounding arbitrary language in this
-  sort of denotational semantics.
-\todo{gabor} accumulate prior work to cite here.\needcite
+The central thesis behind denotational semantics is the notion that words have \textit{denotations},
+  which are sets of elements in a particular domain.
+For example, this thesis and your hand have denotations which are the singleton sets of elements
+  in the domain of \textit{things in the world}.
+Analogously, cats will be the set of cats in the world, \ww{run} will be the set of actions which
+  we'd label as running, and so forth.
+The remainder of this section will go over how we map different lexical items to denotations in
+  different domains.
+This will form the basis of the model theory behind monotonicity calculus, introduced in
+  \refsec{natlog-mono}.
+%Already we are grounding bits of language (\ww{this thesis}; \ww{your hand})
+%  in terms of the denotation of that language in the set $\sD$.
+%This section will review a general theory for grounding arbitrary language in this
+%  sort of denotational semantics.
+%\todo{gabor} accumulate prior work to cite here.\needcite
 
 % %%%%%
 % Nouns and Adjectives
@@ -117,13 +127,13 @@ These two interpretations are, of course, equivalent.
 A predicate can be represented as the set of entities in the world which satisfy it,
   and a set of entities in the world can be represented as the predicate that selects them.
 
-The key contrast between denotations in monotonicity calculus and semantic parsing
+The key difference between denotations in monotonicity calculus and semantic parsing
   is that in the later, the world \sD\ and the denotations of words have concrete
   (domain-specific) instantiations.
-For example, \sD\ may be a database that can be queried against.
+For example, \sD\ may be a database of places, people, etc. that can be queried against.
 In that case, the word \ww{river} would correspond to a finite set of database rows
   for the rivers in the world.
-To contrast, and as we'll see more clearly in \refsec{natlog-mono}, in this thesis we
+In monotonicity calculus, as we'll see more clearly in \refsec{natlog-mono}, we
   will never appeal to the explicit denotations of these lexical items.
 It is sufficient to know that there exist a set of rivers in the world; we never need
   to explicitly enumerate them.
@@ -195,7 +205,7 @@ Less \naive ly, we could consider other types of composition (for more informati
   e.g., \newcite{key:1975kamp-adjectives}).
 For instance, not all adjectives behave intersectively in the way shown above.
 A \ww{quick DMV visit} is still a DMV visit, but is likely not in the denotation of
-  quick ordeals.
+  quick things.
 Similarly, a \ww{small planet} is nonetheless not generally considered a \ww{small} thing.
 We refer to these as \textit{subsective} adjectives -- the denotation of the compound is
   a subset of the denotation of the noun, but not a subset of the denotation of the adjective.
@@ -215,7 +225,7 @@ However, for now we'll continue to review the basic components of the logic.
 \Subsection{natlog-denotations-sentences}{Sentences are Truth Values}
 Like most logics, the primary goal of natural logic is to assign truth
   values to sentences.
-Unlike most logics, however, in natural logic the model-theoretic interpretation of
+In natural logic the model-theoretic interpretation of
   a sentence is simply its truth value.
 That is to say, sentences can have one of two denotations: they are either true, or they
   are false.
@@ -270,9 +280,8 @@ We can then define a class of functions $f : \bD_e \rightarrow \sD_t$.
 That is, the class of functions mapping from an entity to a truth value.
 This corresponds most intuitively to the class of intransitive verbs: \ww{plays},
   \ww{runs}, \ww{eats}, \ww{barks}, etc.;
-  although also corresponds to the denotations for longer phrases like \ww{plays chess}
+  it also corresponds to the denotations for longer phrases like \ww{plays chess}
   and \ww{barks at the neighbor}.
-
 As a useful visualization, we can ``plot'' this function
   along its domain and range in  \reffig{natlog-denotation-barks}.
 The $x$ axis lists the set of denotations in the world.
