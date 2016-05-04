@@ -1,2 +1,27 @@
 \prefacesection{Preface}
-This thesis tells you all you need to know about...
+This thesis describes a new technique for learning open-domain knowledge from unstructured web-scale text corpora,
+  making use of a probabilistic relaxation of natural logic -- 
+  a logic which uses the syntax of natural language as its logical formalism.
+We begin by reviewing the theory behind natural logic, and propose a novel extension of the logic to handle
+  propositional formulae.
+
+We then show how to capture common sense facts: given a candidate statement about the world and a large corpus of 
+  known facts, is the statement likely to be true? 
+This is treated as a search problem 
+  from the query statement to its appropriate support in the knowledge base over valid (or approximately valid) 
+  natural logical inference steps.
+This approach achieves a 4x improvement at retrieval recall compared to lemmatized lookup, 
+  maintaining above 90\% precision.
+
+We then extend the approach to handle longer, more complex premises by segmenting these utterance into a set of 
+  atomic statements entailed through natural logic.
+We evaluate this system in isolation by using it as the main component in an Open Information Extraction system, 
+  and show that it achieves a 3\% absolute improvement in F1 compared to prior work on a competitive knowledge 
+  base population task.
+
+Finally, we address how to elegantly handle situations where we could not find a supporting premise for our query.
+To address this, we create an analogue of an evaluation function in gameplaying search: a shallow lexical 
+  classifier is folded into the search program to serve as a heuristic function to assess how likely we would 
+  have been to find a premise.
+Results on answering 4th grade science questions show that this method improves over both the classifier in isolation, 
+  a strong IR baseline, and prior work.

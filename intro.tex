@@ -1,1 +1,241 @@
 \chapter{Introduction}
+
+%
+% Philosophical BS
+%
+At its core, machine learning driven natural language processing aims to immitate human intelligence by
+  observing a human perform a given task repeatedly, and training from this data.
+For example, in order to train a system to recognize whether a given word is the name of a person,
+  we would first collect a large set of words, labelled as either people or not.
+A system would then take this data, and learn a \textit{model} that can then predict, on unseen
+  words, whether it is a person or not.
+The great advantage of this framework is that it frees us from having to have a deep understanding of
+  the underlying process by which humans perform the target task, instead allowing us to observe
+  examples and use this to learn to replicate the task.
+In fact, this has been responsible for much of the progress in natural language processing in the
+  past two decades.
+The field is finally at the point where many of the core NLP tasks can be done with high accuracy,
+  and many of the higher-level tasks (relation extraction, sentiment analysis, question-answering, etc)
+  have matured to the point of being useful as off-the-shelf components for both academia and industry.
+
+With these advancements, I belive the next question should turn back to a relatively neglected
+  topic: how do we begin to create programs that exhibit \textit{general purpose} intelligence?
+In many ways, data driven natural language processing systems can be thought of as idiot savants:
+  these systems perform at impressive accuracies at very narrow tasks -- the tasks they were trained
+  to repliate -- but are incapable of either generalizing across tasks, or performing complex
+  common-sense inferences.
+For example, we can list off some questions which are trivial for humans to answer, but are very difficult
+  for a trained system without either (1) very specific, narrow, and deep training data, or (2) a very large
+  amount of general-purpose background knowledge:
+
+\begin{displayquote}
+  \ww{\textbf{I ate a bowl of soup, and put the bowl in the bathtub. Did it float?}} \\
+  Answering this question correctly requires not only a fairly complex bit of inference, but also
+    a large amount of varried background knowledge: a bowl is concave, empty concave things float,
+    if you eat soup the bowl becomes empty, bathtubs are full of water, etc.
+\end{displayquote}
+
+\begin{displayquote}
+  \ww{\textbf{I left water in the freezer; what happened to it?}} \\
+  Here again, we need to know that freezers are cold (below freezing), that water turns to ice
+    when it's below freezing, and that water turning to ice is more informative than the other things
+    that also ``happen'' to it, such as it getting cold, or getting dark, or no longer sloshing, etc.
+\end{displayquote}
+
+\begin{displayquote}
+  \ww{\textbf{The Congressman resigned to go back to governing his hometown. What is his new title?}} \\
+  To correctly answer ``mayor,'' we would have to know that if someone resigns from a title, he no longer
+    holds it, and that a mayor governs a town.
+  Also, that a hometown is a city or other entity with a mayor -- unlike, say, homework or downtown.
+\end{displayquote}
+
+%
+% Thesis Intro
+%
+
+A central tennant of this thesis is that, if we're in pursuit of general intelligence, we should be
+  aiming to answer these sorts of questions not by collecting narrow deep training sets, but rather
+  by developing techniques to collect and then leverage this sort of common-sense information at scale.
+Furthermore, the most promising way to collect this sort of common-sense knowledge is from
+  text.
+Natural language is the de-facto standard for storing and transmitting 
+  information. 
+Textual data stores information about people and places (e.g., \w{Obama was born in 
+  Hawaii}), facts about science and engineering (e.g., \w{Ice is frozen water}), 
+  or simply common-sense facts (e.g., \w{Some mushrooms are poisonous}). 
+With the internet, we have unprecedented access to a huge -- and growing -- amount
+  of text.
+This presents an immediate practical concern: it becomes infeasible for
+  humans to digest and catalog this influx of information.
+Attempts at manually extracting knowledge (e.g., Freebase) have 
+  led to knowledge bases which are both woefully incomplete and quickly become 
+  outdated.
+In medicine, half of the medical school curriculum becomes obsolete within 5 
+  years of graduation,\footnote{
+    \url{http://uvamagazine.org/articles/adjusting\_the\_prescription/}
+  }
+  requiring constant updating.
+  MEDLINE counts 800,000 biomedical articles published in 2013 alone.\footnote{
+    \url{https://www.nlm.nih.gov/bsd/medline\_cit\_counts\_yr\_pub.html}
+  }
+In academia, studies show that up to 90\% of papers are never 
+  cited, suggesting that many are never read.
+In this thesis, I will describe theoretically sound inference 
+  methods that can leverage 
+  unstructured text for knowledge extraction \cite{key:2014angeli-naturalli,key:2015angeli-openie}.
+
+A key challenge in this research direction is the ability to use a large 
+  corpus of plain text to query facts and answer questions which are not verbatim 
+  expressed in the text.
+For example, a statement ``\ww{the cat ate a mouse}'' should support even lexically 
+  dissimilar queries like ``\ww{carnivores eat animals}'' and reject logically 
+  contradicted queries (like ``\ww{no carnivores eat animals}'').
+Or, a long sentence from Wikipedia may include additional information besides 
+  the part that supports the query.
+This contrasts with information retrieval (IR), which simply retrieves lexically 
+  similar passages.
+
+A natural formalism for addressing this challenge is \textit{natural logic} -- a proof 
+  theory over the syntax of natural language.
+The logic offers computational efficiency and eliminates the need for semantic 
+  parsing and domain-specific meaning representations, while still warranting most 
+  common language inferences (e.g., negation). 
+Furthermore, the inferences warranted by the logic tend to be 
+  the same inferences that are cognitively easy for humans -- that is, 
+  the inferences humans assume a reader will effortlessly make.
+
+This thesis work explores how to leverage natural logic as a formalism for
+  extracting knowledge not only when it is verbatim written in text, but also when
+  it is implied by some statement in the text.
+In the subsequent chapters, we will review the theory behind natural logic
+  (\refchp{natlog}), and then describee a system to
+  (1) extract common-sense knowledge from a large corpus of unannotated text via 
+    a search procedure over a soft relaxation of natural logic;
+  (2) simplify complex syntactic structures into maximally informative atomic
+    statements, and
+  (3) incorporate an entailment classifier into this search to serve as an
+    informed backoff.
+
+
+%
+% NaturalLI
+%
+
+In \refchp{naturalli} we introduce our general framework inferring the truth or 
+  falsehood of common-sense facts from a very large knowledge base 
+  of statements about the world.
+For example, if a premise ``\w{the cat ate a mouse}'' is present in the knowledge 
+  base, we should conclude that a hypothesis ``\w{no carnivores eat animals}'' is false.
+The system constructs a search problem for each queried hypothesis over relaxed 
+  natural logic inferences: the surface form of the hypothesis is allowed to mutate 
+  until it matches one of the facts in the knowledge base.
+These mutations correspond to steps in a natural logic proof; a learned cost for each 
+  mutation corresponds to the system's confidence that the mutation is indeed 
+  logically valid (e.g., mutating to a hypernym has low cost, whereas 
+  nearest neighbors in vector space has high cost).
+This amounts to high-performance fuzzy theorem prover over an arbitrarily 
+  large premise sets. 
+In my experiments, there are 
+  270M premises in the knowledge base
+  and the the system visits 1M candidates per second.
+
+An illustration of a search from the query ``\w{no carnivores eat animals}'' 
+  is given below, with the appropriate natural logic relation annotated 
+  along the edges:
+
+\vspace{1cm}
+\begin{center}
+\teaserSearch
+\end{center}
+\vspace{1cm}
+
+This framing of the problem has a number of advantages: unlike most 
+  approaches in textual entailment, it can scale to arbitrarily large knowledge 
+  bases.
+Unlike most approaches in relational inference (e.g., Markov Logic Networks), 
+  the runtime of the system decreases as the size of the knowledge base grows, 
+  since we can run a shallower search in expectation.
+From the other direction, unlike information retrieval approaches, we remain 
+  sensitive to a notion of entailment rather than simply similarity -- for example, 
+  we can detect false facts in addition to true ones.
+In an empirical evaluation, we show that we can recover 50\% of common sense facts 
+  from a subset of ConceptNet at 90\% precision -- 4x the recall of querying the knowledge 
+  base directly.
+%However, at this point our knowledge base consists of atomic facts rather than 
+%  the syntactically rich language we see in the real world.
+
+
+
+%
+% OpenIE
+%
+A common motif in extracting information from text is the value in 
+  converting a complete sentence into a set of atomic propositions.
+This is relevant not only as a standalone application, but also as a
+  subcomponent in our reasoning engine: it will allow us to digest complex
+  sentences from real-world data sources, and segment them into atomic facts.
+\refchp{openie} describes our system to extract atomic propositions (e.g., 
+  ``\w{Obama was born in Hawaii}'') from longer, more syntactically difficult 
+  sentences (e.g., ``\w{Born in Hawaii, Obama attended Columbia}'') by recursively 
+  segmenting a dependency tree into a set of self-contained clauses expressing 
+  atomic propositions.
+These clauses are then maximally shortened to yield propositions which are
+  logically entailed by the original sentence, and also maximally concise.
+For instance, the statement 
+  ``\w{anchovies were an ideal topping for Italian sailors}'' 
+  yields ``\w{anchovies are a topping.}'' 
+
+In addition to being a component in the reasoning engine described in the previous 
+  section, we can directly use this method for Open Information Extraction 
+  (Open IE) -- a flavor of relation extraction where the relation, subject, and 
+  object are all allowed to be \textit{open domain} plain-text strings.
+On a NIST-run knowledge base population task, we show that our system 
+  outperforms UW's 4\nth generation Open IE system by 3 F$_1$.
+Despite not being developed for this 
+  task, our system achieves a score halfway between the median and top 
+  performing system, outperforming multiple purpose-built systems.
+
+
+%
+% Aristo
+%
+Lastly, a key property of natural logic is its ability to interface nicely with 
+  statistical models which featurize the surface form of a sentence.
+In addition to handling complex premises, we extend the inference system to 
+  allow for inexact matches against the premises in the knowledge base 
+  (\refchp{science}).
+This can be thought of as an evaluation function -- akin to gameplaying search -- 
+  which produces a score at each search state for how likely a simple statistical 
+  classifier thinks that the state is supported by any premise.
+This allows us to provide some judgment for every query hypothesis (in contrast 
+  to the 50\% coverage in the original system over common-sense facts), 
+  while still adhering to logically valid 
+  inferences where possible and still detecting negation.
+We evaluate this complete system on 4\nth\ grade science exams, and show that we 
+  outperform prior work, a strong information retrieval baseline, and a 
+  standalone version of the evaluation function.
+We can achieve a final score of 74\% on our practice test, and 67\% on unseen 
+  test questions.
+
+
+
+%
+% Going forward
+%
+Together, these contributions form a powerful reasoning engine for inferring open-domain
+  knowledge from very large premise sets.
+Unlike traditional IR approaches, or shallow classification methods, the system maintains
+  a notion of logical validity (e.g., proper handling of negation);
+  unlike structured logical methods, the system is high-recall and robust to
+  real-world language and fuzzy inferences.
+From here, the foundation is laid to \textit{leverage} this sort of knowledge in a
+  general way, in pursuit of systems that exhibit broad-domain intelligence.
+Returning to or examples from the beginning of the section, if we are faced with a question like:
+
+\begin{displayquote}
+  \ww{I ate a bowl of soup, and put the bowl in the bathtub. Did it float?}
+\end{displayquote}
+
+We have a method for finding out that a bowl is concave, empty concave things float, etc.;
+  the remaining task for future work is putting these facts together to be able to reason about
+  this and other complex questions.
