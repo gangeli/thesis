@@ -1,4 +1,13 @@
-\chapter{Related Work}
+In this chapter, we review the body of work most related to this dissertation, and to
+  the larger goal of extracting knowledge from text.
+We cover related work in extracting structures knowledge bases from text
+  (Knowledge Base Population) and open domain knowledge base population
+  as two methods for extracting structured and semi-structured knowledge from
+  text.
+We then review work on common-sense reasoning -- one of the main goals of this dissertation.
+Lastly, we review work on textual entailment, related to the underlying natural logic
+  proof system in this dissertation, and conclude with reviewing work on question answering.
+
 
 %
 % KBP + RE
@@ -275,7 +284,7 @@ All of these facts are hand-curated.
 \Section{related-rte}{Textual Entailment}
 
 % -- RTE
-This thesis is in many ways to work on 
+This dissertation is in many ways to work on 
   recognizing textual entailment (RTE) -- e.g., 
   \newcite{key:2010-schoenmackers-horn}, \newcite{key:2011berant-entailment}.
 Textual Entailment is the task of determining if a given premise sentence
@@ -292,7 +301,7 @@ For instance:
 Although the definition of entailment is always a bit fuzzy -- what if I drove a train
   up to SF, or perhaps a boat? -- nonetheless a reasonable person would assume that if
   you drove somewhere you were in a car.
-This sort of reasoning is similar to the goal of this thesis: given premises, infer
+This sort of reasoning is similar to the goal of this dissertation: given premises, infer
   valid hypothesis to claim as true.
 However, in RTE the premise set tends to be very small (1 or 2 premises), and the domain
   tends to have less of a focus on common-sense or broad domain facts.
@@ -335,7 +344,7 @@ This could then be used to easily justify the hypothesis:
 
 
 % Natural Logic
-This thesis focuses a fair bit on natural logic.
+This dissertation focuses a fair bit on natural logic.
 The primary application of natural logic in prior work has been
   for textual entailment and related fields.
 For example, work by MacCartney 
@@ -380,7 +389,7 @@ For example, \newcite{key:2015rocktaschel-snli} construct a recurrent neural net
 % QA
 %
 \Section{related-rte}{Question Answering}
-Many parts of this thesis are reminiscent of question answering tasks.
+Many parts of this dissertation are reminiscent of question answering tasks.
 Related work on question answering can be segmented into two broad categories:
 Early work focused on question answering directly over the text of a
   source corpus.
@@ -417,7 +426,7 @@ The main line of work here is in the tradition of semantic parsing
   \cite{key:2005kate-semantics,key:2005zettlemoyer-semantics,key:2011liang-semantics}.
 An input query is parsed into a structured logical representation; this representation
   can then be run against a knowledge base to retrieve the answer to the query.
-For example, \newcite{2005zettlemoyer-semantics} and \newcite{key:2011liang-semantics} 
+For example, \newcite{key:2005zettlemoyer-semantics} and \newcite{key:2011liang-semantics} 
   parse complex, compositional geological
   queries into a logical form that can be evaluated against a database of geological facts.
 A complex sentence like:
@@ -431,7 +440,7 @@ Would be parsed into a logical form (effectively, a structured query) like:
 \lambda x . state(x) \land borders(x, \argmax( \lambda y . state(y), \lambda y . count (\lambda z . state(x) \land borders(y, z))))
 \end{equation*}
 
-\newcite{2005zettlemoyer-semantics} approaches the problem by learning a synchronous
+\newcite{key:2005zettlemoyer-semantics} approaches the problem by learning a synchronous
   combinatory categorical grammar (CCG) \cite{key:2004bos-ccg} 
   parse over lexical items and logical form fragments,
   given a fixed grammar.
