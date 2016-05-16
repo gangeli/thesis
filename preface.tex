@@ -1,2 +1,32 @@
 \prefacesection{Preface}
-This thesis tells you all you need to know about...
+
+The increasing availability of large text corpora holds the promise of acquiring an 
+  unprecedented amount of knowledge from this text.
+However, current techniques are either specialized to particular domains or do not 
+  scale to large corpora.
+This dissertation develops a new technique for learning open-domain knowledge from 
+  unstructured web-scale text corpora.
+
+A first application aims to capture common sense facts: given a candidate statement 
+  about the world and a large corpus of known facts, is the statement likely to be true? 
+We appeal to a probabilistic relaxation of natural logic -- a logic which uses the syntax of 
+  natural language as its logical formalism -- to define a search problem from the query 
+  statement to its appropriate support in the knowledge base over valid (or approximately 
+  valid) logical inference steps.
+We show a 4x improvement at retrieval recall compared to lemmatized lookup, maintaining 
+  above 90\% precision.
+
+This approach is extended to handle longer, more complex premises by segmenting these 
+  utterance into a set of atomic statements entailed through natural logic.
+We evaluate this system in isolation by using it as the main component in an Open Information 
+  Extraction system, and show that it achieves a 3\% absolute improvement in F$_1$ compared to 
+  prior work on a competitive knowledge base population task.
+
+A remaining challenge is elegantly handling cases where we could not find a supporting 
+  premise for our query.
+To address this, we create an analogue of an evaluation function in gameplaying search: 
+  a shallow lexical classifier is folded into the search program to serve as a heuristic 
+  function to assess how likely we would have been to find a premise.
+Results on answering 4th grade science questions show that this method improves over 
+  both the classifier in isolation and a strong IR baseline, and achieves the best published 
+  results on the task.
