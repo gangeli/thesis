@@ -101,7 +101,7 @@ This is the key insight tying together the concepts of monotonicity and entailme
 We also point out the unfortunate fact that the symbol for the material conditional
   is the same as the superset symbol, which would seem to evoke ``greater than'' rather
   than the ``less than'' it actually corresponds to.
-Unfortunately, this thesis is not the place to redefine either of these symbols.
+Unfortunately, this dissertation is not the place to redefine either of these symbols.
 
 Lastly: we must define a partial order over our inductively defined function types.
 A function is less than another function if, for all
@@ -649,7 +649,7 @@ At each inference step, we note the transition we took to reach it form the prev
 \have {3} {\ww{The cat ate an animal.}}        \by{rel: \forward$~~~$ state:$\Rightarrow$}{2}
 \have {4} {\ww{The feline ate an animal.}}     \by{rel: \forward$~~~$ state:$\Rightarrow$}{3}
 \have {5} {\ww{The carnivore ate an animal.}}  \by{rel: \forward$~~~$ state:$\Rightarrow$}{4}
-\have {5} {\ww{No carnivore ate an animal.}}   \by{rel: \negate$~~~$ state:$\Rightarrow \lnot$}{4}
+\have {6} {\ww{No carnivore ate an animal.}}   \by{rel: \negate$~~~$ state:$\Rightarrow \lnot$}{5}
 \end{nd}
 \]
 
@@ -718,12 +718,14 @@ Here, \ww{meat} is under the scope of two quantifiers: \ww{no} and \ww{n't} (not
   }
 Recall that both of these quantifiers are downward monotone with respect to both of their
   arguments.
+Were the word under the scope of a single downward monotone quantifier, the relation 
+  \forward\ would not be entailment-preserving.
 For example, when under the scope of a single negation, the following inference is invalid:
 
 \[
 \begin{nd}
 \hypo {1} {\ww{No mice eat meat}}          
-\have {2} {!~ \darkred{\ww{No mice eat food}}}        \by{\denote{meat} \forward\ \denote{food}}{1}
+\have {2} {\darkred{\ww{No mice eat food}}}        \by{\denote{meat} \forward\ \denote{food}}{1}
 \end{nd}
 \]
 
@@ -733,10 +735,10 @@ It can be thought of as a function which takes as input a relation which holds b
   item and its mutation, and produces as output the relation that holds between the containing
   sentences.
 For instance, the polarity of \ww{meat} in the sentence \ww{No mice eat meat} would
-  be a function which translates \forward to \reverse\ and \reverse\ to \forward.
+  be a function which translates \forward\ to \reverse\ and \reverse\ to \forward.
 The polarity of \ww{meat} in the sentence \ww{No cats don't eat meat} would be a function
   translating \forward\ to \forward\ and \reverse\ to \reverse.
-This is no different than monotonicity, and is in fact no more than the composition of
+This is no different in nature than monotonicity, and is in fact no more than the composition of
   the monotonicities of the quantifiers acting on a lexical item.
 
 The algorithm for determining polarity is simple.
@@ -757,11 +759,11 @@ As we'll see in the next section, this process becomes more nuanced once we get 
   relations (\alternate, \negate, \cover), but for now this intuition is enough to formulate
   a complete proof theory for monotonicity calculus.
 
-Following a variant of the notation in \newcite{key:2008maccartney-natlog}, we can a natural logic
-  proof as a table.
+Following a variant of the notation in \newcite{key:2008maccartney-natlog}, we can 
+  construct a natural logic proof as a table.
 Each row corresponds to a single lexical mutation on the previous row; the first row is the
   premise fact.
-The first column is the (possibly partial) hypothesis.
+The first column is the hypothesis.
 The second column is the lexical relation induced by the mutation performed to obtain the given
   row.
 The third column is this relation \textit{projected} up the sentence, based on the lexical item's
@@ -927,9 +929,28 @@ The difference between additive and anti-additive, multiplicative and anti-multi
   is simply replacing all instances of \forward\ with \reverse\ (from the definition of
   monotonicity), and all instances of \cover\ with \alternate, and visa versa.
 
+If we return to our naive inference from the beginning of the section 
+  which incorrectly inferred that  \ww{evey cat has a tail} negates \ww{every dog has a tail},
+  we can show that we obtain the correct result if we take into consideration that \ww{every}
+  is anti-additive in its first argument.
+In particular, alternation (\alternate) projects up to the independence relation (\independent)
+  when in the scope of a single anti-additive quantifier.
+Therefore, no inference can be drawn about the two sentences:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Sentence} & \textbf{Lexical Rel} & \textbf{Projected Rel} & \textbf{Truth} \\
+\midrule
+\ww{Every cat has a tail}          &            &              & $\Rightarrow$ \\
+\ww{Every \textbf{dog} has a tail} & \alternate & \independent & $\lnot \Rightarrow$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 This concludes our exploration of monotonicity calculus.
 The subsequent section explores some ideas in extending natural logics to propositional 
-  reasoning; the remainder of the thesis thereafter will explore applications of natural logic
+  reasoning; the remainder of the dissertation thereafter will explore applications of natural logic
   to large-scale open-domain reasoning problems.
 
 

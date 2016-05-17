@@ -27,8 +27,8 @@ At a high level, we would like a propositional logic to handle inferences betwee
 
 We briefly review propositional logic, and then show how we can perform hybrid natural logic
   and propositional proofs.
-Lastly, we explore how we might build a practical system to parse a sentence into propositional
-  components, and the expected challenges therein.
+%Lastly, we explore how we might build a practical system to parse a sentence into propositional
+%  components, and the expected challenges therein.
 
 
 %
@@ -226,6 +226,8 @@ Recall that in natural logic, a sentence is represented as a truth value.
 Whereas \denote{cat} is a set of entities which are cats, and verbs like \denote{run}
   are denoted as functions from sets to truth values, a complete sentence
   (e.g., \denote{cats run}) is either \textit{true} or \textit{false}.
+We can treat any denotation in natural logic which falls into this domain of
+  \{true, false\} as propositions for propositional reasoning.
 From this point, the propositional logic side of our proof theory no longer has to care about
   the substructure of the sentence, and can treat it as an atomic proposition.
 
@@ -242,7 +244,7 @@ Notationally, we define the space of well formed formulas in our hybrid logic an
 \end{enumerate}
 
 
-We now turn to our hybrid proof theory.
+Having defined our logical language, we now turn to our hybrid proof theory.
 Trivially, all of the inference rules of propositional logic hold, if we do not mutate
   any of the atomic sentences.
 Likewise, trivially all of the natural logic inferences hold, if they are not embedded in
@@ -265,7 +267,7 @@ Analogously, disjunction is not multiplicative:
   $(A \land B) \lor C \nvDash (A \land C) \lor (B \land C)$;
   but it is additive:
   $(A \lor B) \lor C \vDash (A \lor C) \lor (B \lor C)$.
-Negation, in turn, is downward monotone, and both anti-multiplicative but not anti-additive:
+Negation, in turn, is downward monotone, and anti-multiplicative but not anti-additive:
   $\lnot (A \lor B) \vDash \lnot A \lor \lnot B$, but
   $\lnot (A \land B) \nvDash \lnot A \land \lnot B$.
 
@@ -381,8 +383,8 @@ If this information is not available \textit{a priori} in the proof, the new neg
 \end{center}
 \end{figure}
 
-We can combine these insights to solve a syntactically simpler version of our motivating example
-  in \reffig{natlog-propositional-simpleproof}.
+We can combine these insights to solve a our motivating example of the disjunctive
+  syllogism, shown in \reffig{natlog-propositional-simpleproof}.
 
 
 
@@ -451,7 +453,7 @@ However, this is true for any semantic parsing task; and if a good parser can be
   then propositional and natural logic provide a fast and expressive paradigm for solving
   entailment tasks.
 
-The rest of this thesis will use various aspects of natural logic in practical applications,
+The rest of this dissertation will use various aspects of natural logic in practical applications,
   focusing on large-scale textual inference and question answering tasks.
 The first challenge, addressed by the next chapter, is on extending the proof theory described
   here to operate over not a single premise, but a very large set of candidate premises.

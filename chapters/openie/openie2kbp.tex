@@ -1,5 +1,5 @@
 \Section{mapping}{Mapping OpenIE to a Known Relation Schema}
-\begin{table*}[t]
+\begin{table}[t]
 \resizebox{\textwidth}{!}{
 \begin{tabular}{l:lc|l:lc}
   \textbf{KBP Relation} & \textbf{Open IE Relation} & \textbf{PMI$^2$} & \textbf{KBP Relation} & \textbf{Open IE Relation} & \textbf{PMI$^2$}\\
@@ -25,7 +25,7 @@
     relations.
   Incorrect or dubious mappings are marked with an asterisk.
 }
-\end{table*}
+\end{table}
 
 % Intro + kbp schema
 A common use case for open IE systems is to map them to a
@@ -80,6 +80,8 @@ To compute PMI$^2$, we collect probabilities for the open IE and KBP
 Each of these probabilities is conditioned on the type signature of the relation.
 For example, the joint probability of KBP relation $r_k$ and open IE relation
   $r_o$, given a type signature of $t_1, t_2$, would be
+
+\vspace{0.25cm}
 \begin{equation*}
   p(r_k, r_o \mid t_1, t_2) = \frac{
     \textrm{count}(r_k, r_o,  t_1, t_2)
@@ -87,14 +89,18 @@ For example, the joint probability of KBP relation $r_k$ and open IE relation
     \sum_{r_k', r_o'}\textrm{count}(r_k', r_o', t_1, t_2)
   }.
 \end{equation*}
+\vspace{0.25cm}
 
 % PMI^2
 Omitting the conditioning on the type signature for notational convenience,
   and defining $p(r_k)$ and $p(r_o)$ analogously,
   we can then compute The PMI$^2$ value between the two relations:
+
+\vspace{0.25cm}
 \begin{equation*}
   \textrm{PMI}^2(r_k, r_o) = \log \left( \frac{p(r_k, r_o)^2}{p(r_k) \cdot p(r_o)} \right)
 \end{equation*}
+\vspace{0.25cm}
 
 Note that in addition to being a measure related to PMI, this captures
   a notion similar to \textit{alignment by agreement} 

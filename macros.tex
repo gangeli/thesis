@@ -15,9 +15,11 @@
 \def\darkgray#1{\textcolor{darkgray}{#1}}
 
 \newcommand\sys[1]{\textsc{#1}}
-\newcommand\w[1]{\textit{\darkgreen{#1}}}
+%\newcommand\w[1]{\textit{\darkgreen{#1}}}
+\newcommand\w[1]{\ww{#1}}  % note: wrong for presentations!
 \newcommand\ww[1]{\textit{#1}}
 \newcommand{\indentitem}{\setlength\itemindent{25pt}}
+\newcommand{\nth}{$^{\textrm{th}}$}
 
 \newcommand\denote[1]{\ensuremath{\llbracket\ww{#1}\rrbracket}}
 
@@ -101,12 +103,12 @@
 }
 
 \newcommand\entailmentExample[2]{
-\vspace{2mm}
-\noindent \hspace{-0.5em}\begin{tabular}{lp{0.41\textwidth}}
+\vspace{0.5cm}
+\noindent \hspace{0.5cm}\begin{tabular}{lp{0.80\textwidth}}
 \textbf{P}: & \hspace*{-1mm}\textit{#1} \\
 \textbf{H}: & \hspace*{-1mm}\textit{#2}
 \end{tabular}
-\vspace{2mm}
+\vspace{0.5cm}
 }
 
 \tikzset{
@@ -130,3 +132,8 @@
 \newcommand\noncircled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw=white,inner sep=2pt] (char) {#1};}
 }
+
+
+\newcommand{\hnode}[1]{|(#1)| \w{#1}}
+\newcommand{\rnode}[2]{|(#1#2)| \w{\textcolor{darkblue}{\textbf{#1}}}\textcolor{white}{#2}}
+\newcommand{\bnode}[2]{|(#1#2)| \w{\textcolor{darkblue}{\textcolor{darkred}{\textbf{#1}}}}\textcolor{white}{#2}}

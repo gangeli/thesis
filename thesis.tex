@@ -13,11 +13,10 @@
 \usepackage[square,sort,comma,numbers]{natbib}
 % (tikz)
 \usepackage{tikz}
-\usetikzlibrary{shapes.arrows,chains,positioning,automata,trees,calc}
-\usetikzlibrary{patterns}
-\usetikzlibrary{decorations.pathmorphing,decorations.markings}
-% (tikz dependency tree)
 \usepackage{tikz-dependency,pifont}
+\usetikzlibrary{shapes.arrows,chains,positioning,automata,trees,calc}
+\usetikzlibrary{patterns,matrix}
+\usetikzlibrary{decorations.pathmorphing,decorations.markings}
 % (print algorithms)
 \usepackage[ruled,lined,linesnumbered]{algorithm2e}
 % (custom)
@@ -50,20 +49,22 @@
 
 % -- Sections --
 % Introduction
+\Chapter{intro}{Introduction}
 \input intro.tex
 
 % Related Work
+\Chapter{related}{Related Work}
 \input related.tex
 
 % Natural Logic
-\chapter{Natural Logic}
+\Chapter{natlog}{Natural Logic}
 \input chapters/natlog/intro.tex
 \input chapters/natlog/denotations.tex
 \input chapters/natlog/mono.tex
 \input chapters/natlog/propositional.tex
 
 % NaturalLI
-\chapter{Common-Sense Reasoning}
+\Chapter{naturalli}{Common-Sense Reasoning}
 \input chapters/naturalli/intro.tex
 \input chapters/naturalli/maccartney.tex
 \input chapters/naturalli/search.tex
@@ -72,7 +73,7 @@
 \input chapters/naturalli/results.tex
 
 % OpenIE
-\chapter{Open Domain Information Extraction}
+\Chapter{openie}{Open Domain Information Extraction}
 \input chapters/openie/intro.tex
 \input chapters/openie/clause.tex
 \input chapters/openie/natlog.tex
@@ -80,14 +81,15 @@
 \input chapters/openie/result.tex
 
 % Open QA
-\chapter{Open Domain Question Answering}
+\Chapter{qa}{Open Domain Question Answering}
 \input chapters/qa/intro.tex
-\input chapters/qa/background.tex
+%\input chapters/qa/background.tex
 \input chapters/qa/naturalli_v2.tex
 \input chapters/qa/softsignal.tex
 \input chapters/qa/results.tex
 
 % Conclusion
+\Chapter{conclude}{Conclusions}
 \input conclude.tex
 
 
