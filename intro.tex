@@ -2,7 +2,7 @@
 %
 % Philosophical BS
 %
-At its core, machine learning driven natural language processing aims to imitate human intelligence by
+At its core, machine-learning-driven natural language processing aims to imitate human intelligence by
   observing a human perform a given task repeatedly and training from this data.
 For example, in order to train a system to recognize whether a given word is the name of a person,
   we would first collect a large set of words, labeled as either people or not.
@@ -15,12 +15,12 @@ In fact, this has been responsible for much of the progress in natural language 
   the first two decades of the new millennium.
 Many of the core NLP tasks (named entity recognition, part of speech tagging, parsing, etc.)
   can now be done with high accuracy,
-  and many of the higher-level tasks (relation extraction, sentiment analysis, question-answering, etc)
+  and many of the higher-level tasks (relation extraction, sentiment analysis, question-answering, etc.)
   have matured to the point of being useful as off-the-shelf components both for academia and industry.
 
-With these advancements, I believe that we should turn back to a relatively neglected
+With these advances, I believe that we should turn back to a relatively neglected
   topic: how do we begin to create programs that exhibit \textit{general purpose} intelligence?
-In many ways, data driven natural language processing systems are idiot savants:
+In many ways, data-driven natural language processing systems are idiot savants:
   these systems perform at impressive accuracies at very narrow tasks -- the tasks they were trained
   to replicate -- but are incapable of either generalizing across tasks, or performing complex
   common-sense inferences.
@@ -54,7 +54,7 @@ For example, the following is a list of some questions which are trivial for hum
 % Thesis Intro
 %
 
-A central tenant of this dissertation is that, if we're in pursuit of general intelligence, we should be
+A central tenet of this dissertation is that, if we're in pursuit of general intelligence, we should be
   aiming to answer these sorts of questions not by collecting narrow deep training sets, but rather
   by developing techniques to collect large amounts of common-sense information at scale.
 This is, after all, the same common-sense information we leverage to solve these tasks ourselves.
@@ -66,7 +66,7 @@ Colors, shapes, and sizes of things for example are far more naturally extracted
   the laws of physics are much more easily learned through interaction with the world.
 
 Nonetheless, natural language is the de-facto standard for storing and transmitting 
-  information, and has the key advantage of being plentiful and convenient to work with.
+  information, and has the key advantages of being plentiful and convenient to work with.
 Textual data stores information about people and places (e.g., \w{Obama was born in 
   Hawaii}), facts about science and engineering (e.g., \w{Ice is frozen water}), 
   or simply common-sense facts (e.g., \w{Some mushrooms are poisonous}). 
@@ -104,8 +104,8 @@ The key challenge in this approach is the ability to use a large
 For example, a statement \ww{the cat ate a mouse} should support even lexically 
   dissimilar queries like \ww{carnivores eat animals} and reject logically 
   contradicted queries (like \ww{no carnivores eat animals}).
-Or, a long sentence from Wikipedia may include additional information besides 
-  the part that supports the query.
+Or, it may be difficult to find the relevant nugget of information from a long and syntactically
+  complex sentence from, e.g., Wikipedia.
 Therefore, the technical focus of this dissertation will be on how we run soft logical
   inference from a very large set of candidate premises (our source corpus) to either
   prove or disprove a candidate fact whose truth we do not know.
@@ -119,7 +119,7 @@ Furthermore, the inferences warranted by the logic tend to be
   the same inferences that are cognitively easy for humans -- that is, 
   the inferences humans assume a reader will effortlessly make.
 
-This dissertation work explores how to leverage natural logic as a formalism for
+This dissertation explores how to leverage natural logic as a formalism for
   extracting knowledge not only when it is verbatim written in text, but also when
   it is only \textit{implied} by some statement in the text and we must perform
   a large scale inference over a large set of candidate premises to find the right one
@@ -138,7 +138,7 @@ In the subsequent chapters, we will review the theory behind natural logic
 % NaturalLI
 %
 
-In \refchp{naturalli} we introduce our general framework inferring the truth or 
+In \refchp{naturalli} we introduce our general framework for inferring the truth or 
   falsehood of common-sense facts from a very large knowledge base 
   of statements about the world.
 For example, if a premise \ww{the cat ate a mouse} is present in the knowledge 
@@ -150,8 +150,8 @@ These mutations correspond to steps in a natural logic proof; a learned cost for
   mutation corresponds to the system's confidence that the mutation is indeed 
   logically valid (e.g., mutating to a hypernym has low cost, whereas 
   nearest neighbors in vector space has high cost).
-This amounts to high-performance fuzzy theorem prover over an arbitrarily 
-  large premise sets, where the extent to which particular logical mutations
+This amounts to a high-performance fuzzy theorem prover over an arbitrarily 
+  large premise set, where the extent to which particular logical mutations
   are correct or incorrect can be learned from a training set of known correct
   and incorrect facts.
 
@@ -172,16 +172,20 @@ Therefore, the premise negates the query fact:
 \vspace{1cm}
 
 
-This framing of the problem has a number of advantages: unlike most 
-  approaches in textual entailment, it can scale to arbitrarily premise sets (knowledge bases).
-Unlike most approaches in relational inference (e.g., Markov Logic Networks), 
-  the runtime of the system decreases as the size of the knowledge base grows, 
-  since we can run a shallower search in expectation.
+This framing of the problem has a number of advantages.
+Prior work in \textit{textual entailment} -- the task of determining if a premise sentence logically entails the
+  truth of a hypothesis -- has traditionally only dealt with very small (1 or 2 sentence) premise sets.
+In contrast, this approach scales to arbitrarily large premise sets.
+Prior work in large-scale inference -- for example approaches making use of large graphical
+  models (e.g., Markov Logic Networks \cite{key:2006richardson-mln}) -- tend to be
+  computationally inefficient as the size of the inference problem grows.
+This approach becomes more efficient the larger the premise set grows, since we can run
+  a shallower search in expectation.
 From the other direction, unlike information retrieval approaches, we remain 
   sensitive to a notion of entailment rather than simply similarity -- for example, 
   we can detect false facts in addition to true ones.
 In an empirical evaluation, we show that we can recover 50\% of common sense facts 
-  from a subset of ConceptNet at 90\% precision -- 4x the recall of directly querying 
+  at 90\% precision -- 4x the recall of directly querying 
   a very large source corpus of 270 million premises.
 
 
@@ -197,7 +201,7 @@ This is, in fact, relevant not only as a
   sentences from real-world data sources and segment them into atomic facts)
   but also as a standalone application.
 A common motif in information extraction in general is the value in 
-  converting such complete sentence into a set of atomic propositions.
+  converting such complete sentences into a set of atomic propositions.
 
 \refchp{openie} describes our system to extract atomic propositions (e.g., 
   \ww{Obama was born in Hawaii}) from longer, more syntactically difficult 
@@ -218,8 +222,8 @@ For example, the figure below shows the system segmenting the sentence
   two ``clauses,'' and then shortening each clause to obtain maximally informative
   short propositions.
 The left ``clause'' is the entire sentence.
-In that context, the main message we are trying to convey is that a girl took the
-  midnight train.
+In that context, the main message we are trying to convey is that a girl (``\textit{she}'') 
+  took the midnight train.
 Her birthplace, the destination of the train, etc. are supplemental bits of information.
 Therefore, we are justified in stripping off these additional modifiers, and arriving
   at a maximally concise utterance (i.e., dependency tree fragment) \ww{she took midnight train}.
@@ -264,10 +268,11 @@ Now, her birthplace is the central theme of the clause, and the most we can stri
   % arrows
   $\downarrow$ & $\downarrow$ \\
   % entailments
-  \begin{tabular}{ll}
-    \ww{\small{she took the midnight train going anywhere}} & \ww{\small{she took the midnight train}} \\
-    \ww{\small{Born in a small town, she took the midnight train}} & \ww{\small{\textbf{she took midnight train}}}  \\
-    \ww{\small{Born in a town, she took the midnight train}} & $\dots$ \\
+  \begin{tabular}{l}
+    \ww{\small{Born in a small town, she took the midnight train going anywhere}} \\
+    \ww{\small{Born in a small town, she took the midnight train}} 
+    \ww{\small{\textbf{she took midnight train}}}  \\
+    $\dots$ \\
   \end{tabular} &
   \begin{tabular}{l}
     \ww{\small{\textbf{she Born in small town}}} \\
@@ -299,12 +304,17 @@ Despite not being developed for this
 Lastly, a key property of natural logic is its ability to interface nicely with 
   statistical models which featurize the surface form of a sentence.
 This allows us to construct models which capture the broad coverage and high recall
-  of shallow featurized models, while nonetheless maintaining the nuanced logical
+  of shallow featurized models, while nonetheless maintaining much of the nuanced logical
   reasoning that natural logic provides.
+This is in contrast to most earlier work using structured logic for question answering
+  tasks, which struggle to get reasonable recall.
+For example, \newcite{key:2005bos-rte} observe that, in the RTE task of determining whether a
+  sentence entails another sentence, strict logical methods obtain only 5.8\% recall.
+
+
 \refchp{qa} outlines a method for combining these two signals -- a shallow
   featurized classifier and our natural logic engine -- elegantly in
   a single unified model.
-
 We continue to view our problem as a search problem, where we mutate the query fact
   in ways that are warranted (or approximately warranted) by natural logic until we
   hit a premise fact.
@@ -317,10 +327,10 @@ This can be thought of as an evaluation function in the same way that a gameplay
   uses an evaluation function to assess the game state.
 If the search problem reaches a terminal state (a known premise in our case, analogous to, e.g., a checkmate
   in Chess) then the evaluation function is not needed.
-However, even if no terminal state is found, it is nonetheless useful to have an estimate for how close we
+However, if no terminal state is found, it is nonetheless useful to have an estimate for how close we
   are to a terminal state.
 
-The alignment classifier is carefully designed to be easy to update during the search
+The evaluation function is carefully designed to be easy to update during the search
   process.
 It makes use of a set of alignment features -- e.g., as in the figure below -- such that
   as we mutate the premise (\ww{rain and snow are types of precipitation}) we can match
@@ -328,8 +338,8 @@ It makes use of a set of alignment features -- e.g., as in the figure below -- s
 Weights over these features are learned, presumably such that more valid alignments
   is positively correlated with entailment.
 Note that even in the below example, despite the premise and the hypothesis being substantially
-  similar they are not technical an entailment pair, and therefore the evaluation function is crucial
-  to produce an entailment relations.
+  similar they are not technically an entailment pair, and therefore the evaluation function is crucial
+  to produce an entailment relation.
 Moreover, note that as the search progresses (e.g., \ww{types} is replaced by its synonym \ww{forms})
   the confidence of entailment will improve.
 
@@ -386,12 +396,20 @@ Unlike traditional IR approaches, or shallow classification methods, the system 
   real-world language and fuzzy inferences.
 From here, the foundation is laid to \textit{leverage} this sort of knowledge in a
   general way, in pursuit of systems that exhibit broad-domain intelligence.
-Returning to or examples from the beginning of the section, if we are faced with a question like:
+Returning to the examples from the beginning of the section, if we are faced with a question like:
 
 \begin{displayquote}
   \ww{I ate a bowl of soup, and put the bowl in the bathtub. Did it float?}
 \end{displayquote}
 
-We have a method for finding out that a bowl is concave, empty concave things float, etc.;
-  the remaining task for future work is putting these facts together to be able to reason about
-  this and other complex questions.
+\noindent We have a method for determining from a large unlabeled corpora of text
+  that a bowl is concave, empty concave things float, and so forth.
+We do this by exploiting three key insights: first, that we can run statistical natural logic proofs
+  over a very large natural language premise set by casting the task as a search problem, producing
+  the most efficient open-domain reasoning engine over such a large number of premises.
+Second, we can segment long, syntactically complex sentences into simple atomic utterances that are
+  convenient for this natural logic search problem.
+Third, we can augment the search with an evaluation function, which ensures high recall in retreiving
+  the truth of these facts .
+The remainder of this disseration will review natural logic as a formalism, and then describe in depth
+  the components of this reasoning system.

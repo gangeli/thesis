@@ -228,7 +228,7 @@ Much of the notation is adapted from \newcite{key:2014icard-natlog}.
 
 \end{tabular}
 \end{center}
-\caption{
+\longcaption{An enumeration of the possible relations between two sets of denotations}{
 \label{fig:natlog-setrelations}
 An enumeration of the possible relations between two sets $\varphi$ (dark green) and
 $\psi$ (light yellow).
@@ -513,7 +513,8 @@ $x \equivalent y$ iff $x \land y = x~$ and $~x \lor y = x$ \\
     \hline
 	\end{tabular}
 	%(caption)
-	\caption{
+	\caption{The join table as taken from \newcite{key:2012icard-natlog}.}
+  {
     The join table as taken from \newcite{key:2012icard-natlog}.
     Entries in the table are the result of joining a row with a
       column.
@@ -561,7 +562,8 @@ This table is given in \reftab{natlog-jointable}.
     (a) & (b)
   \end{tabular}
 \end{center}
-\caption{
+\caption{Natural logic inference expressed as a (possibly collapsed) finite state automaton.}
+{
   \label{fig:natlog-fsa}
   (a) Natural logic inference expressed as a finite state automaton.
   Omitted edges go to the unknown state (\independent), with the exception of
@@ -785,7 +787,8 @@ To make this concrete, \reftab{natlog-mono-tabproof} shows an example inference
 \ww{\textbf{Some} black cats don't eat food}  & \negate  & \negate  & $\Rightarrow \lnot$ \\
 \bottomrule
 \end{tabular}
-\caption{\label{tab:natlog-mono-tabproof}
+\caption{A tabular natural logic proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.}
+{\label{tab:natlog-mono-tabproof}
   A tabular proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.
   The first column tracks the sentence as it mutates.
   The second column tracks the lexical natural logic relation induced by the mutation.
@@ -899,7 +902,8 @@ anti-multiplicative                  & \reverse & \forward & \cover & \cover & \
 anti-additive$+$anti-multiplicative  & \reverse & \forward & \negate & \cover & \alternate \\
 \bottomrule
 \end{tabular}
-\caption{\label{tab:natlog-mono-add}
+\caption{Monotonicity for quantifiers marked with additivity / multiplicativity information}
+{\label{tab:natlog-mono-add}
   The definition of the monotonicity for quantifiers marked with additivity / multiplicativity
     information.
   Given that the argument in the domain of the quantifier is mutated according to the 

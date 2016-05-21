@@ -4,7 +4,7 @@ thesis.pdf: $(wildcard *.tex) $(wildcard chapters/natlog/*.tex)  $(wildcard chap
 	@pdflatex thesis
 
 clean:
-	rm -f *.aux *.log *.bbl *.blg present.pdf *.bak *.ps *.dvi
+	rm -f *.aux *.log *.bbl *.blg present.pdf *.bak *.ps *.dvi thesis.pdf
 
 dist: thesis.pdf
 	@pdflatex thesis
