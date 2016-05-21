@@ -1,0 +1,147 @@
+\Section{engineering}{System Design}
+A key design principle behind NaturalLI and its extensions was the hypothesis
+  that the speed at which the search could be performed would be a significant
+  factor in the success of the the system.
+In fact, NaturalLI over dependency trees runs at nearly 1M search states per
+  second per core, and around 100k search states when the evaluation function is enabled.
+This section details some of the engineering tricks used to allow the system
+  to run efficiently.
+
+\paragraph{Data Structures}
+Like many NLP applications, the fundamental bottleneck for speed is the memory bus
+  rather than the CPU's clock speed.
+Therefore, NaturalLI was designed with a careful eye on managing memory.
+The search problem is at its core composed of two data structures: a fringe
+  for the search boundary and a set of terminal states.
+In a uniform cost search (like the one NaturalLI runs), the fringe is conceptually a
+  priority queue; we use the sequence heap described in
+  \newcite{key:2000sanders-knheap}.
+This data structure is more friendly to the cache than a more conventional binary heap,
+  and empirically obtains a noticeable performance improvement for large heap sizes.
+
+An interesting empirical finding was that storing the set of terminal states in a btree
+  set was substantially more efficient than the default hash map implementations.
+We hypothesize that this again has to do with caching behavior.
+Although a btree has a theoretical lookup time of $O(\log(n))$, in practice the top
+  of the tree remains in cache between lookups.
+Therefore, fewer requests have to be made to main memory, and many of those are at least
+  roughly co-located.
+The default hash map implementation (and even open addressed maps), by contrast,
+   often have to make many random accesses to main memory when there is a hash code
+   collision.
+This is particularly bad in the default STL implementation of \texttt{unordered\_map},
+  where the list at each bucket is implemented as a linked list.
+
+The implementation of the mutation graph is less important, as it tends to be
+  significantly smaller than both the fringe and the knowledge base of premises.
+The graph is implemented straightforwardly; the only important subtlety is to ensure
+  that the set of candidate edges (i.e., incoming edges) are located in the same block
+  of memory.
+Fortunately, this is the natural way to store a graph in memory anyways.
+
+
+
+\paragraph{Cache Optimization}
+Selecting cache-aware data structures is half the battle, but some attention should also be
+  paid to the data being put into these structures.
+Again, the two relevant bits of data are (1) search states, which go into the fringe, and
+  (2) facts in the knowledge base, which go into the premise set.
+
+We begin with the knowledge base facts.
+Recall that a fact is a plain text sentence, and the associated dependency tree.
+Naively, this takes up a fair bit of memory.
+Fortunately, all we need the knowledge base for is to check if a given fact is contained
+  in the KB -- we never have to reconstruct the sentence from the stored fact.
+This lends itself to a natural solution: we hash each fact, and store that hash in the
+  knowledge base.
+In practice, we use 64 bits to hash the fact, though of course this can be increased or
+  decreased.
+
+In addition to making the knowledge base smaller, the fact that we are hashing facts
+  also means that our search states can be compacted significantly.
+Rather than storing an entire sentence, a search state only needs to keep the hash of the
+  mutated sentence, and update that hash as the search progresses.
+This, however, does mean that the hash function has to be a bit carefully designed:
+  in particular, if we know what natural logic mutation we are applying, we must be able to
+  apply it \textit{directly to the hash} without knowing the underlying sentence.
+Three insights make this possible:
+
+\begin{enumerate}
+  \item If the hash function is an order-invariant hash of the edges in the dependency tree,
+        then it is robust to reordering, deletion order, etc.
+        We accomplish this simply by defining the hash of a sentence to be the xor of the hash of
+        the dependency edges -- (governor, relation, dependent) triples -- in the sentence.
+
+  \item Modulo deletions (in reverse inference), the \textit{structure} of the dependency 
+        tree of the sentence cannot be changed by natural logic inferences.
+        Mutations, of course, only mutate a given lexical item. Insertions (in search, therefore deletions
+        in the inference) are in turn handled before the search by the OpenIE system maximally shortening
+        clauses.
+        Therefore, we can store the structure of the dependency tree only once, and appeal to that structure for
+        each search state.
+
+  \item We mutate a lexical item in bulk at once, and never return to it during the search.
+        Therefore, once we have finished mutating an item in the search, we do not have to remember what
+        that lexical item is.
+        The exception here is quantifiers, which require special treatment anyways.
+\end{enumerate}
+
+These insights allow us to compress a search state into only 32 bytes -- exactly half of a cache line.
+The 32 bytes (256 bits) are allocated as follows:
+
+\begin{itemize}
+  \item[64 bits] The hash of the fact in the current search state.
+                 This is used to check if we've reached a terminal state
+  \item[6 bits]  The index of the sentence we are currently mutating.
+                 This limits the length of queries NaturalLI can handle to a reasonable 64 tokens.
+  \item[24 bits] The word we are mutating. This allows for a vocabulary size of 16.7M; words outside
+                 of this vocabulary are treated as unknown words. 
+                 We need this to compute valid mutations of the current word, and
+                 to recover the edge we are mutating to update the hash.
+  \item[5 bits]  The word sense of the word we are mutating. 
+                 We need this to compute valid mutations of the current word.
+                 The value 0 is reserved for ``unknown sense'' -- e.g., for nearest neighbors mutations.                 
+                 Entries in WordNet with more than 30
+                 senses have their remaining senses lumped into a last catch-all class.
+  \item[24 bits] The governor of the word we are mutating.
+                 We need this to recover the edge we are mutating to update the hash.
+  \item[1 bit]   The presumed truth of the fact in the search so far. See the natural logic 
+                 finite state diagram.
+  \item[1 bit]   A marker for whether the search has mutated all quantifiers once already.
+  \item[25 bits] A backpointer to the search state this state was generated from.
+                 This limits NaturalLI to searching over at most 33M states.
+                 Note that this is somewhat unconventional: usually, the backpointer is stored as a
+                 pointer to the previous state (64 bits); however, managing the history explicitly
+                 in a flat array allows us to cut this space by over half.
+                 Since we add to the history array linearly, we maintain good caching properties.
+  \item[64 bits] The monotonicity signatures of the quantifiers in the sentence.
+                 This supports up to 8 quantifiers, each of which is 8 bits: 2 bits for monotonicity and
+                 2 bits for additivity/multiplicativity for both the subject and the object of the quantifier.
+\end{itemize}
+
+
+Updating the hash of a fact given a mutation is then as easy as reconstructing the hash of the edge we are
+  mutating, xoring that with the current hash, and xoring in the new edge's hash.
+Deleting an edge involves computing the subtree that was deleting, and xoring out each deleted edge.
+  The root edge can be computed as above, and since we're searching through the tree in a breadth-first
+  fashion, the children edges will be identical to the original tree.
+
+
+
+\paragraph{Cycle Detection}
+Since we are running a graph search, of course there are cycles in the search.
+Trivially, if we mutate a word to its synonym, we can mutate the synonym back to the original word.
+The natural solution to this problem is to keep a set of seen states around, and at each search tick look up
+  whether we have already seen the node we are considering.
+On the other extreme, the problem could simply be ignored on the theory that a faster search computationally
+  would be more valuable than a faster search theoretically.
+Empirically, we found that both options were slow, and the best solution was to implement an approximate cycle
+  detection algorithm.
+At each search state, we search up the tree through the states' backpointers to a depth $k$ (5\ in our experiments),
+  and ignore the state if we found an identical state in this $k$ node \textit{cycle memory}.
+Why this approach was empirically more effective remains an open question -- 
+  in principle, keeping around a set of all seen nodes should not be substantially slower.
+Our theory is that this again has to do with caching behavior.
+The cycle memory of nodes pop'd at near the same time will be nearly the same; therefore, 
+  this simple cycle detection mechanism is not likely to make many main memory accesses.
+Nonetheless, it catches the most common cases of an already-visited node being re-visited.
