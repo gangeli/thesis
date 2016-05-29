@@ -1,4 +1,4 @@
-A recurring theme throughout this dissertation will be the use of natural
+A theme throughout this dissertation will be the use of natural
   logics for natural language tasks.
 %
 % Motivate Logic
@@ -11,10 +11,10 @@ A wide range of successful approaches in NLP neither use nor need logical reason
   fairly agnostic to any logical phenomena in the documents they are operating over.
 However, as the field of NLP moves away from syntax and shallow classification tasks and
   increasingly towards natural language \textit{understanding}, we are faced with a
-  necessity to understand meaning of sentences, and understand the implications that can
+  necessity to understand the meaning of sentences, and to understand the implications that can
   be drawn from them.
 
-Taking some simple examples across a few tasks: in relation extraction, it would be
+Take some simple examples across a few tasks: in relation extraction, it would be
   incorrect to assume that Obama was born in Kenya from a sentence \ww{Obama was not
   born in Kenya}.
 For sentiment analysis, the sentence \ww{The movie's box office failure should not be taken as
@@ -26,7 +26,7 @@ In all of these cases, a system must either explicitly or implicitly learn how t
   sorts of logical subtleties.
 Implicitly, a neural network or sufficiently powerful statistical classifier could learn how
   to treat these queries, at the expense of sufficiently large amount of training data
-  (in the extreme, one can always simply memorizing the logic).
+  (in the extreme, one can always simply memorize the logic).
 Explicitly, a first order theorem prover or Markov Logic network could capture the logical
   content of a sentence, at the expense of a drop in expresivity and computational
   efficiency.
@@ -41,7 +41,7 @@ In this chapter we'll motivate natural logics as an optimal midway between offlo
 Broadly, the aim of natural logics are to capture a subset of valid logical
   inferences by appealing directly to the structure of language,
   as opposed to running deduction in an abstract logical language (e.g., well-formed first-order formulae
-  composed predicates, variables, connectives, and quantifiers).
+  composed of predicates, variables, connectives, and quantifiers).
 That is to say, a natural logic is primarily a \textit{proof theory}, where
   the deductive system operates over natural language syntax.
 To illustrate with an example, we can consider a simple premise:
@@ -68,7 +68,7 @@ That is to say, if the cat ate a mouse, it is false that no carnivore ate an
   animal, and this is by virtue of the ``proof'' presented above.
 Although it's not unnatural to use a line of reasoning like the one above to justify
   a conclusion informally, it may be strange
-   the perspective of propositional and
+  from the perspective of propositional and
   first-order logics to treat this as a formal proof.
 Nonetheless, it is not an altogether unfamiliar sort of reasoning.
 Natural logics can trace their origins to the syllogistic reasoning of Aristotle.
@@ -80,9 +80,9 @@ For instance, the proof above is similar to a simple syllogism:
 
 \[
 \begin{nd}
-\hypo {1} {\ww{All cats eat mice.}}
+\hypo {1} {\ww{Some cats eat mice.}}
 \hypo {2} {\ww{All cats are carnivores.}}
-\have {3} {\ww{All carnivores eat mice.}}
+\have {3} {\ww{Some carnivores eat mice.}}
 \end{nd}
 \]
 
@@ -140,7 +140,7 @@ To introduce a motivating example, an Athenian philosopher might retort with the
 Sadly our poor philosopher will have likely perished by this point -- lest a Greek hero
   saves him, in which case then there would remain neither a need nor an audience for
   his argument.
-But but I can still convince you, the reader, that this was a valid retort by constructing 
+But I can still convince you, the reader, that this was a valid retort by constructing 
   a first-order proof, given in \reffig{natlog-fol-syllogism}.
 The proof follows a proof by contradiction, showing that the hypothesized hero-God (\ww{``some
   heroes are Gods''}) would have to both live on Olympus and be Persian -- a contradiction with
@@ -238,19 +238,20 @@ Of course, more expressive natural logics have more difficult search problems;
   but, nonetheless, they remain in the same spirit of searching over lexical mutations
   rather than applying symbolic rule sets.
 
-Contrasting with approaches like Markov Logic Networks makes this difference especially salient
-  \cite{key:2006richardson-mln}.
-Formulating our motivating example as a Markov Logic Network requires outright instantiating
+A potentially promising way around the intractability of first-order theorem provers
+  could be to appeal to a model-theoretic approach directly -- e.g., using
+  Markov logic Networks \cite{key:2006richardson-mln}.
+However, formulating our motivating example as a Markov Logic Network requires outright instantiating
   the denotations of our predicates on a closed world.
 That is, we must first enumerate all the heroes, Gods, and residents of Olympus.
 Thereafter, the task of grounding our formulae on this world and running heavyweight
   statistical inference algorithm the resulting Markov Network.
 Making this grounding and inference process tractable is in itself an active area of
   research \cite{key:2011niu-tuffy,key:2014zhang-dimmwitted}.
-By contrast, natural logics are almost by definition a \textit{proof-theoretic} logic:
-  quantifiers can be reasoned over efficiently using only lexical mutation based proofs.
-Although they have a model-theoretic interpretation, actually simulating this model
-  is unnecessary and would be impractical.
+%By contrast, natural logics are almost by definition a \textit{proof-theoretic} logic:
+%  quantifiers can be reasoned over efficiently using only lexical mutation based proofs.
+%Although they have a model-theoretic interpretation, actually simulating this model
+%  is unnecessary and would be impractical.
 
 
 % What's missing?
@@ -271,7 +272,7 @@ The remainder of chapter will review denotational semantics (\refsec{natlog-deno
   as a prelude to introducing the monotonicity calculus of \newcite{key:1991valencia-natlog},
   described in detail in \refsec{natlog-mono}.
 From here on, \textit{natural logic} will be used to refer to the monotonicity calculus
-  described in \newcite{key:1991valencia-natlog}.
+  described in \newcite{key:1991valencia-natlog} and its extensions.
 These sections are intended to give a \textit{model-theoretic} interpretation of the logic
   that can then be used to justify the potentially ad-hoc seeming proof theory described
   here.

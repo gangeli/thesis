@@ -72,7 +72,7 @@ To reason about whether these functions are monotone (or, by extenstion, antiton
   we need to show that each of our domains forms a partial order we can define
   monotonicity against.
 
-First: the domain of noun denotations: $\sD_e$ (or, $e$).
+First: the domain of noun denotations: $\sD_p$ (or, $p$).
 We define our partial order $\leq_e$ to be the subset operator: $\subseteq$.
 That is, if the denotation of a word is completely contained in the denotation of
   another word, we consider the first word to be ``less than'' the second.
@@ -81,11 +81,7 @@ For example, $\llbracket cat \rrbracket$ $\leq_e$ $\llbracket feline \rrbracket$
   any entity which is a cat is also necessarily a feline.
 
 Second: the domain of truth values: $\sD_t$ (or, $t$).
-Here, we axiomatically define a partial order $\leq_t$ to be:\footnote{
-    The elegance of the interpretation of false as the empty set and true as a singleton
-    set becomes clear here: we can define the partial order over truth values to be the same
-    subset operator as the partial order over noun denotations.
-    }
+Here, we axiomatically define a partial order $\leq_t$ to be:
 
 \begin{align*}
   false &\leq_t false \\
@@ -94,14 +90,14 @@ Here, we axiomatically define a partial order $\leq_t$ to be:\footnote{
 \end{align*}
 
 The very important observation to make at this point is that
-  \textbf{the partial order $\leq_t$ corresponds exactly to the material conditional $\supset$}.
-So, for any two propositions $A$ and $B$, $A$ entails $B$ ($A \supset B$) is the same
+  \textbf{the partial order $\leq_t$ corresponds exactly to the material conditional $\Rightarrow$}.
+So, for any two propositions $A$ and $B$, $A$ entails $B$ ($A \Rightarrow B$) is the same
   as $A \leq_t B$.
 This is the key insight tying together the concepts of monotonicity and entailment.
-We also point out the unfortunate fact that the symbol for the material conditional
-  is the same as the superset symbol, which would seem to evoke ``greater than'' rather
-  than the ``less than'' it actually corresponds to.
-Unfortunately, this dissertation is not the place to redefine either of these symbols.
+%We also point out the unfortunate fact that the symbol for the material conditional
+%  is the same as the superset symbol, which would seem to evoke ``greater than'' rather
+%  than the ``less than'' it actually corresponds to.
+%Unfortunately, this dissertation is not the place to redefine either of these symbols.
 
 Lastly: we must define a partial order over our inductively defined function types.
 A function is less than another function if, for all
@@ -114,9 +110,11 @@ Formally: for two functions $f$ and $g$ with the same domain and range $\bX \rig
   \forall x \in \bX; ~~ f(x) \leq_Y g(x)
 \end{equation}
 
-For the remainder of this thesis, we will collapse all of these partial orders
+For the remainder of this dissertation, we will collapse all of these partial orders
   -- $\leq_e$, $\leq_t$, and $\leq_f$ -- into
   a single symbol: \forward.
+So, $\textrm{false} \forward \textrm{true}$, $\denote{cat} \forward \denote{animal}$,
+  $\denote{all} \forward \denote{some}$, etc.
 
 
 
@@ -126,10 +124,7 @@ The most important insight from the partial orders above is that our partial ord
   over truth values corresponds exactly to entailment.
 Although ``entailment'' is not particularly well-defined for the other denotation
   types (i.e., does \ww{cat} entail \ww{animal}?), for the purposes of monotonicity
-  calculus and natural logic we will take the symbol \forward\ to be entailment.\footnote{
-    This is, again, not to be confused with the symbol for entailment in propositional
-    logic: $\supset$.
-  }
+  calculus and natural logic we will take the symbol \forward\ to be entailment.
 By extension, we can define $A \reverse B$ to mean that $B \forward A$, and define
   \equivalent\ to be equivalence.
 That is to say, $A \equivalent B$ is the same as $A \forward B$ and $B \forward A$.
@@ -151,7 +146,7 @@ Therefore, by the definition of monotonicity, we can replace \ww{drink milk} wit
   is guaranteed to be true if the original sentence was true.
 
 The fact that quantifiers and other operators in natural language have this
-  property of monotonicity is wonderfully convenient.
+  property of monotonicity is wonderfully convenient \cite{key:1981barwise-quantifiers}.
 Grounding an interpretation for \ww{all cats drink milk} would be rather
   difficult in the general case -- and certainly difficult for longer utterances.
 But by appealing to the monotonicity of quantifiers, we do not need to ground
@@ -268,11 +263,11 @@ This is  a 5-tuple:
 
 For denotations, we define this lattice as follows, mirroring previous sections.
 \begin{lquote}
-$\bD$ is the power set of all denotations in $\sD_e$. \\
+$\bD$ is the power set of all denotations in $\sD_p$. \\
 $\lor$ is the union operator: $\cup$. \\
 $\land$ is the intersect operator: $\cap$. \\
 $\bot$ is the empty set: $\{\}$. \\
-$\top$ is the full domain of denotations: $\sD_e$.
+$\top$ is the full domain of denotations: $\sD_p$.
 \end{lquote}
 
 For truth values, we define the lattice straightforwardly as:
@@ -513,7 +508,7 @@ $x \equivalent y$ iff $x \land y = x~$ and $~x \lor y = x$ \\
     \hline
 	\end{tabular}
 	%(caption)
-	\caption{The join table as taken from \newcite{key:2012icard-natlog}.}
+	\longcaption{The join table as taken from \newcite{key:2012icard-natlog}.}
   {
     The join table as taken from \newcite{key:2012icard-natlog}.
     Entries in the table are the result of joining a row with a
@@ -562,7 +557,7 @@ This table is given in \reftab{natlog-jointable}.
     (a) & (b)
   \end{tabular}
 \end{center}
-\caption{Natural logic inference expressed as a (possibly collapsed) finite state automaton.}
+\longcaption{Natural logic inference expressed as a (possibly collapsed) finite state automaton.}
 {
   \label{fig:natlog-fsa}
   (a) Natural logic inference expressed as a finite state automaton.
@@ -579,7 +574,7 @@ This table is given in \reftab{natlog-jointable}.
 
 However, a much more convenient representation of this join table
   is as a finite state machine.
-We further will show that  we can losslessly collapse this
+This dissertation work showed that we can losslessly collapse this
   finite state machine into only three intuitive inference states.
 These observations allow us to formulate a proof as a path through this
   collapsed state machine, making reasoning with exclusion almost as
@@ -600,7 +595,8 @@ Each transition is labeled with a projected relation
 That is, the transition $s \xrightarrow{\rho(r)} s'$ exists iff
   $s' = s \bowtie \rho(r)$.
 \reffig{natlog-fsa}a shows the automaton, with trivial edges
-  omitted for clarity.
+  omitted for clarity (i.e., all outgoing edges from \equivalent, and
+  all incoming edges to \independent).
 
 
 
@@ -697,7 +693,7 @@ That is, \denote{cat} \forward\ \denote{animal}, and \denote{black cat} \forward
   and \denote{happy} \alternate\ \denote{sad}, and true \forward\ true, and so forth.
 For our proofs over sentences, we have limited ourselves to a single quantifier, which has
   allowed us to reason about inferences directly based off of the monotonicity of the quantifier.
-In this section, we explore two important concepts to complete our theory of monotonicity
+In this section, we explore two important concepts to complete our theory of the monotonicity
   calculus:
   we describe how we compose monotonicity when a lexical item is under the scope of multiple
   quantifiers, and
@@ -732,7 +728,8 @@ For example, when under the scope of a single negation, the following inference 
 \]
 
 To address this, we introduce a notion of \textit{polarity}.
-Polarity is a property we assign to lexical items.
+Polarity is a property we assign to lexical items in the context of a sentence (e.g., a token
+  in a sentence).
 It can be thought of as a function which takes as input a relation which holds between a lexical
   item and its mutation, and produces as output the relation that holds between the containing
   sentences.
@@ -754,7 +751,7 @@ We begin with the identity function as our polarity;
   that function's monotonicity.
 
 In the simplest case, this takes the form of flipping an item's polarity between \textit{upward}
-  to \textit{downward} and visa versa for every downward monotone quantifier in its scope.
+  to \textit{downward} and vice versa for every downward monotone quantifier in its scope.
 For our double negation case above, we begin with an upward polarity, and flip the polarity twice
   (once for \ww{no} and once for \ww{n't}) to arrive back at an upward polarity context.
 As we'll see in the next section, this process becomes more nuanced once we get into the exclusion
@@ -787,7 +784,7 @@ To make this concrete, \reftab{natlog-mono-tabproof} shows an example inference
 \ww{\textbf{Some} black cats don't eat food}  & \negate  & \negate  & $\Rightarrow \lnot$ \\
 \bottomrule
 \end{tabular}
-\caption{A tabular natural logic proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.}
+\longcaption{A tabular natural logic proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.}
 {\label{tab:natlog-mono-tabproof}
   A tabular proof negating \textit{no carnivores eat animals} from \textit{the cat ate a mouse}.
   The first column tracks the sentence as it mutates.
@@ -902,7 +899,7 @@ anti-multiplicative                  & \reverse & \forward & \cover & \cover & \
 anti-additive$+$anti-multiplicative  & \reverse & \forward & \negate & \cover & \alternate \\
 \bottomrule
 \end{tabular}
-\caption{Monotonicity for quantifiers marked with additivity / multiplicativity information}
+\longcaption{Monotonicity for quantifiers marked with additivity / multiplicativity information}
 {\label{tab:natlog-mono-add}
   The definition of the monotonicity for quantifiers marked with additivity / multiplicativity
     information.
@@ -931,7 +928,7 @@ Another interesting observation is that the symmetry between
   also appears in the monotonicity function.
 The difference between additive and anti-additive, multiplicative and anti-multiplicative, etc.,
   is simply replacing all instances of \forward\ with \reverse\ (from the definition of
-  monotonicity), and all instances of \cover\ with \alternate, and visa versa.
+  monotonicity), and all instances of \cover\ with \alternate, and vice versa.
 
 If we return to our naive inference from the beginning of the section 
   which incorrectly inferred that  \ww{evey cat has a tail} negates \ww{every dog has a tail},
@@ -954,8 +951,8 @@ Therefore, no inference can be drawn about the two sentences:
 
 This concludes our exploration of monotonicity calculus.
 The subsequent section explores some ideas in extending natural logics to propositional 
-  reasoning; the remainder of the dissertation thereafter will explore applications of natural logic
-  to large-scale open-domain reasoning problems.
+  reasoning; the remainder of the dissertation thereafter will explore applications of the natural logic
+  presented up to this point to large-scale open-domain reasoning problems.
 
 
 

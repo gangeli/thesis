@@ -125,11 +125,8 @@ We again note that $\leq_t$ is precisely Modus
   $}
   \end{prooftree}
 \longcaption{A proof in natural logic for \textit{all tabby cats have tails} from
-    the premise \textit{all cats have tails}.}
-{\label{fig:catsproof}
-  A proof in natural logic for \textit{all tabby cats have tails} from
-    the premise \textit{all cats have tails}.
-  Note that $\le_t$ is equivalent to entailment ($\Rightarrow$).
+    the premise \textit{all cats have tails}.}{\label{fig:catsproof}Note that 
+  $\le_t$ is equivalent to entailment ($\Rightarrow$).
   The last step, marked valid axiomatically, is elaborated on in
     Definition 8 of \newcite{key:2014icard-natlog}.
 } 
@@ -211,9 +208,7 @@ Making use of this extended set of relations, we are faced with two
     $e_1 \independent e_2$ & $t_1 \independent t_2$ & $t_1 \independent t_2$
 	\end{tabular}
 	%(caption)
-	\longcaption{The natural logic projection table.}
-  {
-    The projection table used for a relation between a phrase $e_1$ and
+	\longcaption{The natural logic projection table.}{The projection table is between a phrase $e_1$ and
       its candidate mutation $e_2$, in terms of the produced relation
       between truth value $t_1$ and the new truth value $t_2$.
     Values are given for when the entities are in a monotone and
@@ -252,10 +247,7 @@ See Lemma 2.4\ in \newcite{key:2012icard-natlog} for a more careful
     \hline
 	\end{tabular}
 	%(caption)
-	\longcaption{The natural logic join table.}
-  {
-    The join table, as copied from \newcite{key:2012icard-natlog}.
-    Note that the $\independent$ always joins to yield $\independent$,
+	\longcaption{The natural logic join table.}{Note that the $\independent$ always joins to yield $\independent$,
     and $\equivalent$ always joins to yield the input relation.
 		\label{tab:join}
 	}
@@ -295,10 +287,7 @@ The composition of relations through an inference chain is given in
     (a) & (b)
   \end{tabular}
 \end{center}
-\longcaption{The natural logic join table expressed as a finite state automata.}
-{
-  \label{fig:fsa}
-  (a) The join table in \reftab{join} expressed as a finite state automata.
+\longcaption{The natural logic join table expressed as a finite state automata.}{\label{fig:fsa}(a) The join table in \reftab{join} expressed as a finite state automata.
   Omitted edges go to the unknown state (\independent), with the exception of
     omitted edges from $\equivalent$, which go to the state of the edge
     type.

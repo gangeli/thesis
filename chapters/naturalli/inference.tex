@@ -19,7 +19,7 @@ Natural Logic allows us to formalize our approach elegantly as
 Given a query, we search over the space of possible facts for
   a valid premise in our database.
 The nodes in our search problem correspond to candidate facts
-  (\refsec{inference-state});
+  (\refsec{natlog-mono});
   the edges are mutations of these facts (\refsec{inference-transitions}); 
   the costs over these edges encode the confidence that this edge
   maintains an informative inference (\refsec{inference-prob}).
@@ -32,13 +32,25 @@ This approach is efficient over a large database of 270 million entries
   nor does the approach make use of any sort of approximate
   matching against the database, beyond lemmatizing individual 
   lexical items.
+This is an important point: as the amount of unstructured text increases
+  in the world, it's appealing to move towards approaches that become
+  \textit{easier} the more text they have access to.
+Although the search process in NaturalLI is inefficient in the depth
+  of the search, it is constant with respect to the size of the
+  knowledge base (technicallly, logarithmic if we are using
+  a cache-friendly lookup table).
+This means that as we get more facts in the premise set, the expected
+  depth of the search decreases, while the penalty incurred from
+  operating over a larger set of premises does not.
+
+
 The motivation in prior work for approximate matches --
   to improve the recall of candidate premises -- is captured
   elegantly by relaxing Natural Logic itself.
 %However, occasionally approximate matches, penalized appropriately,
 %  are beneficial for downstream applications.
 We show that allowing invalid transitions with appropriate costs
-  generalizes JC distance \cite{key:1997jc-similarity} -- a common
+  generalizes Jiang Conrath distance \cite{key:1997jc-similarity} -- a common
   thesaurus-based similarity metric (\refsec{inference-jc}).
 Importantly, however, the entire inference pipeline is done
   within the framework of weighted lexical transitions in Natural
@@ -61,8 +73,8 @@ The space of possible nodes in our search is the set of possible
 To a first approximation, this is a pair $(w, s)$ of a surface form
   $w$ tagged with word sense and polarity,
   and an inference state $s \in \{\textrm{valid}, \textrm{invalid}\}$
-  in our collapsed FSA (\reffig{fsa}b).
-For example, the search path in \reffig{teaser} traverses the nodes:
+  in our collapsed FSA (\reffig{natlog-fsa}b).
+For example, the search path in \reffig{naturalli-teaser} traverses the nodes:
 
 \vspace{0.5em}
 \begin{tabular}{lr}
@@ -108,7 +120,8 @@ A similar observation is noted in \newcite{key:2009maccartney-thesis},
 \paragraph{Polarity}
 Mutating operators can change the polarity on a span
   in the fact.
-Since we do not have the full parse tree at our disposal at search time,
+If we do not have the full parse tree at our disposal at search time
+  (as is the case for the experiments in this portion of the dissertation),
   we track a small amount of metadata to guess the scope of the
   mutated operator.
 
@@ -191,7 +204,7 @@ We then notice that the transition
   validity.
 
 Note that negation is somewhat subtle, as the transitions are not
-  symmetric from valid to invalid and visa versa, and we do not know
+  symmetric from valid to invalid and vice versa, and we do not know
   our true inference state with respect to the premise
   yet.
 In practice, the search procedure treats all three of
@@ -310,8 +323,10 @@ However, many of these transitions have low weight:
   $f_{\uparrow_{\textit{cat} \rightarrow \textit{feline}}}$ is only
   \num{0.37}.
 
-For nearest neighbors edges, we take Neural Network embeddings learned
-  in \newcite{key:huang-vectors} corresponding to each vocabulary entry.
+For nearest neighbors edges we take neural network embeddings;
+  for the experiments in this chapters, we use the embeddings learned
+  in \newcite{key:huang-vectors}.
+Subsequent chapters will use GloVe vectors \cite{key:2014pennington-glove}.
 We then define $f_{NN_{w \rightarrow w'}}$
   to be the arc cosine of the cosine similarity (i.e., the angle)
   between word vectors associated with lexical items $w$ and $w'$:
@@ -367,7 +382,7 @@ The JC distance $\textrm{dist}_{\textrm{jc}}(w_1, w_2)$ is:
 \end{equation}
 \vspace{0.25cm}
 
-For simplicity, we simplify $\theta_{\uparrow,v,p}$ and $\theta_{\downarrow,v,p}$
+For simplicity, we write $\theta_{\uparrow,v,p}$ and $\theta_{\downarrow,v,p}$
   as simply $\theta_\uparrow$ and $\theta_\downarrow$.
 %The derivation generalizes trivially to the the case where weights are
 %  further parametrized.
@@ -381,7 +396,7 @@ We can factorize the cost of a path, $\theta \cdot \bef$, along the path
   as follows:
 
 \begin{align*}
-\theta \cdot \phi
+\theta \cdot f
   &= \theta_\uparrow \left( 
     \left[\log p(w_1^{(1)}) - \log p(w_1)\right] +
     \dots
@@ -465,7 +480,7 @@ We can normalize this value by negating every element of the cost
 \textrm{confidence} = \frac{1}{1 + e^{- (-\theta \cdot \bef)}}.
 \end{equation*}
 
-Importantly, note that the cost vector must be non-negative for the
+\noindent Importantly, note that the cost vector must be non-negative for the
   search to be well-defined, and therefore the confidence value will
   be constrained to be between 0 and $\frac{1}{2}$.
 

@@ -1,7 +1,7 @@
 \Section{natlog-propositional}{A Propositional Natural Logic}
 
 So far all of our natural logic proofs have had a single premise.
-This is not accidental -- a key shortcoming of monotonicity calculus and modern natural
+This is not accidental -- a key shortcoming of the monotonicity calculus and modern natural
   logics is that by their very nature they operate on a single premise.
 That premise is mutated in well-specified ways which preserve entailment; but there's no
   theory of how to combine multiple premises together for an inference.
@@ -24,7 +24,6 @@ Propositional logic has rich notions of the common connectives: conjunction, dis
   and lexical entailment.
 At a high level, we would like a propositional logic to handle inferences between natural language
   propositions, while deferring to a natural logic to handle the entailments within propositions.
-
 We briefly review propositional logic, and then show how we can perform hybrid natural logic
   and propositional proofs.
 %Lastly, we explore how we might build a practical system to parse a sentence into propositional
@@ -48,7 +47,7 @@ Furthermore, for simplicity, we will treat material implication axiomatically in
   the core connectives:
 
 \begin{center}
-  $ \lnot A \lor B \equivalent A \rightarrow B$
+  $A \rightarrow B \equivalent \lnot A \lor B$
 \end{center}
 
 This section is not intended to be a formal introduction to propositional proofs,
@@ -200,11 +199,11 @@ The Fitch rules for contradiction are:
   \end{nd}
   $ \\
 \\
-\textbf{$\lnot$ elimination} & \textbf{$\lnot$ introduction}
+\textbf{$\bot$ elimination} & \textbf{$\bot$ introduction}
 \end{tabular}
 \end{center}
 
-The next section shows how we can adapt these rules to the incorporate natural logic.
+The next section shows how we can adapt these rules to incorporate natural logic.
 
 
 
@@ -318,22 +317,25 @@ Formally:
 \begin{tabular}{c@{\hspace{2cm}}c}
   $
   \begin{nd}
-  \hypo         {1} {\denote{X}}         \by{state:$\Rightarrow$}{}
-  \have[\vdots] {2} {\vdots}
-  \have[n]      {3} {\denote{Y}}         \by{state:$\lnot \Rightarrow$}{1-3}
-  \have         {4} {\lnot \denote{X}}   \by{$\lnot$ I}{1,3}
+  \hypo         {1} {\denote{Q}}         
+  \hypo         {2} {\denote{X}}         \by{state:$\Rightarrow$}{}
+  \have[\vdots] {3} {\vdots}
+  \have[n]      {4} {\denote{Q}}         \by{state:$\lnot \Rightarrow$}{2-4}
+  \have         {5} {\lnot \denote{X}}   \by{$\lnot$ I}{1,2,4}
   \end{nd}
   $
 &
   $
   \begin{nd}
-  \hypo         {1} {\lnot \denote{X}}         \by{state:$\Rightarrow$}{}
+  \hypo         {1} {\denote{Q}}         
+  \hypo         {2} {\lnot \denote{X}}         \by{state:$\Rightarrow$}{}
   \open[]
-  \hypo         {2} {\denote{X}}         \by{state:$\lnot \Rightarrow$}{1}
-  \have[\vdots] {3} {\vdots}
-  \have[n]      {4} {\denote{Y}}         \by{state:$\Rightarrow$}{2-4}
+  \hypo         {3} {\denote{X}}               \by{state:$\lnot \Rightarrow$}{}
+  \have[\vdots] {4} {\vdots}
+  \have[n-1]    {5} {\denote{Q}}               \by{state:$\lnot \Rightarrow$}{}
+  \have[n]      {6} {\lnot \denote{Q}}         \by{$\lnot$ I}{3-5}
   \close
-  \have         {5} {\lnot \lnot \denote{X}}   \by{$\lnot$ I}{1,2-4}
+  \have         {7} {\lnot \lnot \denote{X}}   \by{$\lnot$ I}{1,2,3-6}
   \end{nd}
   $ \\
 \\
@@ -344,7 +346,12 @@ Formally:
 
 The added complication here is that we now have to keep track of whether introduced
   formulas are presupposed to be true or false.
-For instance, line 2 in the right $\lnot$ introduction proof presupposes that the sentence
+This leads to the strange-looking proof in the second $\lnot$ introduction rule.
+From lines 2--3, all we are doing is propagating the negation into the natural logic
+  world (that is, changing the state to $\lnot \Rightarrow$).
+If then we can derive the negation of $\denote{Q}$, we can infer that $\lnot \denote{X}$ is
+  false, and therefore \denote{X} is true.
+For instance, line 3 in the right $\lnot$ introduction proof presupposes that the sentence
   \denote{X} is false, and therefore the cover (\cover) relation can flip the truth of the sentence
   to be true.
 Similarly, in the left proof we assume that our premises are true -- this is not necessarily the case
@@ -355,6 +362,8 @@ Similarly, in the left proof we assume that our premises are true -- this is not
   }
 If this information is not available \textit{a priori} in the proof, the new negation introduction
   rules are only warranted by the full negation relation (\negate).
+For all practical applications, this is the recommended course of action; that is, only the
+  first negation introduction rule should be used.
 
 \begin{figure}[th]
 \begin{center}
@@ -364,17 +373,17 @@ If this information is not available \textit{a priori} in the proof, the new neg
 \hypo {2} {\denote{Ted did not steal the cookies}}
 \open[]
   \hypo {3} {\denote{Bill stole the cookies}}
-  \have {4} {\denote{Bill stole the cookies}}        \r{3}
+  \have {4} {\denote{Bill stole the cookies}}        
 \close
 \open[]
-  \hypo {4} {\denote{Ted stole the cookies}}
-  \have {5} {\denote{Ted did steal the cookies}}     \by{\denote{steal} \equivalent\ \denote{did steal}; state:$\Rightarrow$}{4}
-  \have {6} {\denote{Ted did not steal the cookies}} \by{\denote{did} \negate\ \denote{did not}; state:$\lnot \Rightarrow$}{5}
-  \have {7} {\lnot \denote{Ted stole the cookies}}   \by{$\lnot$ I}{4,6}
-  \have {8} {\bot}                                   \by{$\bot$ I}{4,7}
-  \have {9} {\denote{Bill stole the cookies}}        \by{$\bot$ E}{8}
+  \hypo {5} {\denote{Ted stole the cookies}}
+  \have {6} {\denote{Ted did steal the cookies}}     \by{\denote{steal} \equivalent\ \denote{did steal}; state:$\Rightarrow$}{5}
+  \have {7} {\denote{Ted did not steal the cookies}} \by{\denote{did} \negate\ \denote{did not}; state:$\lnot \Rightarrow$}{6}
+  \have {8} {\lnot \denote{Ted stole the cookies}}   \by{$\lnot$ I}{5,7}
+  \have {9} {\bot}                                   \by{$\bot$ I}{5,8}
+  \have {10} {\denote{Bill stole the cookies}}        \by{$\bot$ E}{9}
 \close
-\have {10} {\denote{Bill stole the cookies}}         \by{$\lor$ E}{1,3-4,4-9}
+\have {11} {\denote{Bill stole the cookies}}         \by{$\lor$ E}{1,3-4,5-10}
 \end{nd}
 \]
 \longcaption{A hybrid propositional + natural logic proof showing the disjunctive syllogism.}
@@ -384,7 +393,7 @@ If this information is not available \textit{a priori} in the proof, the new neg
 \end{center}
 \end{figure}
 
-We can combine these insights to solve a our motivating example of the disjunctive
+We can combine these insights to solve our motivating example of the disjunctive
   syllogism, shown in \reffig{natlog-propositional-simpleproof}.
 
 
@@ -400,7 +409,7 @@ However, in natural language, propositional statements are usually not said in a
 Even taking our simple running example, it's much more natural to say
   \ww{Either Bill or Ted stole the cookies} than \ww{Bill stole the cookies or Ted stole the cookies}.
 Therefore, it is clearly useful to have a semantic parser which takes as input a complex
-  utterance, and produces as output a hybrid natural/propositional logic formula.
+  utterance, and produces as output a hybrid natural-propositional logic formula.
 Such a parser would allow us to do powerful forms of logical reasoning, without requiring
   a heavyweight logical representation (e.g., the Abstract Meaning Representation 
   \cite{key:2013banarescu-amr}).

@@ -39,12 +39,15 @@ We can write these statements as: \ww{this thesis}$ \in \sD$ and \ww{your hand}$
 \end{center}
 \vspace{1em}
 
-The central dissertation behind denotational semantics is the notion that words have \textit{denotations},
-  which are sets of elements in a particular domain.
+The central thesis behind denotational semantics is the notion that words have \textit{denotations},
+  which are elements in a particular domain.
+Perhaps the simplest cases are nouns (\textit{predicates}), which have denotations of sets of elements
+  in the world (within the domain of all possible sets of elements in the world).
 For example, this dissertation and your hand have denotations which are the singleton sets of elements
   in the domain of \textit{things in the world}.
-Analogously, cats will be the set of cats in the world, \ww{run} will be the set of actions which
-  we'd label as running, and so forth.
+Analogously, cats will be the set of cats in the world. 
+The verb \ww{run} will be the set of actions which we'd label as running (defined more formally later),
+  and so forth.
 The remainder of this section will go over how we map different lexical items to denotations in
   different domains.
 This will form the basis of the model theory behind monotonicity calculus, introduced in
@@ -135,7 +138,7 @@ In that case, the word \ww{river} would correspond to a finite set of database r
   for the rivers in the world.
 In monotonicity calculus, as we'll see more clearly in \refsec{natlog-mono}, we
   will never appeal to the explicit denotations of these lexical items.
-It is sufficient to know that there exist a set of rivers in the world; we never need
+It is sufficient to know that there exists a set of rivers in the world; we never need
   to explicitly enumerate them.
 
 
@@ -231,9 +234,9 @@ That is to say, sentences can have one of two denotations: they are either true,
   are false.
 
 To make this more formal, and to lay the notational groundwork for the rest of this chapter,
-  let us redefine our domain \sD\ to be $\sD_e$ -- the domain of entities in the world.
-So, now, $\llbracket cat \rrbracket \subseteq \sD_e$.
-We are now free to specify other domain for other types of lexical items.
+  let us redefine our domain \sD\ to be $\sD_p$ -- the domain of entities in the world.
+So, now, $\llbracket cat \rrbracket \subseteq \sD_p$.
+We are now free to specify other domains for other types of lexical items.
 In our case, let us define $\sD_t$ as the domain of truth values.
 The natural way to define $\sD_t$ would be to say: $\sD_t = \{true, false\}$
   (equivalently, and as we'll find useful later, $\sD_t = \{1, 0\}$).
@@ -269,14 +272,14 @@ Our review of possible linguistic phenomena or types of lexical items is by
 For instance, we have not covered verbs, or adverbs.
 Without belaboring the chapter with pedantic thoroughness, the claim of natural logic
   is that we can construct a denotation for any of these items inductively
-  from the two basic domain -- 
-  the domain of entities $\sD_e$ and the domain of truth values $\sD_t$ --
+  from the two basic domains -- 
+  the domain of entities $\sD_p$ and the domain of truth values $\sD_t$ --
   and functions based around these domains.
 
-To begin, let's define a set $\bD_e$ to be the power set $\sD_e$: the set of all subsets
+To begin, let's define a set $\bD_p$ to be the power set $\sD_p$: the set of all subsets
   of items in the world.
 This is the set of all possible denotations.
-We can then define a class of functions $f : \bD_e \rightarrow \sD_t$.
+We can then define a class of functions $f : \bD_p \rightarrow \sD_t$.
 That is, the class of functions mapping from an entity to a truth value.
 This corresponds most intuitively to the class of intransitive verbs: \ww{plays},
   \ww{runs}, \ww{eats}, \ww{barks}, etc.;
@@ -284,7 +287,8 @@ This corresponds most intuitively to the class of intransitive verbs: \ww{plays}
   and \ww{barks at the neighbor}.
 As a useful visualization, we can ``plot'' this function
   along its domain and range in  \reffig{natlog-denotation-barks}.
-The $x$ axis lists the set of denotations in the world.
+The $x$ axis lists the set of denotations in the world (although
+  we never have to enumerate this set, as natural logic is primarily a proof theory).
 Recall that each of these is just an arbitrary set of items, 
   although we will label them as denotations of words.
 The $y$ axis is simply the set of true and false.
@@ -302,18 +306,22 @@ The $y$ axis is simply the set of true and false.
 Importantly, we can keep composing functions from known domains and form new
   domains corresponding to these new functions.
 For example, if the domain of intransitive functions defined above is $\sD_f$,
-  we can define a class of transitive functions as $f : \sD_e \rightarrow \sD_f$.
-We can alternately write this as $f : \sD_e \rightarrow (\sD_e \rightarrow \sD_t)$.
-The denotation of any span of text is therefore either an entity ($\sD_e$), a truth
+  we can define a class of transitive functions as $f : \sD_p \rightarrow \sD_f$.
+We can alternately write this as $f : \sD_p \rightarrow (\sD_p \rightarrow \sD_t)$.
+The denotation of any span of text is therefore either an entity ($\sD_p$), a truth
   value ($\sD_t$), or some class of function inductively defined above.
 
 \paragraph{Notational Note}
-It becomes tedious to write long functions as $\sD_e \rightarrow (\sD_e \rightarrow \sD_t)$;
+It becomes tedious to write long functions as $\sD_p \rightarrow (\sD_p \rightarrow \sD_t)$;
   not to mention defining a new set for every function type, as we did for $\sD_f$.
-Therefore, from now on, we'll denote the set of entities as $e = \sD_e$, the set of truth values as 
+Therefore, from now on, we'll denote the set of entities as $p = \sD_p$, the set of truth values as 
   $t = \sD_t$, and functions in the usual way of $a \rightarrow b$.
-In this notational scheme, intransitive verbs are written as $e \rightarrow t$; transitive
-  verbs are $e \rightarrow (e \rightarrow t)$, and so forth.
+In this notational scheme, intransitive verbs are written as $p \rightarrow t$; transitive
+  verbs are $p \rightarrow (p \rightarrow t)$, and so forth.\footnote{Note that 
+    if we define sets of entities as a predicate (i.e., $e \rightarrow t$), we can 
+    always write $p = (e \rightarrow t)$ -- this is often seen in the broader 
+    linguistics and logic literature.
+  }
 
 
 % %%%%%
@@ -324,12 +332,12 @@ In this notational scheme, intransitive verbs are written as $e \rightarrow t$; 
 An important class of lexical items are quantifiers (and more generally natural language
   operators).
 From a denotational semantics point of view, these behave just like any other function:
-  \ww{all} has the same denotation as a transitive verb: $e \rightarrow (e \rightarrow t)$;
-  \ww{not} has the same denotation as an intransitive verb: $e \rightarrow t$.
-However, natural language operators has an important additional property: they are often
+  \ww{all} has the same denotation as a transitive verb: $p \rightarrow (p \rightarrow t)$;
+  \ww{not} has the same denotation as an intransitive verb: $p \rightarrow t$.
+However, natural language operators have an important additional property: they are often
   \textit{monotonic} functions.
 This property is the happy accident of language that underpins much of the usefulness
-  of monotonicity calculus as a natural logic, and is the main topic of the next section.
+  of the monotonicity calculus as a natural logic, and is the main topic of the next section.
 
 
 

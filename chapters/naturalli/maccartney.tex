@@ -1,33 +1,5 @@
 \Section{maccartney-proof}{MacCartney's Proofs By Aligmnent}
 
-% -- Join Table--
-\begin{table}[t]
-	\begin{center}
-	\begin{tabular}{|c||c|c|c|c|c|c|c|}
-    \hline
-    $\bowtie$ & $\equivalent$ & $\forward$ & $\reverse$ & $\negate$ & $\alternate$ & $\cover$ & $\independent$ \\
-    \hline
-    $\equivalent$ & $\equivalent$ & $\forward$ & $\reverse$ & $\negate$ & $\alternate$ & $\cover$ & $\independent$ \\
-    $\forward$ & $\forward$ & $\forward$ & $\independent$ & $\alternate$ & $\alternate$ & $\independent$ & $\independent$ \\
-    $\reverse$ & $\reverse$ & $\independent$ & $\reverse$ & $\cover$ & $\independent$ & $\cover$ & $\independent$  \\
-    $\negate$ & $\negate$ & $\cover$ & $\alternate$ & $\equivalent$ & $\reverse$ & $\forward$ & $\independent$  \\
-    $\alternate$ & $\alternate$ & $\independent$ & $\alternate$ & $\forward$ & $\independent$ & $\forward$ & $\independent$  \\
-    $\cover$ & $\cover$ & $\cover$ & $\independent$ & $\reverse$ & $\reverse$ & $\independent$ & $\independent$  \\
-    $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ & $\independent$ \\
-    \hline
-	\end{tabular}
-	%(caption)
-	\longcaption{The join table, from \newcite{key:2012icard-natlog}}
-  {
-    The join table as shown in \newcite{key:2012icard-natlog}.
-    Entries in the table are the result of joining a row with a
-      column.
-    Note that the $\independent$ always joins to yield $\independent$,
-    and $\equivalent$ always joins to yield the input relation.
-		\label{tab:join}
-	}
-	\end{center}
-\end{table}
 
 \newcite{key:2007maccartney-natlog} approach inference for natural logic in
   the context of inferring whether a single relevant premise entails
@@ -36,10 +8,10 @@ Their approach first generates an alignment between the premise
   and the query, and then classifies each aligned segment into one of
   the lexical relations described in \refchp{natlog}.
 Inference reduces to projecting each of these relations
-  according to the projection function $\rho$ (\reftab{natlog-mono-add})
+  according to the polarity function (\reftab{natlog-mono-add})
   and iteratively \textit{joining}  two projected relations together to 
   get the final entailment relation.
-This join relation, denoted as $\bowtie$, is given in \reftab{join}.
+This join relation, denoted as $\bowtie$, is given in \reftab{natlog-jointable}.
 
 To illustrate, we can consider MacCartney's example inference from
   \w{Stimpy is a cat} to \w{Stimpy is not a poodle}.

@@ -74,7 +74,7 @@ Whereas as few million movie reviews should be sufficient to get a good sense fo
 
 An additional axiom of the dissertation is that the most promising way to collect this sort of 
   common-sense knowledge is from text.
-This is not not an uncontroversial axiom: much of what we know about the world we know from
+This is not an uncontroversial axiom: much of what we know about the world we know from
   vision, or interactions with physical objects.
 Colors, shapes, and sizes of things for example are far more naturally extracted from visual data;
   the laws of physics are much more easily learned through interaction with the world.
@@ -96,11 +96,11 @@ However, these manually created knowledge bases are both woefully incomplete
   and quickly become outdated.
 In medicine, half of the medical school curriculum becomes obsolete within 5 
   years of graduation,\footnote{
-    \url{http://uvamagazine.org/articles/adjusting\_the\_prescription/}
+    \url{http://uvamagazine.org/articles/adjusting_the_prescription/}
   }
   requiring constant updating.
   MEDLINE counts 800,000 biomedical articles published in 2013 alone.\footnote{
-    \url{https://www.nlm.nih.gov/bsd/medline\_cit\_counts\_yr\_pub.html}
+    \url{https://www.nlm.nih.gov/bsd/medline_cit_counts_yr_pub.html}
   }
 In academia, studies show that up to 90\% of papers are never 
   cited, suggesting that many are never read.
@@ -114,7 +114,16 @@ This dissertation presents an alternative:
   directly in text.
 This allows us to make use of our large corpus of unstructured text directly, with
   perhaps minimal syntactic annotation, to reason about true and false facts.
-Storing information becomes as easy as storing text.
+In general, this paradigm provides a few nice advantages:
+  First, since information is originally stored in text anyways, we bypass
+    a difficult and imprecise intermediate step of extracting information from
+    this text into a representation which we hope to be useful for downstream tasks.
+  Second, it's often the case that these downstream tasks would like information which
+    we did not extract into our knowledge base, but is nonetheless present in the
+    underlying text corpus.
+In these cases, it is appealing to reason directly over the text, so that we do
+  not lose this signal.
+
 But, this comes at a cost.
 The key challenge in this approach is the ability to use a large 
   corpus of plain text to query facts and answer questions which are not verbatim 
@@ -179,7 +188,7 @@ An illustration of a search from the query \ww{no carnivores eat animals}
   along the edges.
 The mutation from \ww{no} to \ww{the} negates the sentence (\negate); the mutations
   from \ww{carnivore} to \ww{cat}, the introduction of \ww{an}, and the mutation from
-  \ww{animal} to \ww{mouse} all preserve negation (\reverse).
+  \ww{animal} to \ww{mouse} all preserve negation (\reverse and \equivalent).
 Therefore, the premise negates the query fact:
 
 
@@ -194,7 +203,7 @@ This framing of the problem has a number of advantages.
 Prior work in \textit{textual entailment} -- the task of determining if a premise sentence logically entails the
   truth of a hypothesis -- has traditionally only dealt with very small (1 or 2 sentence) premise sets.
 In contrast, this approach scales to arbitrarily large premise sets.
-Prior work in large-scale inference -- for example approaches making use of large graphical
+Prior systems for large-scale inference -- for example approaches making use of large graphical
   models (e.g., Markov Logic Networks \cite{key:2006richardson-mln}) -- tend to be
   computationally inefficient as the size of the inference problem grows.
 This approach becomes more efficient the larger the premise set grows, since we can run
@@ -204,7 +213,7 @@ From the other direction, unlike information retrieval approaches, we remain
   we can detect false facts in addition to true ones.
 In an empirical evaluation, we show that we can recover 50\% of common sense facts 
   at 90\% precision -- 4x the recall of directly querying 
-  a very large source corpus of 270 million premises.
+  over a very large source corpus of 270 million premises.
 
 
 
@@ -311,7 +320,7 @@ In addition to being a component in our reasoning engine,
 On a NIST-run knowledge base population task, we show that this system 
   achieves good results, outperforming all prior work applying OpenIE
   to structured relation extraction by 3 F$_1$.
-Despite not being developed for this 
+Despite not being developed for the  knowledge base population
   task, our system achieves a score halfway between the median and top 
   performing system, outperforming multiple purpose-built systems.
 
@@ -319,8 +328,13 @@ Despite not being developed for this
 %
 % Aristo
 %
-Lastly, a key property of natural logic is its ability to interface nicely with 
-  statistical models which featurize the surface form of a sentence.
+One of the important lessons from the textual entailment systems developed
+  for the RTE challenges and related tasks is the unusual effectiveness of shallow
+  lexical reasoning at predicting entailments.
+That is, given two sentences, shallow methods are surprisingly good at determining whether the 
+  second sentence follows from the first.
+A key property of natural logic is its ability to interface nicely with 
+  these shallow statistical models which featurize the surface form of a sentence.
 This allows us to construct models which capture the broad coverage and high recall
   of shallow featurized models, while nonetheless maintaining much of the nuanced logical
   reasoning that natural logic provides.

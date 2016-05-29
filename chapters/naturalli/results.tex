@@ -105,7 +105,7 @@ For instance, we can consider two inferences:
 It is clear from the parse of the sentence that the first is valid
   and the second is not; however, from the perspective of the search
   algorithm both make the same two edits: inserting \w{Jack} and \w{saw}.
-In order to err on the side of safety, we disallow deleting the verb
+In order to err on the side of safety, we manually disallow deleting the verb
   \w{saw}.
 
 %For instance, differentiating between \w{Smith saw} \w{Smith thinks that}
@@ -171,7 +171,7 @@ Extractions with confidence below 0.25 or which contained
   pronouns were discarded.
 This yielded a total of 305 million unique extractions composed
   entirely of lexical items which mapped into our vocabulary
-  (\num{186707} items).
+  (\num{186707} items) -- e.g., \ww{(cats; have; tails)}.
 Each of these extracted triples $(e_1,r,e_2)$ was then flattened into
   a plain-text fact $e_1~r~e_2$ and lemmatized.
 This yields \num{270} million unique lemmatized premises in our database.
@@ -204,7 +204,7 @@ This yields queries like the following:
 \end{itemize}
 \vspace{-0.25em}
 
-For negative examples, we take the 689 ReVerb extractions
+For negative examples, we take  689 ReVerb extractions
   \cite{key:2011fader-reverb}
   judged as false by Mechanical Turk workers \cite{key:2013angeli-truth}.
 This provides a set of plausible but nonetheless incorrect examples,

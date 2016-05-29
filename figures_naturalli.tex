@@ -22,7 +22,7 @@
     \node[state]           (alternate)  [right=of forward]          {\alternate};
 
     % (paths)
-    \path[<->] (equivalent) edge              node {\negate}             (negate);
+    \path[->]  (equivalent) edge              node {\negate}             (negate);
     \path[->]  (negate)     edge [bend right] node {\forward}            (cover)
                             edge [bend left]  node {\alternate}          (reverse)
                             edge [bend left]  node {\reverse}            (alternate)

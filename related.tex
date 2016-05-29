@@ -44,8 +44,8 @@ The most common of these are \textit{supervised} relation extractors
 
 % this is a classification problem
 Relation extraction can be naturally cast as a supervised classification problem.
-A corpus of relation mentions is collected,
-  and each mention $x$ is annotated
+A corpus of annotated relation mentions is collected,
+  and each of these mentions $x$ is annotated
   with the relation $y$, if any, it expresses. The classifier's output
   is then aggregated to decide the relations between the two entities.
 
@@ -64,25 +64,26 @@ This has led to the rise of \textit{distantly supervised} methods, which
 \Fig{img/relation-extraction-setup}{0.5}{re-intro}{
   A standard setup for relation extraction for knowledge base population.
 }{
-  The relation extraction setup.
+  The distantly supervised relation extraction setup.
   For a pair of entities, we collect sentences which
     mention both entities.
   These sentences are then used to predict one or more relations between
     those entities.
   For instance, the  sentences containing both \textit{Barack Obama}
     and \textit{Hawaii} should support the \rel{state of birth} and
-    \rel{state of residence} relation.
+    \rel{state of residence} relations.
 }
 
-Traditional distant supervision makes the assumption that
+Traditional distant supervision works with the assumption that
   for every triple $(e_1, y, e_2)$ in a knowledge base between
   a subject $e_1$, a relation $y$, and an object $e_2$, every sentence
-  containing mentions for $e_1$ and $e_2$ express the relation $y$.
+  containing mentions of $e_1$ and $e_2$ expresses the relation $y$;
+  exceptions to this assumption are then treated as noise in the training data.
 % Example
-For instance, taking \reffig{re-intro}, we would create a datum for each
+For instance, taking \reffig{re-intro}, we would create a relation mention $x$ for each
   of the three sentences containing \ent{Barack Obama} and \ent{Hawaii}
   labeled with \rel{state of birth}, and likewise with
-  \rel{state of residence}, creating 6 training examples overall.
+  the relation $y=$\rel{state of residence}, creating 6 training examples overall.
 Similarly, both sentences involving \textit{Barack Obama} and
   \textit{president} would be marked as expressing the \rel{title}
   relation.
@@ -104,7 +105,8 @@ The first of these assumptions is addressed by
   for each sentence-level prediction, that then has to predict the correct knowledge base
   triples \cite{key:2012surdeanu-mimlre}.
 \newcite{key:2013min-incomplete} address the second assumption by extending the
-  MIML model with additional latent variables, while \newcite{key:2013xu-filling}
+  MIML model with additional latent variables modeling the uncertainty over our presumed negatives,
+  while \newcite{key:2013xu-filling}
   allow feedback from a coarse relation extractor to augment labels from the knowledge base.
 These latter two approaches are compatible with but are 
   not implemented in this work.
@@ -123,13 +125,12 @@ For example, in the simplest case, if we know that a person usually lives in the
 A natural technique for this is to embed entities and relations into an
   appropriate vector space, and predict which relations should hold 
   between entities given the structure of this space.
-For example, \newcite{key:2013chen-completion} and \newcite{key:2013socher-completion}
-  use Neural Tensor Networks for this task, predicting unseen relation triples in
-  WordNet and Freebase.
-This builds on a line of work by
+For example,
   \newcite{key:2011bordes-completion} and
   \newcite{key:2012jenatton-completion} on knowledge base completion based on vector-space
-  approaches.
+  approaches; this is subsequently extended by \newcite{key:2013chen-completion} to
+  use Neural Tensor Networks, predicting unseen relation triples in
+  WordNet and Freebase.
 % Universal schemas
 \newcite{key:2012yao-schemas} and \newcite{key:2013riedel-schemas}
   present a related line of work, inferring new relations between
@@ -152,10 +153,11 @@ Since this is an approximate factorization, some entries in the matrix which wer
 %
 \Section{related-openie}{Open Information Extraction}
 % Talk about OpenIE
-One approach to broad-domain knowledge extraction is \textit{open information extraction} (Open IE).
+One approach to broad-domain knowledge extraction is \textit{open information extraction} 
+(Open IE; \newcite{key:2007yates-textrunner}).
 Traditional relation extraction settings usually specify a domain of relations they're
   interested in (e.g., place of birth, spouse, etc.), and usually place restrictions on the
-  types of arguments extracted (e.g., only people are born places).
+  types of arguments extracted (e.g., only people are born in places).
 Open IE systems generalize this setting to the case where both the relation and the arguments
   are represented as plain text, and therefore can be entirely open-domain.
 For example, in the sentence \ww{the president spoke to the Senate on Monday}, we might extract
@@ -179,7 +181,7 @@ In both of these cases, an emphasis is placed on \textit{speed} --
   open domain triples.
 ReVerb, for instance, heuristically extracts relations centered around maximally expanded
   relations centered around a main verb, and attempts to find the best arguments
-  for that relation subjected to certain constraints.
+  for that relation subject to certain constraints.
 A confidence function is then trained over a set of features on the extractions, so that
   the system can provide calibrated confidence values.
 
@@ -193,7 +195,9 @@ Building upon this, Ollie \cite{key:2012mausam-ollie} also learns patterns from 
   when extracting these triples.
 Exemplar \cite{key:2013mesquita-exemplar} adapts the open IE framework to
   $n$-ary relationships similar to semantic role labeling, but without the
-  associated expensive machinery of SRL systems.
+  associated expensive machinery of a full-blown semantic role labeling (SRL) system.
+Like Exemplar, OpenIE 4 predicts $n$-ary relations (as well as nominal relations) by including
+  a lightweight SRL system.
 
 In another line of work, The Never Ending Language Learning project (NELL) \cite{key:2010carlson-nell}
   iteratively learns more facts from the internet
@@ -229,7 +233,7 @@ Another prominent use-case for open domain triples is
 In \newcite{key:2014fader-openqa}, a set of question paraphrases is mined from a large
   question answering corpus; these paraphrases are then applied to a new question until
   it matches a known Open IE relation.
-In each of these cases, the concise extractions provided by open IE allow
+In each of these cases, the concise extractions provided by Open IE allow
   for efficient symbolic methods for entailment, such as Markov logic
   networks or matrix factorization.
 
@@ -271,8 +275,8 @@ For example, a sentence \ww{John kicked Pluto} could be interpreted as:
 \exists e1 : [ e1 ~ \textrm{before Now1} ] \left[ [ \textrm{John kick Pluto} ] **~ e1 \right]
 \end{equation*}
 
-That is, there is an event $e1$ that happened before now (the reference time), and the various
-  the sentence \ww{John kick Pluto} characterizes or fully describes $e1$.
+That is, there is an event $e1$ that happened before now (the reference time), and the
+  sentence \ww{John kick Pluto} characterizes or fully describes $e1$.
 The operator $**$ has an analogous operator $*$ for cases where the statement (or formula)
   is \textit{true} in the event, but does not fully characterize it
 For example:
@@ -282,14 +286,20 @@ For example:
 \end{equation*}
 
 
-Lastly, efforts like MIT's ConceptNet \cite{key:2011tandon-conceptnet} and Cyc \cite{key:1995lenat-cyc}
+Efforts like MIT's ConceptNet \cite{key:2011tandon-conceptnet} and Cyc \cite{key:1995lenat-cyc}
   aim to create a comprehensive, unified knowledge base of common-sense facts.
 For instance, ConceptNet has facts like (\ww{learn}; \ww{motivated by goal}; \ww{knowledge}).
 These facts are collected from a number of sources, both automatic (e.g., Open IE) and hand-curated
   (e.g., WordNet).
 Cyc catalogs in a structured way facts like: There exists a female animal for every Chordate
   which is described by the predicate \textit{mother}.
-All of these facts are hand-curated.
+YAGO \cite{key:2007suchanek-yago} is a popular knowledge base of roughly 5M facts covering
+  both Freebase-style factoids and some common sense topics
+The Component Library \cite{key:2001barker-component} is a framework for aggregating these sorts of
+  broad-domain knowledge bases, including relations between entities and events (e.g.,
+  \ww{happens before}).
+This is, of course, not an exhaustive list.
+All of these knowledge bases are based on significant hand-curation.
 
 The systems described in this dissertation differ from this earlier work in a few key respects:
 First, the facts inferred by the system are not hand coded, but rather latent in a large
@@ -305,7 +315,7 @@ Third, we operate at scale: our goal is to store and reason about hundreds of mi
 \Section{related-rte}{Textual Entailment}
 
 % -- RTE
-This dissertation is in many ways to work on 
+This dissertation is in many ways related to work on 
   recognizing textual entailment (RTE) -- e.g., 
   \newcite{key:2010-schoenmackers-horn}, \newcite{key:2011berant-entailment}.
 Textual Entailment is the task of determining if a given premise sentence
@@ -329,7 +339,7 @@ However, in RTE the premise set tends to be very small (1 or 2 premises), and th
 
 
 Work by \newcite{key:2013lewis-entailment}
-  approach entailment by constructing a CCG parse of the query,
+  approaches entailment by constructing a CCG parse of the query,
   while mapping questions which are paraphrases of each other to the
   same logical form using distributional relation clustering.
 \newcite{key:2008hickl-rte} approaches the problem by segmenting the premise and
@@ -344,15 +354,15 @@ For example, the following premise, taken from the RTE-3 challenge:
   Hollywood to be in the pictures. 
 This Mabel Normand vehicle, produced by Mack Sennett, followed earlier
   films about the film industry and also paved the way for later films about Hollywood, such as King Vidor’s
-  "Show People" (1928).
+  ``Show People'' (1928).
 \end{displayquote}
 
 would yield the commitments:
 
 \begin{displayquote}
-T1. "The Extra Girl" [took place in] 1923. \\
-T2. "The Extra Girl" is a story of a small−town girl. \\
-T3. "The Extra Girl" is a story of Sue Graham. \\
+T1. ``The Extra Girl'' [took place in] 1923. \\
+T2. ``The Extra Girl'' is a story of a small−town girl. \\
+T3. ``The Extra Girl'' is a story of Sue Graham. \\
 T4. Sue Graham is a small−town girl. \\
 T5. Sue Graham [was] played by Mabel Normand. \\
 $\dots$ \\
@@ -360,12 +370,12 @@ T10. ``The Extra Girl'' [was] produced by Mack Sennett. \\
 T11. Mack Sennett is a producer.
 \end{displayquote}
 
-This could then be used to easily justify the hypothesis:
+\noindent This could then be used to easily justify the hypothesis:
   \ww{``The Extra Girl'' was produced by Sennett}.
 
 
 % Natural Logic
-This dissertation focuses a fair bit on natural logic (more background on natural logic is given in \refchp{natlog}).
+This dissertation focuses considerably on natural logic (more background on natural logic is given in \refchp{natlog}).
 The primary application of natural logic in prior work has been
   for textual entailment and related fields.
 For example, work by MacCartney 
@@ -385,7 +395,7 @@ Although this dissertation adopts the same formalism as the earlier textual enta
 More recently, work by \newcite{key:2013bowman-natlog}
   (and \newcite{key:2015bowman-natlog} has explored using vector spaces
   as a meaning representation for natural language semantics.
-Entailment was chosen as difficult, comprehensive evaluation of natural language
+Entailment was chosen as a representative task to evaluate natural language
   understanding, and since natural logic is inherently lexical, it was chosen
   as the formalism against which to test these models.
 Results from these papers show that, indeed, appropriately composing
@@ -404,7 +414,7 @@ This dataset has since been used as the de-facto large-scale dataset on which
   to evaluate entailment models, and most prominently neural sequence models for
   entailment.
 For example, \newcite{key:2015rocktaschel-snli} construct a recurrent neural network
-  with attention for entailment; \newcite{key:2016long-snli} and other
+  with attention for entailment; \newcite{key:2016long-snli} and others
   follow up on that work with a new attention mechanism.
 
 
@@ -441,12 +451,37 @@ The keywords are then fed into a query expansion module to expand the domain of 
 
 This can be cast as a simplistic version of the two-stage Q/A approach of running information
   retrieval (IR), and then classifying the results into whether they are an answer to the
-  questions.
+  question.
 Subsequent work has expanded on this sort of IR+classify approach to, e.g., use language
   modeling to assist in reranking results \cite{key:2006chen-trec}, incorporate
   more sophisticated methods for learning to rank \cite{key:2007cao-trec},
   incorporating additional knowledge sources such as Wikipedia \cite{key:2004ahn-trec},
   etc.
+
+% -- Logic-based QA
+There has also been work on incorporating more structured logical
+  reasoning for question answering.
+The COGEX system \cite{key:2003moldovan-trec} incorporates a theorem
+  prover into a QA system, boosting overall performance.
+Similarly, Watson \cite{key:2010ferrucci-watson} incorporates
+  logical reasoning components.
+In COGEX, an input sentence is first split into a shallow logical form -- fundamentally
+  similar to the Open IE approaches described above -- using a set of 10 rules to cover
+  most common predicate cases.
+This shallow logical form is then expanded via the WordNet ontology, and then added
+  to the set of axioms known to the theorem prover (alongside \textit{a priori} knowledge).
+Empirical results show that this system could answer 206 of 500 TREC questions, 98 of which
+  (20\%) were not answered by the shallow Q/A module.
+
+In a new spin on logical methods for question-answering,
+  \newcite{key:2015hixon-aristo} proposes
+  a dialog system to augment a knowledge graph used for answering science exam
+  questions.
+This is in a sense an oracle measure, where a human is consulted while answering
+  the question to substantially improve accuracy.
+Furthermore, they show that their additional extractions help
+  answer questions other than the one the dialog was collected for;
+  that is, human-in-the-loop Q/A improves accuracy even on unseen questions.
 
 The other main line of work uses structured knowledge bases for question answering.
 The main line of work here is in the tradition of semantic parsing
@@ -454,8 +489,8 @@ The main line of work here is in the tradition of semantic parsing
 An input query is parsed into a structured logical representation; this representation
   can then be run against a knowledge base to retrieve the answer to the query.
 For example, \newcite{key:2005zettlemoyer-semantics} and \newcite{key:2011liang-semantics} 
-  parse complex, compositional geological
-  queries into a logical form that can be evaluated against a database of geological facts.
+  parse complex, compositional geographic
+  queries into a logical form that can be evaluated against a database of geographic facts.
 A complex sentence like:
 
 \begin{displayquote}
@@ -467,14 +502,14 @@ Would be parsed into a logical form (effectively, a structured query) like:
 \lambda x . state(x) \land borders(x, \argmax( \lambda y . state(y), \lambda y . count (\lambda z . state(x) \land borders(y, z))))
 \end{equation*}
 
-\newcite{key:2005zettlemoyer-semantics} approaches the problem by learning a synchronous
-  combinatory categorical grammar (CCG) \cite{key:2004bos-ccg} 
+\newcite{key:2005zettlemoyer-semantics} approach the problem by learning a synchronous
+  combinatory categorial grammar (CCG) \cite{key:2004bos-ccg} 
   parse over lexical items and logical form fragments,
   given a fixed grammar.
 Until convergence, the algorithm performs the following two steps:
 \begin{itemize}
-  \item Expand the set of lexical mappings (e.g., \ww{state} means $\lambda x . state(x)$) 
-        known to the algorithm. 
+  \item Expand the set of lexical mappings
+        known to the algorithm (e.g., \ww{state} means $\lambda x . state(x)$).
         This is done by performing the following on each example in the training set:
         (1) Generate all possible lexical mappings, given the logical form and surface
             form of the example.
@@ -487,7 +522,7 @@ Until convergence, the algorithm performs the following two steps:
 
 Work by \newcite{key:2011liang-semantics} builds on this approach by removing the need for
   an annotated logical form, and instead running a two-step EM-like learning algorithm
-  (on a fixed CFG rather than CCG grammar):
+  (on a fixed context free grammar rather than a CCG grammar):
 First, a set of possible parses for each example are induced given the current parameter vector.
 The parses which evaluate to the correct \textit{answer} are treated as correct and renormalized
   proportional to their original score.
@@ -495,8 +530,7 @@ This is then used as a training signal to learn a new parameter vector.
 
 This same type of approach can be applied more broadly to more practical types of questions.
 For example, \newcite{key:2013berant-sempre} apply a similar approach to answering
-  questions about entities in Freebase -- a popular large knowledge base containing facts
-  about people, places, organizations, etc.
+  questions about entities in Freebase.
 In this case, utterances are factoid-style Q/A questions similar to the TREC questions;
   e.g., \ww{what college did Obama go to?}.
 This is then parsed into a logical form, and executed against the Freebase knowledge graph
@@ -519,20 +553,12 @@ Although these methods show early promise, at the time of writing it remains to 
   whether a vector space can capture the level of semantics necessary to perform
   open-domain reasoning at the level that we as humans perform it.
 
-% -- Logic-based QA
-Lastly, there has been work on incorporating more structured logical
-  reasoning for question answering.
-The COGEX system \cite{key:2003moldovan-trec} incorporates a theorem
-  prover into a QA system, boosting overall performance.
-Similarly, Watson \cite{key:2010ferrucci-watson} incorporates
-  logical reasoning components.
-In a new spin on logical methods for question-answering,
-  \newcite{key:2015hixon-aristo} proposes
-  a dialog system to augment a knowledge graph used for answering science exam
-  questions.
-This is in a sense an oracle measure, where a human is consulted while answering
-  the question to substantially improve accuracy.
-Furthermore, they show that their additional extractions help
-  answer questions other than the one the dialog was collected for;
-  that is, human-in-the-loop Q/A improves accuracy even on unseen questions.
 
+We have reviewed the main lines of work supporting this dissertation.
+Some of these -- e.g., knowledge base population, Open IE, and question answering -- are 
+  alternative approaches to extracting knowledge from text.
+Others -- e.g., textual entailment and common-sense reasoning -- are tools and sources of insight
+  which will be useful in our effort.
+We will now review natural logic -- the central formalism behind much of the work described here --
+  and subsequently describe the systems that have been built to tackle common sense reasoning and
+  question answering.
