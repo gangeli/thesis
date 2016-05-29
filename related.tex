@@ -14,7 +14,7 @@ Lastly, we review work on textual entailment, related to the underlying natural 
 %
 \Section{related-kbp}{Knowledge Base Population}
 
-Knowledge base population is the task of taking a large body of unstructured text,
+Knowledge base population (KBP) is the task of taking a large body of unstructured text,
   and extracting from it a structured knowledge base.
 Importantly, the knowledge base has a fixed schema of relations (e.g.,
   \ww{born in}, \ww{spouse of}), usually with associated type signatures.
@@ -26,6 +26,11 @@ Prominent examples include
     \cite{key:2001voorhees-trec},
   and semantic parsers
     \cite{key:1996zelle-semantics,key:2007zettlemoyer-semantics,key:2013kwiatkowski-semantics,key:2014berant-semantics}.
+Knowledge base population is in many ways in line with the spirit of this dissertation:
+  in both cases, the goal is to extract true facts about the world.
+However in the case of knowledge base population, these facts are structured bits of information -- e.g.,
+  subject/relation/object triples -- rather than the open-domain, schemaless information that we 
+  extract in the systems described in this dissertation.
 
 % Talk about relation extraction
 Prior work in this area can be categorized into a number of approaches.
@@ -158,6 +163,10 @@ For example, in the sentence \ww{the president spoke to the Senate on Monday}, w
   (\ww{president}; \ww{spoke on}; \ww{Monday})
 \end{displayquote}
 
+This representation is a step closer to being able to store open-domain information
+  and common sense facts, and can be thought of as a sort of compromise between
+  the more structured knowledge base population work, and this disseration's stance
+  of representing facts entirely as unstructured text.
 
 One line of work in this area are the early UW OpenIE systems: for example,
   TextRunner \cite{key:2007yates-textrunner} and
@@ -279,6 +288,13 @@ Cyc catalogs in a structured way facts like: There exists a female animal for ev
   which is described by the predicate \textit{mother}.
 All of these facts are hand-curated.
 
+The systems described in this dissertation differ from this earlier work in a few key respects:
+First, the facts inferred by the system are not hand coded, but rather latent in a large
+  unstructured body of text.
+Second, we do not appeal to any formal logical language beyond the syntax of the text we are processing.
+Third, we operate at scale: our goal is to store and reason about hundreds of millions of facts (or more),
+  rather than capturing a deep understanding any particular premise.
+
 
 %
 % RTE
@@ -346,7 +362,7 @@ This could then be used to easily justify the hypothesis:
 
 
 % Natural Logic
-This dissertation focuses a fair bit on natural logic.
+This dissertation focuses a fair bit on natural logic (more background on natural logic is given in \refchp{natlog}).
 The primary application of natural logic in prior work has been
   for textual entailment and related fields.
 For example, work by MacCartney 
@@ -357,7 +373,10 @@ This work approaches the entailment task by inducing an alignment between the pr
   from this alignment and the semantics of natural logic what the correct entailment
   relation is between the sentences.
 This line of work has been extended since in, e.g., \newcite{key:2012watanabe-natlog}.
-More background on natural logic is given in \refchp{natlog}.
+Although this dissertation adopts the same formalism as the earlier textual entailment work,
+  it differs substantially in that the task is less about classifying whether a premise entails
+  a consequent, and more about finding a supporting premise in a very large collection of
+  candidates.
 
 
 More recently, work by \newcite{key:2013bowman-natlog}
@@ -391,7 +410,10 @@ For example, \newcite{key:2015rocktaschel-snli} construct a recurrent neural net
 % QA
 %
 \Section{related-rte}{Question Answering}
-Many parts of this dissertation are reminiscent of question answering tasks.
+Many parts of this dissertation are cast as question answering tasks.
+Although the methods are different, the goal is the same: given a body of text,
+  be able to answer meaningful questions about the text -- in our case, simply
+  whether a new candidate fact is true or false.
 Related work on question answering can be segmented into two broad categories:
 Early work focused on question answering directly over the text of a
   source corpus.

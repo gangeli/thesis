@@ -55,9 +55,23 @@ For example, the following is a list of some questions which are trivial for hum
 %
 
 A central tenet of this dissertation is that, if we're in pursuit of general intelligence, we should be
-  aiming to answer these sorts of questions not by collecting narrow deep training sets, but rather
+  aiming to answer these sorts of questions not by collecting narrow-domain deep training sets, but rather
   by developing techniques to collect large amounts of common-sense information at scale.
+For example, we can teach a computer to play Chess or Go at super-human levels, but an algorithm
+  for playing Go cannot play Chess.
+We have collected (or generated) deep training data for one of these games, but it is so narrow domain
+  that the data is near worthless at the other game.
+In the same way, we can train statistical models to predict the sentiment of a movie review, but these models
+  do not do well on any task other than the very narrow task it was trained for.
+Going forward, I believe a key property of broad domain intelligent systems will be the ability to 
+  leverage vast amounts of \textit{common sense} knowledge to perform tasks.
 This is, after all, the same common-sense information we leverage to solve these tasks ourselves.
+But, this is also the kind of knowledge that is hard to collect a training set for.
+Whereas as few million movie reviews should be sufficient to get a good sense for what sort of reviews
+  are positive versus negative, it's certainly not true that a few million common-sense facts do
+  not even make a dent on the number of facts we as humans know, and require to perform the reasoning
+  we do.
+
 An additional axiom of the dissertation is that the most promising way to collect this sort of 
   common-sense knowledge is from text.
 This is not not an uncontroversial axiom: much of what we know about the world we know from
@@ -90,6 +104,10 @@ In medicine, half of the medical school curriculum becomes obsolete within 5
   }
 In academia, studies show that up to 90\% of papers are never 
   cited, suggesting that many are never read.
+Moreover, it's often hard to represent in a knowledge base facts which are easy to 
+  represent in language.
+For instance: ``\ww{A graduated cylinder is the best tool to measure the volume of a
+  liquid},'' or ``\ww{strawberries are probably one of the best foods}.''
 
 This dissertation presents an alternative:
   instead of storing knowledge in knowledge bases, let's continue to store knowledge
@@ -404,12 +422,12 @@ Returning to the examples from the beginning of the section, if we are faced wit
 
 \noindent We have a method for determining from a large unlabeled corpora of text
   that a bowl is concave, empty concave things float, and so forth.
-We do this by exploiting three key insights: first, that we can run statistical natural logic proofs
+We do this by exploiting three key insights: \textbf{first}, that we can run statistical natural logic proofs
   over a very large natural language premise set by casting the task as a search problem, producing
   the most efficient open-domain reasoning engine over such a large number of premises.
-Second, we can segment long, syntactically complex sentences into simple atomic utterances that are
+\textbf{Second}, we can segment long, syntactically complex sentences into simple atomic utterances that are
   convenient for this natural logic search problem.
-Third, we can augment the search with an evaluation function, which ensures high recall in retreiving
+\textbf{Third}, we can augment the search with an evaluation function, which ensures high recall in retreiving
   the truth of these facts .
 The remainder of this disseration will review natural logic as a formalism, and then describe in depth
   the components of this reasoning system.

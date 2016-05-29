@@ -74,7 +74,19 @@ This behaves as a sort of evaluation function -- akin to evaluation functions in
 I show that this method outperforms both strong IR baselines and prior work on answering multiple choice
   4\nth\ grade science exam questions.
 
-There are a number of interesting and natural directions for future work in this area,
+Together, these contributions have created a system for question-answering over large text corpora by appealing
+  to natural logic to determine whether a query fact is entailed by any fact in the corpus.
+Furthermore, we have shown that we can relax the strictness of the logical formalism in at least two ways
+  while still maintaining many of the beneficial properties of having a strong underlying logic:
+First, we assign a \textit{cost} for every mutation in our natural logic search.
+Second, we incorporate an \textit{evaluation function} to give us expected truth even if our relaxed search
+  does not find a premise.
+More broadly, independent of the particular formalism used, I hope that this dissertation will encourage work
+  in combining logical and shallow lexical methods directly based on the surface form of language.
+We have been fortunate enough to evolve a concise, coherent representation of knowledge, and I believe we
+  would be wise to exploit that representation as much as we can.
+
+Finally, there are a number of interesting and natural directions for future work in this area,
   which I will briefly discuss below:
 
 \paragraph{Propositional Natural Logic} \refsec{natlog-propositional} sketches a simplistic propositional
@@ -109,7 +121,8 @@ For the first time, the same system could be asked both what color the sky is, a
 I hope that this dissertation can inspire research in the direction of open-domain, broad coverage
   knowledge extraction, and encourage researchers to consider natural logic and its extensions
   as the foundation for storing and reasoning about this sort of knowledge.
-As humans, we have chosen language as the means we store and represent knowledge, and I believe
-  intelligent computers should do the same.
-
+I believe that the sort of common-sense knowledge and common-sense reasoning presented in this dissertation
+  is important in the pursuit of general-purpose artificial intelligence, and hope that the continuation
+  of this line of work will eventually yield computers which can perform the types of reasoning I outlined in
+  the introduction.
 

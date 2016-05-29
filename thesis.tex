@@ -10,7 +10,7 @@
 % (custom libraries)
 \usepackage{fitch}
 % (inline references)
-\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{natbib}
 % (tikz)
 \usepackage{tikz}
 \usepackage{tikz-dependency,pifont}
@@ -26,7 +26,14 @@
 \input figures_kbp.tex	
 % (paper compilation hacks)
 \def\newcite#1{\citet{#1}}
+\def\cite#1{\citep{#1}}
+%\def\newcite#1{\textcite{#1}}
+%\def\cite#1{\autocite{#1}}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.4}
+
+
+
+%\bibliographystyle{plainnat}
 
 
 
@@ -62,6 +69,7 @@
 \input chapters/natlog/denotations.tex
 \input chapters/natlog/mono.tex
 \input chapters/natlog/propositional.tex
+\input chapters/natlog/conclusions.tex
 
 % NaturalLI
 \Chapter{naturalli}{Common-Sense Reasoning}
@@ -93,11 +101,8 @@
 \Chapter{conclude}{Conclusions}
 \input conclude.tex
 
-
-% -- Appendix --
-\appendix
-
-
-\bibliographystyle{plainnat}
+% Bibliography
+\bibliographystyle{acl}
 \bibliography{ref}
+
 \end{document}
