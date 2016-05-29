@@ -270,6 +270,7 @@ The score of an extraction, then, is the product of the scores of each
 }
 \end{table}
 
+
 % Verb patterns
 Once a set of short entailed sentences is produced, it becomes straightforward
   to segment them into conventional open IE triples.
@@ -288,7 +289,26 @@ Note that the constraint of named entity information is by no means
   required for the system.
 In other applications -- for example, applications in vision -- 
   the otherwise trivial nominal relations could be quite useful.
-  
+
+% Simplification important in its own right (DanJ)
+Although the focus of this chapter is on open IE and generating relation triples,
+  sentence simplification is an interesting problem in its own right.
+Early work focused primarily on sentence simplification as an accessibility problem
+  -- improving tools for the blind and people with disabilities 
+  \cite{key:1998carroll-simplification,key:1998grefenstette-simplification}.
+Later work began to also focus more on sentence simplification for
+  \textit{summarization}
+For example, \newcite{key:2000knight-simplification} approached the task with
+  a noisy-channel model; \newcite{key:2008clarke-simplification} introduced an
+  ILP formulation of the problem -- a method which would remain popular thereafter.
+Work in this area in the mid 2010's, in turn, has tended to frame the task as
+  a sequence-to-sequence learning problem to be tackled with recurrent
+  neural networks (e.g., \newcite{key:2015rush-simplification}).
+However, few of these cases explicitly try to model sentence simplification as
+  an entailment problem where logical validity has to be maintained.
+An interesting direction of future work would be to combine the insights from this
+  prior work with the more principled logical underpinnings of this work.
+
 %All six of these capture either of the declarative \ww{be} relation
 %  (e.g., adjective modification) or simple variants of such
 %  (e.g., \ww{Napoleon of France} entails \ww{Napoleon is of France}).

@@ -120,7 +120,10 @@ For example, in the simplest case, if we know that a person usually lives in the
   we know a person's employer, and the employer's state of headquarters.
 
 % Richard
-\newcite{key:2013chen-completion} and \newcite{key:2013socher-completion}
+A natural technique for this is to embed entities and relations into an
+  appropriate vector space, and predict which relations should hold 
+  between entities given the structure of this space.
+For example, \newcite{key:2013chen-completion} and \newcite{key:2013socher-completion}
   use Neural Tensor Networks for this task, predicting unseen relation triples in
   WordNet and Freebase.
 This builds on a line of work by
@@ -504,9 +507,17 @@ Subsequent work has also applied semantic parsing to even more broad-domain repr
 For example, work by \newcite{key:2009artzi-amr} uses semantic parsing methods to parse into
   the Abstract Meaning Representation \cite{key:2013banarescu-amr} -- a 
   broad-domain structured meaning representation.
-New methods (e.g., \newcite{key:2014bordes-qa}) have applied neural methods
+By the mid 2010's, neural methods gained popularity as a means of bypassing a meaning representation
+  altogether in favor of end-to-end learning of semantics in a vector space.
+For example, \newcite{key:2014bordes-qa} applies neural methods
   to embed knowledge base fragments and natural language questions in vector spaces,
    and answer questions based on neural network methods.
+\newcite{key:2015hermann-qa} tackle a reading comprehension tasks -- similar in spirit
+  to the KBP task described earlier -- using a neural network to ``read'' the supporting
+  paragraph and answer questions about it.
+Although these methods show early promise, at the time of writing it remains to be seen
+  whether a vector space can capture the level of semantics necessary to perform
+  open-domain reasoning at the level that we as humans perform it.
 
 % -- Logic-based QA
 Lastly, there has been work on incorporating more structured logical
