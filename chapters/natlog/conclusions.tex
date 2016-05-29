@@ -1,0 +1,51 @@
+\Section{natlog-conclusion}{Summary}
+
+In this chapter we've explored a logical formalism for performing valid inferences
+  directly on the surface form of text.
+In this section, we'll briefly summarize the advantages, and admitted disadvantages, of the formalism.
+First, the advantages:
+
+\begin{enumerate}
+\item Natural logics are lossless. The inferences warranted by the logic may be limited, but
+      nothing is lost in the translation from text to the logical representation used for
+      reasoning, because that representation is just text.
+\item Natural logics capture most common types of reasoning. Most types of trivial inferences we
+      as humans automatically make -- reasoning about hypernymy, negation, etc. -- are warranted
+      by the logic.
+\item Natural logics are computationally efficient. For example, many proofs can be performed by simply
+      aligning the premise and the hypothesis, and determining the natural logic relations between the
+      aligned segments.
+\item Natural logics play nice with traditional lexical methods. Since the logic operates directly over text,
+      it is easy to combine parts of it with arbitrary natural language processing methods that operate over
+      the same representation -- natural language.
+\end{enumerate}
+
+On the other hand, the representation has some clear practical shortcomings, some of which I've enumerated below:
+
+\begin{enumerate}
+\item Natural logic has a shallow view of quantification. For example, whereas there is a first-order translation for
+      the quantifier ``\ww{only},'' there is currently no equivalent in natural logic.
+      For instance, if only one cat is in a box, and we know Felix is in the box, natural logic cannot derive
+      that Oliver is not in the box.
+\item Context-dependence is subtle. For instance, why is it the case that ``\ww{eating candy is bad for you}''
+      negates ``\ww{eating candy is good for you},'' whereas ``\ww{eating bad candy is unhealthy}'' does not
+      negate ``\ww{eating good candy is unhealthy}?''
+      This is not insurmountable -- the issue in this case is that the verb \ww{to be} has additive/multiplicative
+      properties of its own -- but it's certainly a complication to the clean story presented in this chapter.
+\item The set of possible mutations must still be known in advance. In much of this dissertation, this is collected
+      from hand-created resources such as WordNet or Freebase. However, these resources are of course woefully
+      incomplete, and therefore this is suboptimal.
+\item Paraphrases remain problematic. For instance, whereas a semantic parser would parse \ww{cats chase mice}
+      and \ww{mice are chased by cats} into the same logical representation, of course natural logic does not.
+      Translating from one to the other is difficult with single lexical mutations, requiring a more global
+      rewrite of the sentence.
+      These batched rewrites are more difficult to capture in natural logic.
+\end{enumerate}
+
+
+The rest of this dissertation will use various aspects of natural logic in practical applications,
+  focusing on large-scale textual inference and question answering tasks.
+The first challenge, addressed by the next chapter, is on extending the proof theory described
+  here to operate over not a single premise, but a very large set of candidate premises.
+That is, we are using natural logic to look for any supporting premise for a hypothesis 
+  in a very large collection of plain text.
