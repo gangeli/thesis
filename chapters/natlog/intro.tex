@@ -28,7 +28,7 @@ Implicitly, a neural network or sufficiently powerful statistical classifier cou
   to treat these queries, at the expense of sufficiently large amount of training data
   (in the extreme, one can always simply memorize the logic).
 Explicitly, a first order theorem prover or Markov Logic network could capture the logical
-  content of a sentence, at the expense of a drop in expresivity and computational
+  content of a sentence, at the expense of a drop in expressivity and computational
   efficiency.
 In this chapter we'll motivate natural logics as an optimal midway between offloading this sort
   of logical reasoning entirely to statistical / neural methods, and enforcing a rigid
@@ -40,7 +40,7 @@ In this chapter we'll motivate natural logics as an optimal midway between offlo
 %
 Broadly, the aim of natural logics are to capture a subset of valid logical
   inferences by appealing directly to the structure of language,
-  as opposed to running deduction in an abstract logical language (e.g., well-formed first-order formulae
+  as opposed to running deduction in an abstract logical language (e.g., well-formed first-order formulas
   composed of predicates, variables, connectives, and quantifiers).
 That is to say, a natural logic is primarily a \textit{proof theory}, where
   the deductive system operates over natural language syntax.
@@ -147,7 +147,7 @@ The proof follows a proof by contradiction, showing that the hypothesized hero-G
   our premise: \ww{``no one who lives on Mount Olympus is Persian.''}
 
 To contrast with the first order logic proof, there also exists a natural logic proof of our
-  contradiction, based entirely on Aristotilean syllogisms.
+  contradiction, based entirely on Aristotelian syllogisms.
 This proof makes use of two syllogistic patterns chained together, and one of the axiomatic
   negations:
 
@@ -244,7 +244,7 @@ A potentially promising way around the intractability of first-order theorem pro
 However, formulating our motivating example as a Markov Logic Network requires outright instantiating
   the denotations of our predicates on a closed world.
 That is, we must first enumerate all the heroes, Gods, and residents of Olympus.
-Thereafter, the task of grounding our formulae on this world and running heavyweight
+Thereafter, the task of grounding our formulas on this world and running heavyweight
   statistical inference algorithm the resulting Markov Network.
 Making this grounding and inference process tractable is in itself an active area of
   research \cite{key:2011niu-tuffy,key:2014zhang-dimmwitted}.
