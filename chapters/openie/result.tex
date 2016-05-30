@@ -186,6 +186,18 @@ For comparison, Ollie extracted \num{12274319} triples, covering
   instances, and \num{870} in more than 1000 instances.
     
 
+In this chapter we have presented a system for extracting open domain relation triples
+  by breaking a long sentence into short, coherent clauses, and then
+  finding the maximally simple relation triples which are warranted given
+  each of these clauses.
+This allows the system to have a greater awareness of the context of each
+  extraction, and to provide informative triples to downstream applications.
+We show that our approach performs well on one such downstream application:
+  the KBP Slot Filling task.
+In the next chapter, we will return to the NaturalLI system, and show how we can
+  combine the search process from the previous chapter, the sentence shortening
+  approach from this chapter, and a statistical evaluation function to create
+  a high-recall open-domain question answering system.
 
 
 
