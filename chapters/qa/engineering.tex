@@ -13,7 +13,7 @@ Like many NLP applications, the fundamental bottleneck for speed is the memory b
 Therefore, NaturalLI was designed with a careful eye on managing memory.
 The search problem is at its core composed of two data structures: a fringe
   for the search boundary and a set of terminal states.
-In a uniform cost search (like the one NaturalLI runs), the fringe is conceptually a
+In a uniform cost search (like the one NaturalLI runs), the fringe is a
   priority queue; we use the sequence heap described in
   \newcite{key:2000sanders-knheap}.
 This data structure is more friendly to the cache than a more conventional binary heap,
@@ -34,7 +34,7 @@ This is particularly bad in the default STL implementation of \texttt{unordered\
 
 The implementation of the mutation graph is less important, as it tends to be
   significantly smaller than both the fringe and the knowledge base of premises.
-The graph is implemented straightforwardly; the only important subtlety is to ensure
+Therefore our graph is implemented straightforwardly; the only important subtlety is to ensure
   that the set of candidate edges (i.e., incoming edges) are located in the same block
   of memory.
 Fortunately, this is the natural way to store a graph in memory anyways.
@@ -68,7 +68,9 @@ Three insights make this possible:
 
 \begin{enumerate}
   \item If the hash function is an order-invariant hash of the edges in the dependency tree,
-        then it is robust to reordering, deletion order, etc.
+        then it is robust to deletion and mutation order.
+        As a bonus, it also becomes invariant with respect to word order (e.g., for passive vs. active
+        constructs).
         We accomplish this simply by defining the hash of a sentence to be the xor of the hash of
         the dependency edges -- (governor, relation, dependent) triples -- in the sentence.
 
@@ -80,13 +82,14 @@ Three insights make this possible:
         Therefore, we can store the structure of the dependency tree only once, and appeal to that structure for
         each search state.
 
-  \item We mutate a lexical item in bulk at once, and never return to it during the search.
+  \item We mutate a given lexical item exhaustively at once, and never return to it during the search.
         Therefore, once we have finished mutating an item in the search, we do not have to remember what
         that lexical item is.
         The exception here is quantifiers, which require special treatment anyways.
 \end{enumerate}
 
-These insights allow us to compress a search state into only 32 bytes -- exactly half of a cache line.
+These insights allow us to compress a search state into only 32 bytes -- exactly half of a cache line
+  on most machines at the time of writing this dissertation.
 The 32 bytes (256 bits) are allocated as follows:
 
 \begin{itemize}
@@ -108,8 +111,10 @@ The 32 bytes (256 bits) are allocated as follows:
   \item[1 bit]   The presumed truth of the fact in the search so far. See the natural logic 
                  finite state diagram.
   \item[1 bit]   A marker for whether the search has mutated all quantifiers once already.
-  \item[25 bits] A backpointer to the search state this state was generated from.
-                 This limits NaturalLI to searching over at most 33M states.
+  \item[39 bits] A mask for which words have been deleted in the tree at this search state.
+                 Note that this limits the length of a query to 39 words.
+  \item[28 bits] A backpointer to the search state this state was generated from.
+                 This limits NaturalLI to searching over at most 268M states.
                  Note that this is somewhat unconventional: usually, the backpointer is stored as a
                  pointer to the previous state (64 bits); however, managing the history explicitly
                  in a flat array allows us to cut this space by over half.
@@ -137,11 +142,10 @@ On the other extreme, the problem could simply be ignored on the theory that a f
   would be more valuable than a faster search theoretically.
 Empirically, we found that both options were slow, and the best solution was to implement an approximate cycle
   detection algorithm.
-At each search state, we search up the tree through the states' backpointers to a depth $k$ (5\ in our experiments),
+At each search state, we search up the tree through the states' backpointers to a depth $k$ (3\ in our experiments),
   and ignore the state if we found an identical state in this $k$ node \textit{cycle memory}.
 Why this approach was empirically more effective remains an open question -- 
-  in principle, keeping around a set of all seen nodes should not be substantially slower.
+  in principle, keeping around a set of all seen nodes shouldn't be substantially slower.
 Our theory is that this again has to do with caching behavior.
-The cycle memory of nodes pop'd at near the same time will be nearly the same; therefore, 
-  this simple cycle detection mechanism is not likely to make many main memory accesses.
-Nonetheless, it catches the most common cases of an already-visited node being re-visited.
+So long as $k$ is small, nodes close to the current node are likely to be in similar locations in memory.
+Nonetheless, this catches the most common cases of an already-visited node being re-visited.
