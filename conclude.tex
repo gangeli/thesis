@@ -62,7 +62,8 @@ Moreover, this work provides another view onto existing work in sentence simplif
 Using segmented triples from this system outperforms prior OpenIE systems on a downstream relation
   extraction task by 3 F$_1$.
 
-In \refchp{qa}, we extend NaturalLI to operate over dependency trees and incorporate the method for
+In \refchp{qa}, we update the NaturalLI search problem to operate over dependency trees and 
+  incorporate the method for
   creating atomic propositions from \refchp{openie} to allow NaturalLI to operate over a more complex
   premise set.
 In addition, we introduce a method for combining a shallow entailment classifier with the more formal
@@ -109,13 +110,14 @@ For example, perhaps a parser which is more aware of facts about the world could
   prepositional attachments (e.g., \ww{I ate the cake with a fork / cherry}).
 
 \paragraph{Natural Logic for Cross-Domain Question Answering}
-The applications in this dissertation have focused on factoid-style true/false queries.
+The applications in this dissertation have focused on factoid-style true/false queries,
+  or questions which could be converted into this format (e.g., Aristo's multiple-choice questions).
 However, much of question answering is either (1) non-factoid (e.g., procedural) questions, or
   (2) requires finding a textual answer to the question (e.g., \ww{Who is the president of the US?)}.
 Extending NaturalLI to handle these questions is a potential means of creating a truly cross-domain
-  question-answering system.
+  question-answering system (e.g., using something similar to the pipeline used in the COGEX system).
 If all premises are encoded in text, and all questions are given in text, then there is no notion of
-  a schema or domain-specific model / named entity tag set / etc. which would limit the scope of questions
+  a schema or domain-specific modelr, named entity tag set, etc., which would limit the scope of questions
   that could be asked of the system.
 For the first time, the same system could be asked both what color the sky is, and where Barack Obama was
   born.
@@ -123,8 +125,6 @@ For the first time, the same system could be asked both what color the sky is, a
 I hope that this dissertation can inspire research in the direction of open-domain, broad coverage
   knowledge extraction, and encourage researchers to consider natural logic and its extensions
   as the foundation for storing and reasoning about this sort of knowledge.
-I believe that the sort of common-sense knowledge and common-sense reasoning presented in this dissertation
-  is important in the pursuit of general-purpose artificial intelligence, and hope that the continuation
-  of this line of work will eventually yield computers which can perform the types of reasoning I outlined in
-  the introduction.
+As humans, we have chosen language as the means by which we store and represent knowledge, and I
+  believe intelligent computers should do the same.
 

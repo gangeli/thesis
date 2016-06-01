@@ -23,7 +23,7 @@ The nodes in our search problem correspond to candidate facts
   the edges are mutations of these facts (\refsec{inference-transitions}); 
   the costs over these edges encode the confidence that this edge
   maintains an informative inference (\refsec{inference-prob}).
-This mirrors the automaton defined in \refsec{search}, except importantly
+This mirrors the automaton defined in \refchp{natlog}, except importantly
   we are constructing a reversed derivation, and are therefore
   ``traversing'' the FSA backwards.
 
@@ -179,7 +179,7 @@ Once we have an edge defining a lexical mutation with
   corresponding end node
   $(w', s')$ such that $w'$ is the sentence with the lexical mutation
   applied, and $s'$ is the validity state obtained from the
-  FSA in \refsec{search}.
+  FSA in \refchp{natlog}.
 For instance, if our edge begins at $(w, s)$, and there exists
   a transition in the FSA from $s' \xrightarrow{r} s$, then we
   define the end point of the edge to be $(w', s')$.

@@ -26,8 +26,17 @@ For brevity, we will refer to insertions during inference (deletions during
 % Dependency Trees
 %
 \Subsection{naturalli-trees}{Natural logic over Dependency Trees}
+NaturalLI, as presented in \refchp{naturalli}, operated over the surface form
+  of a sentence directly.
+However, this is in many ways suboptimal: in part, inserting and deleting entire clauses is
+  cumbersome; in another part, the semantics of what we are allowed to insert or delete 
+  become less clear.
+For instance, in general we cannot delete spurious nouns, but if it is embedded in
+  a prepositional phrase then it is ok.
+We therefore adapt NaturalLI to run its search directly over a dependency representation.
 Operating over dependency trees rather than a token sequence requires reworking
-  (1) the semantics of deleting a token during search, and 
+  (1) the semantics of deleting a token during search (i.e., inserting tokens during
+      inference -- recall that search is a reversed inference), and 
   (2) the order in which the sentence is traversed.
 
 %% Zoom in on what we're changing
@@ -39,7 +48,7 @@ Operating over dependency trees rather than a token sequence requires reworking
 %  deciding an order in which to traverse the tokens.
 
 % Talk about deletion
-Recent work by \newcite{key:2015angeli-openie} defined a mapping from Stanford
+\refchp{openie} defined a mapping from Stanford
   Dependency relations to the associated lexical relation deleting the
   dependent subtree would induce.
 %For instance, deleting an \textit{amod} edge induces \forward\ -- it maintains
@@ -49,7 +58,8 @@ We adapt this mapping to yield the relation induced by \textit{inserting} a
 %  (recall, a deletion during search is an insertion during
 %  inference); 
   we also convert the mapping to use Universal Dependencies
-  \cite{key:stanford-ud}.
+  \cite{key:stanford-ud} -- an evolution of Stanford Dependencies
+  intended to be a unified dependency representation across languages.
 This now lends a natural deletion operation: at a given node, the subtree rooted
   at that node can be deleted to induce the associated natural logic relation.
 

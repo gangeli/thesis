@@ -51,7 +51,9 @@ We build such a classifier and adapt it as an evaluation function
 Our entailment classifier is designed to be as domain independent as possible;
   therefore we define only 5 unlexicalized real-valued features, with an 
   optional sixth feature encoding the score output by the Solr
-  information extraction system (in turn built upon Lucene).
+  information retrieval system (in turn built upon Lucene).\footnote{
+    Solr can be found online at \url{http://lucene.apache.org/solr/}.
+  }
 % Why simple feature set
 Additional features were not shown to improve performance on the training set.
 In fact, this classifier is a stronger baseline than it may seem: evaluating

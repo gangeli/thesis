@@ -7,6 +7,6 @@ clean:
 	rm -f *.aux *.log *.bbl *.blg present.pdf *.bak *.ps *.dvi *.lot *.bcf thesis.pdf
 
 dist: thesis.pdf
-	@pdflatex thesis
+	@pdflatex --file-line-errors thesis
 
 default: thesis.pdf
