@@ -33,7 +33,7 @@ A common use case for open IE systems is to map them to a
   known relation schema.
 This can either be done manually with minimal annotation effort, or
   automatically from available training data.
-We use both methods in our TAC-KBP evaluation.
+We use both methods in the TAC-KBP evaluation used in this chapter.
 A collection of relation mappings was constructed by a single
   annotator in approximately a day,\footnote{
     The official submission we compare against claimed two weeks for constructing
@@ -69,7 +69,10 @@ A collection of relation mappings was constructed by a single
 %  training a supervised classifier.
 
 % Treat KBP relations as random variables
-We map open IE relations to the KBP schema by searching for co-occurring
+The KBP task has a fixed schema of 41 relations over people and organizations, covering relations such as
+  a person's country of birth, job title, employer, etc.; and an organization's
+  country of headquarters, top employees, etc.
+We map open IE relations to this KBP schema by searching for co-occurring
   relations in a large distantly-labeled corpus, and marking open IE and
   KBP relation pairs which have a high PMI$^2$ value
   \cite{key:1994dailee-pmisquared,key:2005evert-pmi}
@@ -99,11 +102,11 @@ Omitting the conditioning on the type signature for notational convenience,
 
 \vspace{0.25cm}
 \begin{equation*}
-  \textrm{PMI}^2(r_k, r_o) = \log \left( \frac{p(r_k, r_o)^2}{p(r_k) \cdot p(r_o)} \right)
+  \textrm{PMI}^2(r_k, r_o) = \log \frac{p(r_k, r_o)^2}{p(r_k) \cdot p(r_o)}
 \end{equation*}
 \vspace{0.25cm}
 
-Note that in addition to being a measure related to PMI, this captures
+\noindent Note that in addition to being a measure related to PMI, this captures
   a notion similar to \textit{alignment by agreement} 
   \cite{key:2006liang-alignment};
   the formula can be equivalently written as 

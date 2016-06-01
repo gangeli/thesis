@@ -40,9 +40,13 @@
 % Segue
 A key shortcoming of NaturalLI as presented in the previous chapter is its inability to reason
   over sufficiently long or syntactically complex premises.
-In this chapter, we construct a system for open information extraction (open IE), which will also
+In naturally occurring text, a sentence most often expresses a number of atomic facts -- NaturalLI
+  is most efficient when each of its premises expresses only a single, isolated fact.
+Fortunately, this is in itself a well-studied problem: open information extraction (open IE) -- creating open-domain triples from
+  text -- can be thought of as extracting atomic propositions from a syntactically complex sentence.
+In this chapter, we construct a system for open information extraction, which will also
   serve to segment a long sentence into atomic propositions suitable to be a premise set for NaturalLI.
-We will revisit the introduction of this open IE system into NaturalLI in the next chapter.
+We will revisit the merging of this open IE system into NaturalLI in the next chapter.
 
 
 % Motivation
@@ -88,8 +92,7 @@ Rather, we first pre-process the sentence in linguistically motivated ways
 Our approach consists of two stages:
   we first learn a classifier for splitting a sentence into shorter
   utterances (\refsec{clause}), 
-  and then appeal to natural logic \cite{key:1991valencia-natlog}
-  to maximally
+  and then appeal to natural logic to maximally
   shorten these utterances while maintaining necessary context (\refsec{natlog}).
 A small set of 14 hand-crafted patterns can then be used to segment an
   utterance into an open IE triple.
@@ -103,7 +106,7 @@ We treat the first stage as a greedy search problem: we traverse
 Importantly, in many cases \naive ly yielding a clause on a dependency
   edge produces an incomplete utterance (e.g., \ww{Born in Honolulu, Hawaii},
   from \reffig{teaser}).
-These are often attributable to control relationships, where either the
+These cases are often attributable to control relationships, where either the
   subject or object of the governing clause controls the subject of the
   subordinate clause.
 We therefore allow the produced clause to sometimes inherit 
@@ -126,7 +129,7 @@ From these independent clauses, we then extract shorter sentences, which
   will produce shorter arguments more likely to be useful for downstream
   applications.
 A natural framework for solving this problem is natural logic -- 
-  a proof system built on the syntax of human language (see \refsec{natlog}).
+  the underlying formalism behind much of this dissertation (see \refchp{natlog}).
 We can then observe that
   \ww{Heinz Fischer of Austria visits China} entails that
   \ww{Heinz Fischer visits China}.
@@ -158,7 +161,7 @@ For example, whereas \ww{all rabbits eat fresh vegetables} yields
 % Scores
 We show that our new system performs well on a real world evaluation --
   the TAC KBP Slot Filling challenge \cite{key:2013surdeanu-kbpoverview}.
-We outperform both an official submission on
+We outperform both an official submission based on
   open IE, and a baseline of replacing our extractor with Ollie,
   a state-of-the-art open IE systems.
 

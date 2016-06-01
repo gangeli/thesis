@@ -6,7 +6,7 @@
 %\refsec{clause} will describe how to split a longer sentence into such clauses.
 We now turn to the task of generating a maximally compact sentence which retains
   the core semantics of the original utterance, and parsing the sentence
-  into a conventional open IE subject verb object triple.
+  into a conventional open IE subject-verb-object triple.
 This is often a key component in downstream applications, where extractions
   need to be not only \textit{correct}, but also \textit{informative}.
 Whereas an argument like \ww{Heinz Fischer of Austria} is often correct,
@@ -23,31 +23,6 @@ Moreover, it must do so without the ability to appeal to the larger context
 % Intro
 We adopt a subset of natural logic semantics dictating
   contexts in which lexical items can be removed.
-Natural logic as a formalism captures common logical inferences
-  appealing directly to the form of language, rather than parsing to a
-  specialized logical syntax.
-It provides a proof theory for lexical mutations to a sentence which either
-  preserve or negate the truth of the premise.
-
-% Teaser on natural logic
-For instance, if \ww{all rabbits eat vegetables} then 
-  \ww{all cute rabbits eat vegetables}, since we are allowed to mutate
-  the lexical item \ww{rabbit} to \ww{cute rabbit}.
-This is done by observing that \ww{rabbit} is in scope of the first
-  argument to the operator \ww{all}.
-Since \ww{all} induces a \textit{downward polarity} environment for
-  its first argument, we are allowed
-  to replace \ww{rabbit} with an item which is more specific -- in this case
-  \ww{cute rabbit}.
-To contrast, the operator \ww{some} induces an \textit{upward polarity}
-  environment for its first argument,
-  and therefore we may derive the inference from
-  \ww{cute rabbit} to \ww{rabbit} in:
-  \ww{some cute rabbits are small} therefore \ww{some rabbits are small}.
-% Wrap up teaser
-For a more comprehensive introduction to natural logic, see
-  \newcite{key:2008vanbenthem-natlog}.
-
 %In this chapter, we make use of only the theory on when deletions in a sentence
 %  are warranted.
 We mark the scopes of all operators (\ww{all}, \ww{no}, \ww{many},
@@ -59,10 +34,7 @@ In the absence of operators, all items have upwards polarity.
 % Deleting edges as up/down the hierarchy
 Each dependency arc is then classified into whether deleting the dependent
   of that arc makes the governing constituent at that node more general,
-  more specific (a rare case), or neither.\footnote{
-    We use the Stanford Dependencies representation 
-      \cite{key:stanford-dependencies}.
-  }
+  more specific (a rare case), or neither.
 For example, removing the \typ{amod} edge in \hbox{\ww{cute $\xleftarrow{amod}$ rabbit}} yields the
   more general lexical item \ww{rabbit}.
 However, removing the \typ{nsubj} edge in \hbox{\ww{Fido $\xleftarrow{nsubj}$ runs}} would yield the
@@ -85,12 +57,12 @@ For this case, we make use of the list of non-subsective adjectives collected
 % PP Attachment
 The second concern is with prepositional attachment, and direct object
   edges.
-For example, whereas \ww{Alice went to the playground $\xrightarrow{prep\_with}$ Bob} entails
+For example, whereas \ww{Alice went to the playground with Bob} entails
   that \ww{Alice went to the playground}, it is not meaningful to infer that
-  \ww{Alice is friends $\xrightarrow{prep\_with}$ Bob} entails \ww{Alice is friends}.
-Analogously, \ww{Alice played $\xrightarrow{dobj}$ baseball on Sunday} 
+  \ww{Alice is friends with Bob} entails \ww{Alice is friends}.
+Analogously, \ww{Alice played baseball on Sunday} 
   entails that \ww{Alice played
-  on Sunday}; but, \ww{Obama signed $\xrightarrow{dobj}$ the bill on Sunday} should not entail the
+  on Sunday}; but, \ww{Obama signed the bill on Sunday} should not entail the
   awkward phrase \ww{*Obama signed on Sunday}.
 
 % Learning attachment affinity
@@ -236,10 +208,10 @@ The score of an extraction, then, is the product of the scores of each
 \ww{\small{There are cats with tails}}  & \small{(cats; have; tails)}
 \end{tabular}
 \end{center}
-\longcaption{The six dependency patterns used to segment an atomic sentence into an 
+\longcaption{Representative examples from the six dependency patterns used to segment an atomic sentence into an 
   open IE triple.}
 {\label{tab:patterns}
-  The six dependency patterns used to segment an atomic sentence into an 
+  Representative examples from the six dependency patterns used to segment an atomic sentence into an 
   open IE triple.
 }
 \end{table}
@@ -260,10 +232,10 @@ The score of an extraction, then, is the product of the scores of each
 \ww{\small{Our president, Obama,}}      & \small{(Our president; be; Obama)}
 \end{tabular}
 \end{center}
-\longcaption{The eight patterns used to segment a noun phrase into an open IE
+\longcaption{Representative examples from the eight patterns used to segment a noun phrase into an open IE
   triple.}
 {\label{tab:nominal}
-  The eight patterns used to segment a noun phrase into an open IE
+  Representative examples from the eight patterns used to segment a noun phrase into an open IE
   triple.
   The first five are dependency patterns; the last three are surface
     patterns.
@@ -280,7 +252,7 @@ We employ 6 simple dependency patterns, given in \reftab{patterns},
 
 % Noun patterns
 When information is available to disambiguate the substructure of compound
-  nouns (e.g., named entity segmentation),
+  nouns (e.g., named entity segmentation, or the richer NP structure of OntoNotes),
   we extract additional relations with
   5 dependency and 3 TokensRegex \cite{key:stanford-tokensregex} surface
   form patterns.

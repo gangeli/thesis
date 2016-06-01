@@ -535,12 +535,11 @@ In this case, utterances are factoid-style Q/A questions similar to the TREC que
   e.g., \ww{what college did Obama go to?}.
 This is then parsed into a logical form, and executed against the Freebase knowledge graph
   to produce the desired answer: Columbia and Harvard.
-
-
 Subsequent work has also applied semantic parsing to even more broad-domain representations.
 For example, work by \newcite{key:2009artzi-amr} uses semantic parsing methods to parse into
   the Abstract Meaning Representation \cite{key:2013banarescu-amr} -- a 
   broad-domain structured meaning representation.
+
 By the mid 2010's, neural methods gained popularity as a means of bypassing a meaning representation
   altogether in favor of end-to-end learning of semantics in a vector space.
 For example, \newcite{key:2014bordes-qa} applies neural methods
@@ -549,9 +548,15 @@ For example, \newcite{key:2014bordes-qa} applies neural methods
 \newcite{key:2015hermann-qa} tackle a reading comprehension tasks -- similar in spirit
   to the KBP task described earlier -- using a neural network to ``read'' the supporting
   paragraph and answer questions about it.
+In this case, a recurrent neural network is trained to consume a paragraph of text, and then
+  consume a natural language questions.
+While consuming the question, the model is able to use soft attention to look at specific tokens
+  in the supporting paragraph, which can help it in its decision.
 Although these methods show early promise, at the time of writing it remains to be seen
   whether a vector space can capture the level of semantics necessary to perform
   open-domain reasoning at the level that we as humans perform it.
+However the line of work is exciting, in no small part because it offers an alternative
+  meaning representation and reasoning technique to that presented in this dissertation.
 
 
 We have reviewed the main lines of work supporting this dissertation.

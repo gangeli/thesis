@@ -1,4 +1,4 @@
-thesis.pdf: $(wildcard *.tex) $(wildcard chapters/natlog/*.tex)  $(wildcard chapters/naturalli/*.tex) $(wildcard chapters/openie/*.tex) $(wildcard chapters/qa/*.tex)  Makefile figures_naturalli.tex figures_kbp.tex macros.tex std-macros.tex
+thesis.pdf: $(wildcard *.tex) $(wildcard chapters/natlog/*.tex)  $(wildcard chapters/naturalli/*.tex) $(wildcard chapters/openie/*.tex) $(wildcard chapters/qa/*.tex)  Makefile figures_naturalli.tex figures_kbp.tex macros.tex std-macros.tex ref.bib
 	@pdflatex thesis
 	@bibtex thesis
 	@pdflatex thesis
